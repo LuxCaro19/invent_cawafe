@@ -13,6 +13,9 @@
     </style>
 </head>
 <body>
+
+    {% include 'navbar/navbar.html' %}
+
     <div class="container mt-5">
         <h1 class="text-center">Listado de Equipos</h1>
         
@@ -32,16 +35,16 @@
                 <tr class="clickable-row" data-href="{% url 'detalle_equipo' equipo.id %}">
                     <td>{{ equipo.id }}</td>
                     <td>{{ equipo.etiqueta }}</td>
-                    <td>{{ equipo.marca }}</td>
-                    <td>{{ equipo.tipo_equipo.nombre }}</td>  <!-- Si tienes una relación ForeignKey -->
-                    <td>{{ equipo.descripcion }}</td>
+                    <td>{{ equipo.modelo.marca.marca  }}</td>
+                    <td>{{ equipo.modelo.tipo.tipo }}</td>  <!-- Si tienes una relación ForeignKey -->
+                    <td>{{ equipo.modelo.nombre }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 

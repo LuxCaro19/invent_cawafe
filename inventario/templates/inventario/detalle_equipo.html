@@ -1,0 +1,68 @@
+{% extends 'navbar/navbar.html' %}
+
+{% block title %}Detalle del Equipo{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Detalle del Equipo</h1>
+
+    <div class="card mx-auto mt-4 shadow-lg" style="max-width: 500px;">
+        <div class="card-body">
+            <h4 class="card-title text-center" id="etiqueta-text">{{ equipo.etiqueta }}</h4>
+            <hr>
+
+            <!-- Modo Vista -->
+            <div id="vista-detalle">
+                <p><strong>Memoria RAM:</strong> {{ equipo.memoria_ram }} GB</p>
+                <p><strong>Almacenamiento:</strong> {{ equipo.almacenamiento }} GB</p>
+                <p><strong>Marca:</strong> {{ equipo.modelo.marca.marca }}</p>
+                <p><strong>Modelo:</strong> {{ equipo.modelo.nombre }}</p>
+                <p><strong>Sistema Operativo:</strong> {{ equipo.sistema_operativo.nombre }}</p>
+                <p><strong>Procesador:</strong> {{ equipo.procesador.nombre }}</p>
+                <p><strong>Estado:</strong> {{ equipo.estado.nombre }}</p>
+
+                <div class="text-center mt-3">
+                    <button class="btn btn-warning" onclick="toggleEdicion()">Editar</button>
+                </div>
+            </div>
+
+            <!-- Modo Edición -->
+            <form id="form-edicion" action="{% url 'detalle_equipo' equipo.id %}" method="POST" style="display: none;">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="etiqueta">Etiqueta:</label>
+                    <input type="text" class="form-control" id="etiqueta" name="etiqueta" value="{{ equipo.etiqueta }}">
+                </div>
+                <div class="form-group">
+                    <label for="memoria_ram">Memoria RAM (GB):</label>
+                    <input type="number" class="form-control" id="memoria_ram" name="memoria_ram" value="{{ equipo.memoria_ram }}">
+                </div>
+                <div class="form-group">
+                    <label for="almacenamiento">Almacenamiento (GB):</label>
+                    <input type="number" class="form-control" id="almacenamiento" name="almacenamiento" value="{{ equipo.almacenamiento }}">
+                </div>
+                
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleEdicion()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleEdicion() {
+        let vista = document.getElementById("vista-detalle");
+        let form = document.getElementById("form-edicion");
+
+        if (vista.style.display === "none") {
+            vista.style.display = "block";
+            form.style.display = "none";
+        } else {
+            vista.style.display = "none";
+            form.style.display = "block";
+        }
+    }
+</script>
+{% endblock %}
