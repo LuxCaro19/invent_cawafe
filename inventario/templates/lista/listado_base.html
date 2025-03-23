@@ -1,56 +1,62 @@
+<!-- filepath: c:\Users\Lux\OneDrive\Escritorio\djangoproject\inventario\templates\lista\listado_base.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Listado{% endblock %}</title> <!-- Bloque de título que puede ser sobrescrito -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        /* Estilo para hacer que toda la fila sea clickeable */
-        .clickable-row {
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Listado{% endblock %}</title>
+  {% load static %}
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+  <style>
+    .clickable-row {
+      cursor: pointer;
+    }
+  </style>
+  {% block extra_head %}{% endblock %}
 </head>
 <body>
-
-    {% include 'navbar/navbar.html' %} <!-- Incluimos el navbar común -->
-
-    <div class="container mt-4"> <!-- Contenedor principal -->
-        <h3 class="text-left">{% block subtitle %}Listado de Equipos{% endblock %}</h3> <!-- Título secundario -->
-
-        <!-- Tabla de equipos -->
-        <table class="table table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    {% block table_headers %}
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Marca</th>
-                    <th>Tipo</th>
-                    <th>Descripción</th>
-                    {% endblock %}
-                </tr>
-            </thead>
-            <tbody>
-                {% block table_body %}
-                <!-- Aquí se mostrarán las filas de cada vista que extienda esta plantilla -->
-                {% endblock %}
-            </tbody>
-        </table>
+  {% include 'navbar/navbar.html' %}
+  <div class="container-fluid mt-4"> <!-- Cambiado a container-fluid para ocupar todo el ancho -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3 class="text-left">{% block subtitle %}Listado de Equipos{% endblock %}</h3>
+      <div class="input-group" style="max-width: 300px;">
+        <input type="text" class="form-control" placeholder="Buscar por etiqueta" id="search-input">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id="search-button">Buscar</button>
+        </div>
+      </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <script>
-        // Script para redirigir cuando se hace clic en cualquier parte de la fila
-        $(document).ready(function(){
-            $(".clickable-row").click(function() {
-                window.location = $(this).data("href");
-            });
-        });
-    </script>
+    <div class="mb-3">
+      <button class="btn btn-primary" id="filter-button">Filtrar</button>
+      <button class="btn btn-secondary" id="group-button">Agrupar</button>
+    </div>
+    <div class="table-wrapper">
+      <table class="table table-striped listado-base">
+        <thead class="thead-dark">
+          <tr>
+            {% block table_headers %}
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Marca</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            {% endblock %}
+          </tr>
+        </thead>
+        <tbody>
+          {% block table_body %}
+          <!-- Aquí se mostrarán las filas de cada vista que extienda esta plantilla -->
+          {% endblock %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/vue.js' %}"></script>
+  <script src="{% static 'js/custom.js' %}"></script>
+  {% block vue_scripts %}{% endblock %}
 </body>
 </html>

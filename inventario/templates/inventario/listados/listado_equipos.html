@@ -7,6 +7,7 @@
 {% block table_headers %}
     <th>ID</th>
     <th>Etiqueta</th>
+    <th>S.O.</th>
     <th>Marca</th>
     <th>Modelo</th>
     <th>Estado</th>
@@ -17,6 +18,7 @@
     <tr class="clickable-row" data-href="{% url 'detalle_equipo' equipo.id %}">
         <td>{{ equipo.id }}</td>
         <td>{{ equipo.etiqueta }}</td>
+        <td>{{ equipo.sistema_operativo.nombre }}</td>
         <td>{{ equipo.modelo.marca.marca }}</td>
         <td>{{ equipo.modelo.nombre }}</td>
         <td>{{ equipo.estado.nombre }}</td>

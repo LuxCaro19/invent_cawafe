@@ -1,5 +1,6 @@
-{% extends 'navbar/navbar.html' %}
 
+{% extends 'navbar/navbar.html' %}
+{% load static %}
 {% block title %}Detalle del Equipo{% endblock %}
 
 {% block content %}
@@ -47,15 +48,15 @@
 
 <script>
     function toggleEdicion() {
-        let vista = document.getElementById("vista-detalle");
-        let form = document.getElementById("form-edicion");
+        var vista = document.getElementById('vista-detalle');
+        var edicion = document.getElementById('form-edicion');
 
-        if (vista.style.display === "none") {
-            vista.style.display = "block";
-            form.style.display = "none";
+        if (vista.style.display === 'none') {
+            vista.style.display = 'block';
+            edicion.style.display = 'none';
         } else {
-            vista.style.display = "none";
-            form.style.display = "block";
+            vista.style.display = 'none';
+            edicion.style.display = 'block';
         }
     }
 </script>
