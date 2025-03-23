@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de Equipos</title>
+    <title>{% block title %}Listado{% endblock %}</title> <!-- Bloque de título que puede ser sobrescrito -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* Estilo para hacer que toda la fila sea clickeable */
@@ -14,32 +14,28 @@
 </head>
 <body>
 
-    {% include 'navbar/navbar.html' %}
+    {% include 'navbar/navbar.html' %} <!-- Incluimos el navbar común -->
 
-    <div class="container mt-5">
-        <h1 class="text-center">Listado de Equipos</h1>
-        
+    <div class="container mt-4"> <!-- Contenedor principal -->
+        <h3 class="text-left">{% block subtitle %}Listado de Equipos{% endblock %}</h3> <!-- Título secundario -->
+
         <!-- Tabla de equipos -->
         <table class="table table-striped">
             <thead class="thead-dark">
                 <tr>
-                    <th>#</th>
+                    {% block table_headers %}
+                    <th>ID</th>
                     <th>Nombre</th>
                     <th>Marca</th>
                     <th>Tipo</th>
                     <th>Descripción</th>
+                    {% endblock %}
                 </tr>
             </thead>
             <tbody>
-                {% for equipo in equipos %}
-                <tr class="clickable-row" data-href="{% url 'detalle_equipo' equipo.id %}">
-                    <td>{{ equipo.id }}</td>
-                    <td>{{ equipo.etiqueta }}</td>
-                    <td>{{ equipo.modelo.marca.marca  }}</td>
-                    <td>{{ equipo.modelo.tipo.tipo }}</td>  <!-- Si tienes una relación ForeignKey -->
-                    <td>{{ equipo.modelo.nombre }}</td>
-                </tr>
-                {% endfor %}
+                {% block table_body %}
+                <!-- Aquí se mostrarán las filas de cada vista que extienda esta plantilla -->
+                {% endblock %}
             </tbody>
         </table>
     </div>

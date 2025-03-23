@@ -4,3 +4,6 @@ from django.db import models
 
 class Modelo_marca(models.Model):
     marca = models.CharField()
+
+    def __str__(self):  
+        return self.marca

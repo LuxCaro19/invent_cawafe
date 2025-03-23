@@ -1,0 +1,25 @@
+{% extends 'lista/listado_base.html' %} <!-- Hereda de la plantilla base -->
+
+{% block title %}Listado de Equipos{% endblock %} <!-- Sobrescribe el título de la página -->
+
+{% block subtitle %}Listado de Equipos{% endblock %} <!-- Título secundario (puedes personalizarlo) -->
+
+{% block table_headers %}
+    <th>ID</th>
+    <th>Etiqueta</th>
+    <th>Marca</th>
+    <th>Modelo</th>
+    <th>Estado</th>
+{% endblock %}
+
+{% block table_body %}
+    {% for equipo in equipos %}
+    <tr class="clickable-row" data-href="{% url 'detalle_equipo' equipo.id %}">
+        <td>{{ equipo.id }}</td>
+        <td>{{ equipo.etiqueta }}</td>
+        <td>{{ equipo.modelo.marca.marca }}</td>
+        <td>{{ equipo.modelo.nombre }}</td>
+        <td>{{ equipo.estado.nombre }}</td>
+    </tr>
+    {% endfor %}
+{% endblock %}

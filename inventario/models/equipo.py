@@ -15,3 +15,6 @@ class Equipo(models.Model):
     procesador = models.ForeignKey(Procesador, on_delete=models.SET_NULL, null=True )
     estado = models.ForeignKey(Estado_equipo, on_delete=models.SET_NULL, null=True )
 
+    def __str__(self):
+        return self.etiqueta
+

@@ -15,6 +15,7 @@
             <div id="vista-detalle">
                 <p><strong>Memoria RAM:</strong> {{ equipo.memoria_ram }} GB</p>
                 <p><strong>Almacenamiento:</strong> {{ equipo.almacenamiento }} GB</p>
+                <p><strong>Tipo:</strong> {{ equipo.modelo.tipo.tipo }}</p>
                 <p><strong>Marca:</strong> {{ equipo.modelo.marca.marca }}</p>
                 <p><strong>Modelo:</strong> {{ equipo.modelo.nombre }}</p>
                 <p><strong>Sistema Operativo:</strong> {{ equipo.sistema_operativo.nombre }}</p>
@@ -23,25 +24,18 @@
 
                 <div class="text-center mt-3">
                     <button class="btn btn-warning" onclick="toggleEdicion()">Editar</button>
+                    <form method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este equipo?');">
+                        {% csrf_token %}
+                        <button type="submit" name="eliminar" class="btn btn-danger">Eliminar</button>
+                    </form>
                 </div>
             </div>
 
             <!-- Modo Edición -->
             <form id="form-edicion" action="{% url 'detalle_equipo' equipo.id %}" method="POST" style="display: none;">
                 {% csrf_token %}
-                <div class="form-group">
-                    <label for="etiqueta">Etiqueta:</label>
-                    <input type="text" class="form-control" id="etiqueta" name="etiqueta" value="{{ equipo.etiqueta }}">
-                </div>
-                <div class="form-group">
-                    <label for="memoria_ram">Memoria RAM (GB):</label>
-                    <input type="number" class="form-control" id="memoria_ram" name="memoria_ram" value="{{ equipo.memoria_ram }}">
-                </div>
-                <div class="form-group">
-                    <label for="almacenamiento">Almacenamiento (GB):</label>
-                    <input type="number" class="form-control" id="almacenamiento" name="almacenamiento" value="{{ equipo.almacenamiento }}">
-                </div>
-                
+                {{ form.as_p }}
+
                 <div class="text-center mt-3">
                     <button type="submit" class="btn btn-success">Guardar</button>
                     <button type="button" class="btn btn-secondary" onclick="toggleEdicion()">Cancelar</button>
