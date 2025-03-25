@@ -1,68 +1,83 @@
-/* Estilos personalizados para la tabla */
+/* Estilo base tabla */
 .table th, .table td {
     text-align: center;
-    white-space: nowrap; /* Evita que el texto se ajuste en varias líneas */
+    white-space: nowrap; /* Mantiene el contenido en una línea */
 }
 
-/* Estilo para hacer que toda la fila sea clickeable */
+/* Hover fila */
 .clickable-row {
     cursor: pointer;
 }
-
 .clickable-row:hover {
     background-color: #f1f1f1;
 }
 
-/* Personalización de la tabla */
+/* Estilos visuales tabla */
 .table-wrapper {
-    max-height: 700px; /* Define la altura máxima de la tabla */
-    overflow-y: auto; /* Habilita el scroll vertical */
-    overflow-x: auto; /* Habilita el scroll horizontal */
+    max-height: 75vh;
+    overflow-y: auto;
+    overflow-x: auto;
     display: block;
-    margin: 30px; /* Márgenes alrededor de la tabla */
-    border: 1px solid #ddd; /* Borde sutil alrededor de la tabla */
-    width: 100%; /* Asegura que la tabla ocupe todo el ancho disponible */
+    margin: 0px 30px;
+    border: 1px solid #ddd;
+    width: 100%;
 }
 
-/* Estilo para los botones */
+/* Thead fijo */
+.table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #000; /* Asegura que tenga fondo */
+    color: white;
+}
+
+/* Botones */
 .btn {
     margin-left: 10px;
 }
-
 .btn-primary {
     background-color: #0d6efd;
     border-color: #0d6efd;
 }
-
 .btn-secondary {
     background-color: #6c757d;
     border-color: #6c757d;
 }
 
-/* Estilo para que los encabezados queden fijos */
-.table thead th {
-    position: sticky;
-    top: 0;
-    z-index: 1; /* Asegura que los encabezados estén por encima del contenido */
-    background-color: #343a40;
-    color: white;
-}
-
-/* Asegura que las columnas tengan un ancho fijo */
-.table th, .table td {
-    width: 200px; /* Ajusta este valor según tus necesidades */
-}
-
-.table-wrapper {
-    margin: 0px;
-    max-height: 525px;
-}
-
-.bg-dark {
-    background-color: #000000 !important;
-}
-
+/* Fondo negro encabezado */
+.bg-dark,
 .table .thead-dark th {
-    background-color: #000000;
+    background-color: #000000 !important;
     border-color: #000000;
+}
+
+/* Si quieres forzar ancho específico por columna, hazlo por clase, no global */
+.table-head-wrapper {
+    overflow-x: auto;
+}
+
+.table-body-wrapper {
+    max-height: 75vh;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.table-head-wrapper table,
+.table-body-wrapper table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.table-head-wrapper th,
+.table-body-wrapper td {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.clickable-row {
+    cursor: pointer;
+}
+.clickable-row:hover {
+    background-color: #f1f1f1;
 }

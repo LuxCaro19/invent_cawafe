@@ -1,57 +1,137 @@
-<!-- filepath: c:\Users\Lux\OneDrive\Escritorio\djangoproject\inventario\templates\lista\listado_base.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Listado{% endblock %}</title>
-  {% load static %}
+
+  <!-- Estilos -->
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+
   <style>
+    body {
+      overflow: hidden;
+      background-color: #f8f9fa;
+    }
+
+    .main-wrapper {
+      padding: 30px 50px;
+    }
+
+    .table-head-wrapper {
+      overflow-x: auto;
+    }
+
+    .table-body-wrapper {
+      max-height: 75vh;
+      overflow-y: auto;
+      overflow-x: auto;
+    }
+
+    .table-head-wrapper table,
+    .table-body-wrapper table {
+      width: 100%;
+      table-layout: fixed;
+    }
+
+    .table-head-wrapper th,
+    .table-body-wrapper td {
+      text-align: center;
+      white-space: nowrap;
+    }
+
     .clickable-row {
       cursor: pointer;
     }
+
+    .clickable-row:hover {
+      background-color: #f1f1f1;
+    }
+
+    @media (max-width: 768px) {
+      .main-wrapper {
+        padding: 20px;
+      }
+      .table-body-wrapper {
+        max-height: 50vh;
+      }
+    }
   </style>
+
   {% block extra_head %}{% endblock %}
 </head>
 <body>
+
   {% include 'navbar/navbar.html' %}
-  <div class="container-fluid mt-4"> <!-- Cambiado a container-fluid para ocupar todo el ancho -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h3 class="text-left">{% block subtitle %}Listado de Equipos{% endblock %}</h3>
-      <div class="input-group" style="max-width: 300px;">
-        <input type="text" class="form-control" placeholder="Buscar por etiqueta" id="search-input">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button" id="search-button">Buscar</button>
+
+  <div class="container-fluid main-wrapper">
+
+    <!-- Título y buscador -->
+    <div class="row align-items-center mb-3">
+      <div class="col-md-6">
+        <h3 class="mb-0">{% block subtitle %}Listado de Equipos{% endblock %}</h3>
+      </div>
+      <div class="col-md-6 d-flex justify-content-end">
+        <div class="input-group" style="max-width: 300px;">
+          <input type="text" class="form-control" placeholder="Buscar por etiqueta" id="search-input">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="search-button">Buscar</button>
+          </div>
         </div>
       </div>
     </div>
-    <div class="mb-3">
-      <button class="btn btn-primary" id="filter-button">Filtrar</button>
-      <button class="btn btn-secondary" id="group-button">Agrupar</button>
+
+    <!-- Botones -->
+    <div class="row mb-3">
+      <div class="col-md-12 d-flex gap-2">
+        <button class="btn btn-primary" id="filter-button">Filtrar</button>
+        <button class="btn btn-secondary" id="group-button">Agrupar</button>
+      </div>
     </div>
-    <div class="table-wrapper">
-      <table class="table table-striped listado-base">
+
+    <!-- CABECERA (thead fijo) -->
+    <div class="table-head-wrapper bg-dark rounded-top">
+      <table class="table table-striped mb-0">
         <thead class="thead-dark">
           <tr>
             {% block table_headers %}
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Marca</th>
-            <th>Tipo</th>
-            <th>Descripción</th>
+              <th>ID</th>
+              <th>Etiqueta</th>
+              <th>S.O.</th>
+              <th>Marca</th>
+              <th>Modelo</th>
+              <th>Estado</th>
             {% endblock %}
           </tr>
         </thead>
+      </table>
+    </div>
+
+    <!-- CUERPO (scroll) -->
+    <div class="table-body-wrapper bg-white rounded-bottom shadow-sm">
+      <table class="table table-striped mb-0">
         <tbody>
           {% block table_body %}
-          <!-- Aquí se mostrarán las filas de cada vista que extienda esta plantilla -->
+          {% for equipo in equipos %}
+          <tr class="clickable-row" data-href="{% url 'detalle_equipo' equipo.id %}">
+            <td>{{ equipo.id }}</td>
+            <td>{{ equipo.etiqueta }}</td>
+            <td>{{ equipo.sistema_operativo.nombre }}</td>
+            <td>{{ equipo.modelo.marca.marca }}</td>
+            <td>{{ equipo.modelo.nombre }}</td>
+            <td>{{ equipo.estado.nombre }}</td>
+          </tr>
+          {% endfor %}
           {% endblock %}
         </tbody>
       </table>
     </div>
+
   </div>
+
+  <!-- Scripts -->
   <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
   <script src="{% static 'js/popper.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
