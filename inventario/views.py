@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from .models.equipo import Equipo
+from .models import Equipo, Equipo_historial
 from .models.modelo_equipo import Modelo_equipo
 from django.shortcuts import get_list_or_404, get_object_or_404,redirect
 from .forms.equipo_form import EquipoForm
@@ -25,23 +25,26 @@ def listado_modelo_equipo(request):
 
 ##############################
 # Vista de detalles
+
 def detalle_equipo(request, id):
     equipo = get_object_or_404(Equipo, id=id)
 
     if request.method == 'POST':
         if 'eliminar' in request.POST:
-            equipo.delete()
+            equipo.eliminar_equipo()
             equipos = Equipo.objects.all()
             return render(request, 'inventario/listados/listado_equipos.html', {'equipos': equipos})
         else:
             form = EquipoForm(request.POST, instance=equipo)
             if form.is_valid():
-                form.save()
+                equipo.modificar_equipo(form)
                 return redirect('detalle_equipo', id=equipo.id)
     else:
         form = EquipoForm(instance=equipo)
 
-    return render(request, 'inventario/detalle/detalle_equipo.html', {'equipo': equipo, 'form': form})
+    historial = Equipo_historial.objects.filter(equipo=equipo).order_by('-fecha')
+
+    return render(request, 'inventario/detalle/detalle_equipo.html', {'equipo': equipo, 'form': form, 'historial': historial})
 
 
 

@@ -14,7 +14,7 @@
 
 /* Estilos visuales tabla */
 .table-wrapper {
-    max-height: 75vh;
+    max-height: 74vh;
     overflow-y: auto;
     overflow-x: auto;
     display: block;
@@ -58,7 +58,7 @@
 }
 
 .table-body-wrapper {
-    max-height: 75vh;
+    max-height: 74vh;
     overflow-y: auto;
     overflow-x: auto;
 }
@@ -80,4 +80,58 @@
 }
 .clickable-row:hover {
     background-color: #f1f1f1;
+}
+
+/* ===== Estilos movidos desde listado_base.html ===== */
+body {
+    overflow: hidden;
+    background-color: #f8f9fa;
+}
+
+.main-wrapper {
+    padding: 0px 10px;
+}
+
+.table-head-wrapper {
+    overflow-x: auto;
+}
+
+.table-body-wrapper {
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.table-head-wrapper table,
+.table-body-wrapper table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.table-head-wrapper th,
+.table-body-wrapper td {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.clickable-row {
+    cursor: pointer;
+}
+
+.clickable-row:hover {
+    background-color: #f1f1f1;
+}
+
+@media (max-width: 768px) {
+    .main-wrapper {
+        padding: 20px;
+    }
+    .table-body-wrapper {
+        max-height: 60vh;
+    }
+
+    body {
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
 }

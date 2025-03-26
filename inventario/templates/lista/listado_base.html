@@ -10,55 +10,6 @@
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/styles.css' %}" rel="stylesheet">
 
-  <style>
-    body {
-      overflow: hidden;
-      background-color: #f8f9fa;
-    }
-
-    .main-wrapper {
-      padding: 30px 50px;
-    }
-
-    .table-head-wrapper {
-      overflow-x: auto;
-    }
-
-    .table-body-wrapper {
-      max-height: 75vh;
-      overflow-y: auto;
-      overflow-x: auto;
-    }
-
-    .table-head-wrapper table,
-    .table-body-wrapper table {
-      width: 100%;
-      table-layout: fixed;
-    }
-
-    .table-head-wrapper th,
-    .table-body-wrapper td {
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    .clickable-row {
-      cursor: pointer;
-    }
-
-    .clickable-row:hover {
-      background-color: #f1f1f1;
-    }
-
-    @media (max-width: 768px) {
-      .main-wrapper {
-        padding: 20px;
-      }
-      .table-body-wrapper {
-        max-height: 50vh;
-      }
-    }
-  </style>
 
   {% block extra_head %}{% endblock %}
 </head>
