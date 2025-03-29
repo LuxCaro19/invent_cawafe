@@ -134,8 +134,23 @@ body {
     background-color: #f1f1f1;
 }
 
-
+/** Estilos para pantallas Tabletas */
 @media (max-width: 768px) {
+    .main-wrapper {
+        padding: 20px;
+    }
+    .table-body-wrapper {
+        max-height: 60vh;
+    }
+
+    body {
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 1366px) {
     .main-wrapper {
         padding: 20px;
     }
