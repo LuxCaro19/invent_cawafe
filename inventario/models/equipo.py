@@ -5,7 +5,7 @@ from .procesador import Procesador
 from .estado_equipo import Estado_equipo
 from .sistema_operativo import Sistema_operativo
 
-# Create your models here.
+# Clase Equipo.
 
 class Equipo(models.Model):
     etiqueta = models.CharField()

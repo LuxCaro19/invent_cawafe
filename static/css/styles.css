@@ -134,7 +134,7 @@ body {
     background-color: #f1f1f1;
 }
 
-/** Estilos para pantallas Tabletas */
+/** Estilos para pantallas Tabletas o Celulares */
 @media (max-width: 768px) {
     .main-wrapper {
         padding: 20px;
