@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -84,11 +85,11 @@ WSGI_APPLICATION = 'invent_cawafe.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'invent_cawafe',
+        'NAME': 'defaultdb',
         'USER': 'app_user',
         'PASSWORD': 'appUser2025!',
-        'HOST': 'localhost',  # o la IP del servidor PostgreSQL
-        'PORT': '5432',  # el puerto predeterminado de PostgreSQL
+        'HOST': 'inventariogalilea-felipe-49ac.e.aivencloud.com',  # o la IP del servidor PostgreSQL
+        'PORT': '20531',  # el puerto predeterminado de PostgreSQL
     }
 }
 
@@ -129,6 +130,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

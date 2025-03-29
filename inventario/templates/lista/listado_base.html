@@ -10,7 +10,6 @@
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/styles.css' %}" rel="stylesheet">
 
-
   {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -19,8 +18,8 @@
 
   <div class="container-fluid main-wrapper">
 
-    <!-- Título y buscador -->
-    <div class="row align-items-center mb-3">
+    <!-- Buscador (parte superior derecha) -->
+    <div class="row align-items-center mb-1">
       <div class="col-md-6">
         <h3 class="mb-0">{% block subtitle %}Listado de Equipos{% endblock %}</h3>
       </div>
@@ -34,13 +33,17 @@
       </div>
     </div>
 
-    <!-- Botones -->
+    <!-- Botón "+" debajo del buscador con los botones al lado (inicialmente ocultos) -->
     <div class="row mb-3">
-      <div class="col-md-12 d-flex gap-2">
-        <button class="btn btn-primary" id="filter-button">Filtrar</button>
-        <button class="btn btn-secondary" id="group-button">Agrupar</button>
+      <div class="col-md-12 d-flex justify-content-end align-items-center gap-2">
+        <!-- Contenedor dinámico -->
+        <div id="action-buttons" class="d-flex gap-2"></div>
+        <!-- Botón "+" -->
+        <button class="btn btn-outline-secondary btn-sm px-3" type="button" id="toggle-actions">+</button>
       </div>
     </div>
+
+
 
     <!-- CABECERA (thead fijo) -->
     <div class="table-head-wrapper bg-dark rounded-top">
@@ -86,8 +89,7 @@
   <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
   <script src="{% static 'js/popper.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/vue.js' %}"></script>
-  <script src="{% static 'js/custom.js' %}"></script>
-  {% block vue_scripts %}{% endblock %}
+  <script src="{% static 'js/listado_base.js' %}"></script>
+
 </body>
 </html>

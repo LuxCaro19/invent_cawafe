@@ -1,3 +1,22 @@
+.btn-editar {
+    color: #000000;
+    background-color: #c2c2c2;
+    border-color: #696969;
+}
+
+.btn-eliminar {
+    color: #ffffff;
+    background-color: #dc3545;
+    border-color: #818181;
+}
+
+/* Fondo negro encabezado */
+.bg-dark,
+.table .thead-dark th {
+    background-color: #ad0000 !important;
+    border-color: #ad0000;
+}
+
 /* Estilo base tabla */
 .table th, .table td {
     text-align: center;
@@ -28,7 +47,7 @@
     position: sticky;
     top: 0;
     z-index: 10;
-    background-color: #000; /* Asegura que tenga fondo */
+    background-color: #ad0000; /* Asegura que tenga fondo */
     color: white;
 }
 
@@ -43,13 +62,6 @@
 .btn-secondary {
     background-color: #6c757d;
     border-color: #6c757d;
-}
-
-/* Fondo negro encabezado */
-.bg-dark,
-.table .thead-dark th {
-    background-color: #000000 !important;
-    border-color: #000000;
 }
 
 /* Si quieres forzar ancho específico por columna, hazlo por clase, no global */
@@ -121,6 +133,7 @@ body {
 .clickable-row:hover {
     background-color: #f1f1f1;
 }
+
 
 @media (max-width: 768px) {
     .main-wrapper {
