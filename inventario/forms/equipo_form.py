@@ -9,9 +9,9 @@ class EquipoForm(forms.ModelForm):
             'etiqueta': forms.TextInput(attrs={'class': 'form-control'}),
             'memoria_ram': forms.NumberInput(attrs={'class': 'form-control'}),
             'almacenamiento': forms.NumberInput(attrs={'class': 'form-control'}),
-            'modelo': forms.Select(attrs={'class': 'form-control'}),
-            'sistema_operativo': forms.Select(attrs={'class': 'form-control'}),
-            'procesador': forms.Select(attrs={'class': 'form-control'}),
+            'modelo': forms.Select(attrs={'class': 'form-control select2' , 'style': 'width: 100%;'}),
+            'sistema_operativo': forms.Select(attrs={'class': 'form-control select2', 'style': 'width: 100%;'}),
+            'procesador': forms.Select(attrs={'class': 'form-control select2', 'style': 'width: 100%;'}),
             'estado': forms.Select(attrs={'class': 'form-control'}),
         }
 

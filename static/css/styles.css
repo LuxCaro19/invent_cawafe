@@ -134,6 +134,12 @@ body {
     background-color: #f1f1f1;
 }
 
+.navbar-dark .navbar-nav .nav-link {
+    color: rgb(255 255 255);
+}
+
+
+
 /** Estilos para pantallas Tabletas o Celulares */
 @media (max-width: 768px) {
     .main-wrapper {

@@ -24,7 +24,7 @@ $(document).ready(function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const toggleBtn = document.getElementById("toggle-actions");
+    //const toggleBtn = document.getElementById("toggle-actions");
     const actionsContainer = document.getElementById("action-buttons");
     let visible = false;
 
