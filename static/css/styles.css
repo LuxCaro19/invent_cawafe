@@ -1,37 +1,42 @@
+/* ------------------ BOTONES PERSONALIZADOS ------------------ */
 .btn-editar {
     color: #000000;
     background-color: #c2c2c2;
     border-color: #696969;
+    transition: background-color 0.2s ease;
 }
-
+.btn-editar:hover {
+    background-color: #d6d6d6;
+}
 .btn-eliminar {
     color: #ffffff;
     background-color: #dc3545;
     border-color: #818181;
+    transition: background-color 0.2s ease;
+}
+.btn-eliminar:hover {
+    background-color: #f00c23;
 }
 
-/* Fondo negro encabezado */
+/* ------------------ ENCABEZADO TABLA ------------------ */
 .bg-dark,
 .table .thead-dark th {
     background-color: #ad0000 !important;
     border-color: #ad0000;
 }
 
-/* Estilo base tabla */
+/* ------------------ TABLA ESTILO BASE ------------------ */
 .table th, .table td {
     text-align: center;
-    white-space: nowrap; /* Mantiene el contenido en una línea */
+    white-space: nowrap;
 }
-
-/* Hover fila */
 .clickable-row {
     cursor: pointer;
 }
-.clickable-row:hover {
-    background-color: #f1f1f1;
+.clickable-row:hover td {
+    background-color: #f1f1f1 !important;
 }
 
-/* Estilos visuales tabla */
 .table-wrapper {
     max-height: 74vh;
     overflow-y: auto;
@@ -42,16 +47,15 @@
     width: 100%;
 }
 
-/* Thead fijo */
 .table thead th {
     position: sticky;
     top: 0;
     z-index: 10;
-    background-color: #ad0000; /* Asegura que tenga fondo */
+    background-color: #ad0000;
     color: white;
 }
 
-/* Botones */
+/* ------------------ BOTONES BOOTSTRAP ------------------ */
 .btn {
     margin-left: 10px;
 }
@@ -64,98 +68,91 @@
     border-color: #6c757d;
 }
 
-/* Si quieres forzar ancho específico por columna, hazlo por clase, no global */
+/* ------------------ ESTRUCTURA TABLA ------------------ */
 .table-head-wrapper {
     overflow-x: auto;
 }
-
 .table-body-wrapper {
-    max-height: 74vh;
+    max-height: 71vh;
     overflow-y: auto;
     overflow-x: auto;
 }
-
 .table-head-wrapper table,
 .table-body-wrapper table {
     width: 100%;
     table-layout: fixed;
 }
-
 .table-head-wrapper th,
 .table-body-wrapper td {
     text-align: center;
     white-space: nowrap;
 }
 
-.clickable-row {
-    cursor: pointer;
-}
-.clickable-row:hover {
-    background-color: #f1f1f1;
-}
-
-/* ===== Estilos movidos desde listado_base.html ===== */
+/* ------------------ LAYOUT GENERAL ------------------ */
 body {
     overflow: hidden;
     background-color: #f8f9fa;
 }
-
 .main-wrapper {
     padding: 0px 10px;
 }
 
-.table-head-wrapper {
-    overflow-x: auto;
-}
-
-.table-body-wrapper {
-    max-height: 70vh;
-    overflow-y: auto;
-    overflow-x: auto;
-}
-
-.table-head-wrapper table,
-.table-body-wrapper table {
-    width: 100%;
-    table-layout: fixed;
-}
-
-.table-head-wrapper th,
-.table-body-wrapper td {
-    text-align: center;
-    white-space: nowrap;
-}
-
-.clickable-row {
-    cursor: pointer;
-}
-
-.clickable-row:hover {
-    background-color: #f1f1f1;
-}
-
+/* ------------------ NAVBAR ------------------ */
 .navbar-dark .navbar-nav .nav-link {
     color: rgb(255 255 255);
 }
 
+/* ------------------ DROPDOWN LATERAL ALINEADO ------------------ */
+.dropdown-submenu {
+    position: relative;
+}
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -0.35rem;
+    border-radius: 0.25rem;
+    display: none;
+    position: absolute;
+    z-index: 1000;
+}
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
 
+/* ------------------ FLECHAS PERSONALIZADAS ------------------ */
+/* Oculta la flecha del menú principal */
+.navbar .dropdown-toggle::after {
+    display: none !important;
+}
+/* Flecha lateral personalizada */
+.dropdown-submenu-toggle {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+/* Flecha lateral derecha */
+.dropdown-submenu-toggle::after {
+    content: "";
+    border-top: 0.3em solid transparent;
+    border-bottom: 0.3em solid transparent;
+    border-left: 0.3em solid rgba(0, 0, 0, 0.6);
+    margin-left: auto;
+}
 
-/** Estilos para pantallas Tabletas o Celulares */
+/* ------------------ MEDIA QUERIES ------------------ */
 @media (max-width: 768px) {
     .main-wrapper {
         padding: 20px;
     }
     .table-body-wrapper {
-        max-height: 60vh;
+        max-height: 65vh;
     }
-
     body {
         overflow-y: hidden;
         overflow-x: hidden;
     }
 }
-
-/* Estilos para pantallas pequeñas */
 @media (max-width: 1366px) {
     .main-wrapper {
         padding: 20px;
@@ -163,7 +160,6 @@ body {
     .table-body-wrapper {
         max-height: 60vh;
     }
-
     body {
         overflow-y: hidden;
         overflow-x: hidden;

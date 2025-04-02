@@ -12,101 +12,87 @@
 
 <body class="detalle-body">
     <div class="container d-flex justify-content-center">
-        <div class="card shadow-lg w-100" style="max-width: 100%;">
-            <div class="card-body row">
+        <div class="card shadow-lg w-100 mt-4" style="max-width: 1000px;">
+            <div class="card-body">
 
-                <!-- Columna izquierda: Información del equipo -->
-                <div class="col-12 col-lg-8 mb-3 border-end pe-lg-4">
+                <!-- Vista normal del detalle -->
+                <div id="vista-detalle">
+                    <!-- Etiqueta y botones arriba -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="text-dark mb-0"><strong>{{ equipo.etiqueta }}</strong></h4>
+                        <div>
+                            <button class="btn btn-editar btn-sm" onclick="toggleEdicion()">Editar</button>
+                            <form method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este equipo?');">
+                                {% csrf_token %}
+                                <button type="submit" name="eliminar" class="btn btn-eliminar btn-sm">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                    <hr>
 
-                    <!-- Vista normal del detalle -->
-                    <div id="vista-detalle">
-                        <!-- Etiqueta --><!-- Etiqueta y botones arriba -->
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h4 class="text-dark mb-0"><strong>{{ equipo.etiqueta }}</strong></h4>
-                                <div>
-                                    <button class="btn btn-editar btn-sm" onclick="toggleEdicion()">Editar</button>
-                                    <form method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este equipo?');">
-                                        {% csrf_token %}
-                                        <button type="submit" name="eliminar" class="btn btn-eliminar btn-sm">Eliminar</button>
-                                    </form>
-                                </div>
-                            </div>
-                        <hr>
-
-                        <!-- Mini cards internos -->
-                        <div class="row">
-                            <!-- Columna 1 datos del equipo -->
-                            <div class="col-12 col-md-6 mb-3">
-                                <div class="border rounded p-3 h-100">
-                                    <p><strong>Marca:</strong> {{ equipo.modelo.marca.marca }}</p>
-                                    <p><strong>Modelo:</strong> {{ equipo.modelo.nombre }}</p>
-                                    <p><strong>Sistema Operativo:</strong> {{ equipo.sistema_operativo.nombre }}</p>
-                                    <p><strong>Procesador:</strong> {{ equipo.procesador.nombre }}</p>
-                                    <p><strong>Memoria RAM:</strong> {{ equipo.memoria_ram }} GB</p>
-                                    <p><strong>Almacenamiento:</strong> {{ equipo.almacenamiento }} GB</p>
-                                    <p><strong>Estado:</strong> {{ equipo.estado.nombre }}</p>
-                                </div>
-                            </div>
-
-                            <!-- Columna 2 datos de usuario y ubicación -->
-                            <div class="col-12 col-md-6 mb-3">
-                                <div class="border rounded p-3 h-100">
-                                    
-                                </div>
+                    <!-- Mini cards internos -->
+                    <div class="row">
+                        <!-- Columna 1 -->
+                        <div class="col-12 col-md-6 mb-3">
+                            <div class="border rounded p-3 h-100">
+                                <p><strong>Marca:</strong> {{ equipo.modelo.marca.marca }}</p>
+                                <p><strong>Modelo:</strong> {{ equipo.modelo.nombre }}</p>
+                                <p><strong>Sistema Operativo:</strong> {{ equipo.sistema_operativo.nombre }}</p>
+                                <p><strong>Procesador:</strong> {{ equipo.procesador.nombre }}</p>
+                                <p><strong>Memoria RAM:</strong> {{ equipo.memoria_ram }} GB</p>
+                                <p><strong>Almacenamiento:</strong> {{ equipo.almacenamiento }} GB</p>
+                                <p><strong>Estado:</strong> {{ equipo.estado.nombre }}</p>
                             </div>
                         </div>
-            
+
+                        <!-- Columna 2 (vacía de momento) -->
+                        <div class="col-12 col-md-6 mb-3">
+                            <div class="border rounded p-3 h-100"></div>
+                        </div>
                     </div>
-
-                    <!-- Formulario de edición -->
-                    <!-- Formulario hederado de registro_base.html -->
-                    {% include 'registro_base/registro_base.html' with form=form marca_actual=equipo.modelo.marca.marca action_url=request.path form_classes="d-none" modo_creacion=False %}
-
                 </div>
 
-                <!-- Columna derecha: Historial del equipo -->
-                <div class="col-12 col-lg-4 ps-lg-4">
+                <!-- Formulario de edición -->
+                {% include 'registro_base/registro_base.html' with form=form marca_actual=equipo.modelo.marca.marca action_url=request.path form_classes="d-none" modo_creacion=False %}
+
+                <!-- Historial abajo -->
+                <div class="mt-4">
                     <h5 class="text-secondary">Historial de Movimientos</h5>
                     <hr>
                     <div style="max-height: 300px; overflow-y: auto; padding-right: 10px; border: 1px solid #ddd; border-radius: 6px;">
-                    {% if historial %}
-                        <ul class="list-group">
-                        {% for movimiento in historial %}
-                            <li class="list-group-item">
-                            <strong>{{ movimiento.fecha|date:"d/m/Y H:i" }}</strong><br>
-                            Estado cambiado de <em>{{ movimiento.estado_anterior }}</em> a <strong>{{ movimiento.nuevo_estado }}</strong>
-                            </li>
-                        {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-muted m-3">Este equipo no tiene historial registrado.</p>
-                    {% endif %}
+                        {% if historial %}
+                            <ul class="list-group">
+                                {% for movimiento in historial %}
+                                    <li class="list-group-item">
+                                        <strong>| {{ movimiento.fecha|date:"d/m/Y H:i" }} |</strong> 
+                                        Estado cambiado de <em>{{ movimiento.estado_anterior }}</em> a <strong>{{ movimiento.nuevo_estado }}</strong>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted m-3">Este equipo no tiene historial registrado.</p>
+                        {% endif %}
                     </div>
                 </div>
-    
 
             </div>
         </div>
     </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Select2 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-<!-- Select2 JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
     function toggleEdicion() {
         const vista = document.getElementById('vista-detalle');
         const edicion = document.getElementById('form-edicion');
-    
+
         vista.classList.toggle('d-none');
         edicion.classList.toggle('d-none');
     }
 
-
-    // Cargar marcas relacionadas al cambiar modelo
     document.addEventListener("DOMContentLoaded", function () {
         const modeloSelect = document.getElementById("id_modelo");
         const marcaInput = document.getElementById("marca-display");
@@ -124,6 +110,5 @@
             });
         }
     });
-      
 </script>
 {% endblock %}
