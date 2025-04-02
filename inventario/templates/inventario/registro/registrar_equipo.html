@@ -3,115 +3,45 @@
 {% block title %}Registrar Nuevo Equipo{% endblock %}
 {% block content %}
 
-<div class="container d-flex justify-content-center">
-    <div class="card shadow-lg w-100 mt-4" style="max-width: 1000px;">
-        <div class="card-body row">
+<style>
+    .detalle-body {
+        overflow: auto;
+    }
+</style>
 
-            <!-- Columna izquierda: Formulario -->
-            <div class="col-12 col-lg-8 mb-3 border-end pe-lg-4">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h4 class="text-dark mb-0"><strong>Registrar Equipo</strong></h4>
-                </div>
-                <hr>
-
-                <form method="POST">
-                    {% csrf_token %}
-
-                    <!-- Etiqueta -->
-                    <div class="mb-3">
-                        <label><strong>Número de Equipo:</strong></label>
-                        {{ form.etiqueta }}
-                    </div>
-
-                    <div class="row">
-                        <!-- Mini-card izquierda -->
-                        <div class="col-12 col-md-6 mb-3">
-                            <div class="border rounded p-3  h-100">
-                                <div class="mb-2">
-                                    <label><strong>Marca:</strong></label>
-                                    <input type="text" id="marca-display" class="form-control" readonly>
-                                </div>
-                                <div class="mb-2">
-                                    <label><strong>Modelo:</strong></label>
-                                    {{ form.modelo }}
-                                </div>
-                                <div class="mb-2">
-                                    <label><strong>Sistema Operativo:</strong></label>
-                                    {{ form.sistema_operativo }}
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Mini-card derecha -->
-                        <div class="col-12 col-md-6 mb-3">
-                            <div class="border rounded p-3  h-100">
-                                <div class="mb-2">
-                                    <label><strong>Procesador:</strong></label>
-                                    {{ form.procesador }}
-                                </div>
-                                <div class="mb-2">
-                                    <label><strong>Memoria RAM:</strong></label>
-                                    {{ form.memoria_ram }}
-                                </div>
-                                <div class="mb-2">
-                                    <label><strong>Almacenamiento:</strong></label>
-                                    {{ form.almacenamiento }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Estado -->
-                    <div class="mt-3">
-                        <div class="border rounded p-3 ">
-                            <label><strong>Estado:</strong></label>
-                            {{ form.estado }}
-                        </div>
-                    </div>
-
-                    <!-- Botones -->
-                    <div class="text-center mt-4">
-                        <button type="submit" class="btn btn-success me-2">Guardar</button>
-                        <a href="{% url 'listado_equipos' %}" class="btn btn-secondary">Cancelar</a>
-                    </div>
-                </form>
-            </div>
-
-                <!-- Columna derecha vacía (opcional, ayuda visual o futura info) -->
-                <div class="col-12 col-lg-4 ps-lg-4">
-                    <h5 class="text-secondary">Ayuda / Información</h5>
-                    <hr>
-                    <div class=" border rounded p-3">
-                        <p class="text-muted">Completa el formulario para registrar un nuevo equipo en el sistema. Asegúrate de seleccionar correctamente el modelo y estado.</p>
-                    </div>
-                </div>
+<body class="detalle-body">
+    <div class="container d-flex justify-content-center">
+        <div class="card shadow-lg w-100 mt-4" style="max-width: 1000px;">
+            <div class="card-body">
+                <!-- Formulario heredado de registro_base.html -->
+                {% include 'registro_base/registro_base.html' with form=form marca_actual="" action_url=request.path modo_creacion=True %}
             </div>
         </div>
     </div>
-</div>
+</body>
 
 <!-- Script para actualizar automáticamente la marca según modelo -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const modeloSelect = document.getElementById("id_modelo");
-        const marcaInput = document.getElementById("marca-display");
+  document.addEventListener("DOMContentLoaded", function () {
+    const modeloSelect = document.getElementById("id_modelo");
+    const marcaInput = document.getElementById("marca-display");
 
-        const modeloMarcaMap = {
-            {% for modelo in modelos %}
-                "{{ modelo.id }}": "{{ modelo.marca.marca }}",
-            {% endfor %}
-        };
+    const modeloMarcaMap = {
+      {% for modelo in modelos %}
+        "{{ modelo.id }}": "{{ modelo.marca.marca }}",
+      {% endfor %}
+    };
 
-        if (modeloSelect) {
-            modeloSelect.addEventListener("change", function () {
-                const selected = modeloSelect.value;
-                marcaInput.value = modeloMarcaMap[selected] || "";
-            });
+    if (modeloSelect) {
+      modeloSelect.addEventListener("change", function () {
+        const selected = modeloSelect.value;
+        marcaInput.value = modeloMarcaMap[selected] || "";
+      });
 
-            // Trigger automático al cargar
-            const selected = modeloSelect.value;
-            marcaInput.value = modeloMarcaMap[selected] || "";
-        }
-    });
+      // Trigger automático al cargar
+      const selected = modeloSelect.value;
+      marcaInput.value = modeloMarcaMap[selected] || "";
+    }
+  });
 </script>
 {% endblock %}

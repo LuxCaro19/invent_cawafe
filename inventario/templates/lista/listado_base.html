@@ -18,14 +18,14 @@
 
   <div class="container-fluid main-wrapper">
 
-    <!-- Buscador (parte superior derecha) -->
+    <!-- Título y buscador -->
     <div class="row align-items-center mb-1">
       <div class="col-md-6">
         <h3 class="mb-0">{% block subtitle %}Listado de Equipos{% endblock %}</h3>
       </div>
       <div class="col-md-6 d-flex justify-content-end">
         <div class="input-group" style="max-width: 300px;">
-          <input type="text" class="form-control" placeholder="Buscar por etiqueta" id="search-input">
+          <input type="text" class="form-control" placeholder="Ingresa tu búsqueda" id="search-input">
           <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="button" id="search-button">Buscar</button>
           </div>
@@ -33,17 +33,13 @@
       </div>
     </div>
 
-    <!-- Botón "+" debajo del buscador con los botones al lado (inicialmente ocultos) -->
+    <!-- Botones debajo del buscador -->
     <div class="row mb-3">
-      <div class="col-md-12 d-flex justify-content-end align-items-center gap-2">
-        <!-- Contenedor dinámico -->
-        <div id="action-buttons" class="d-flex gap-2"></div>
-        <!-- Botón "+" -->
-        <button class="btn btn-outline-secondary btn-sm px-3" type="button" id="toggle-actions">+</button>
+      <div class="col-md-12 d-flex justify-content-end gap-2 mt-2">
+        <button class="btn btn-primary btn-sm" id="filter-button">Filtrar</button>
+        <button class="btn btn-secondary btn-sm" id="group-button">Agrupar</button>
       </div>
     </div>
-
-
 
     <!-- CABECERA (thead fijo) -->
     <div class="table-head-wrapper bg-dark rounded-top">

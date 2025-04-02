@@ -5,12 +5,17 @@ from .procesador import Procesador
 from .estado_equipo import Estado_equipo
 from .sistema_operativo import Sistema_operativo
 
-# Create your models here.
+# Clase Equipo.
 
 class Equipo(models.Model):
     etiqueta = models.CharField()
     memoria_ram = models.IntegerField(null=True)
     almacenamiento = models.IntegerField(null=True)
+    numero_serie = models.CharField(max_length=100, null=True)
+    fecha_de_compra = models.DateField(null=True) #se puede asociar con el registro de la factura o sea se puede obtener este dato de ahí
+    imei = models.CharField(max_length=100, null=True) #solo para dispositivos moviles
+    mac = models.CharField(max_length=100, null=True) #solo para equipos
+    en_bodega = models.BooleanField(default=True) #si el equipo se encuentra en bodega o no
     modelo = models.ForeignKey(Modelo_equipo, on_delete=models.SET_NULL, null=True )
     sistema_operativo = models.ForeignKey(Sistema_operativo, on_delete=models.SET_NULL, null=True )
     procesador = models.ForeignKey(Procesador, on_delete=models.SET_NULL, null=True )
