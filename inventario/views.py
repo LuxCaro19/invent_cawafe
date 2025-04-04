@@ -48,6 +48,24 @@ def detalle_equipo(request, id):
 
 
 
+def detalle_modelo_equipo(request, id):
+    modelo = get_object_or_404(Modelo_equipo, id=id)
+
+    if request.method == 'POST':
+        if 'eliminar' in request.POST:
+            modelo.eliminar_modelo()
+            modelos = Modelo_equipo.objects.all()
+            return render(request, 'inventario/listados/listado_modelo_equipos.html', {'modelos': modelos})
+        else:
+            form = Modelo_equipoForm(request.POST, instance=modelo)
+            if form.is_valid():
+                modelo.modificar_modelo(form)
+                return redirect('detalle_modelo_equipo', id=modelo.id)
+    else:
+        form = Modelo_equipoForm(instance=modelo)
+
+    return render(request, 'inventario/detalle/detalle_modelo_equipo.html', {'modelo': modelo, 'form': form})
+
 ##############################
 
 ##############################

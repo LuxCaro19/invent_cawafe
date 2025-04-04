@@ -13,7 +13,7 @@
 
 {% block table_body %}
     {% for modelo in modelos %}
-    <tr class="clickable-row" data-href="#">
+    <tr class="clickable-row" data-href="{% url 'detalle_modelo_equipo' modelo.id %}">
         <td>{{ modelo.id }}</td>
         <td>{{ modelo.nombre }}</td>
         <td>{{ modelo.marca.marca }}</td>
