@@ -1,0 +1,19 @@
+{% extends 'base/lista/listado_base.html' %} <!-- Hereda de la plantilla base -->
+
+{% block title %}Tipos de Equipos{% endblock %} <!-- Título de la página -->
+
+{% block subtitle %}Tipos de Equipos{% endblock %} <!-- Título visible en la interfaz -->
+
+{% block table_headers %}
+    <th>ID</th>
+    <th>Tipo</th>
+{% endblock %}
+
+{% block table_body %}
+    {% for tipo in tipos %}
+    <tr class="clickable-row" data-href="{% url 'detalle_tipo_equipo' tipo.id %}">
+        <td>{{ tipo.id }}</td>
+        <td>{{ tipo.tipo }}</td>
+    </tr>
+    {% endfor %}
+{% endblock %}

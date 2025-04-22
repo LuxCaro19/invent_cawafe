@@ -82,16 +82,28 @@ WSGI_APPLICATION = 'invent_cawafe.wsgi.application'
 #    }
 #}
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'defaultdb',
+#         'USER': 'app_user',
+#         'PASSWORD': 'appUser2025!',
+#         'HOST': 'inventariogalilea-felipe-49ac.e.aivencloud.com',  # o la IP del servidor PostgreSQL
+#         'PORT': '20531',  # el puerto predeterminado de PostgreSQL
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'defaultdb',
+        'NAME': 'invent_cawafe',
         'USER': 'app_user',
         'PASSWORD': 'appUser2025!',
-        'HOST': 'inventariogalilea-felipe-49ac.e.aivencloud.com',  # o la IP del servidor PostgreSQL
-        'PORT': '20531',  # el puerto predeterminado de PostgreSQL
+        'HOST': 'localhost',  # o la IP del servidor PostgreSQL
+        'PORT': '5432',  # el puerto predeterminado de PostgreSQL
     }
 }
+
 
 
 

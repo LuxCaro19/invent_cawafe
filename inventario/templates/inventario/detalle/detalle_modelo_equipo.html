@@ -18,7 +18,7 @@
                         </form>
                     </div>
                 </div>
-                <hr>
+                
                 <div class="border rounded p-3">
                     <p><strong>Marca:</strong> {{ modelo.marca.marca }}</p>
                     <p><strong>Tipo:</strong> {{ modelo.tipo.tipo }}</p>
@@ -27,7 +27,7 @@
             </div>
 
             <!-- Formulario edición -->
-            {% include 'registro_base/registro_modelo_base.html' with form=form action_url=request.path form_classes="d-none" modo_creacion=False %}
+            {% include 'base/registro_base/registro_modelo_base.html' with form=form action_url=request.path form_classes="d-none" modo_creacion=False %}
 
     </div>
 </div>
