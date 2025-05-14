@@ -9,6 +9,11 @@ from .forms.equipo_form import EquipoForm
 from .forms.modelo_equipo_form import Modelo_equipoForm
 from .forms.modelo_marca_form import Modelo_marcaForm
 from .forms.tipo_equipo_form import Tipo_equipoForm
+from .models.procesador import Procesador
+from .models.sistema_operativo import Sistema_operativo
+from .forms.procesador_form import ProcesadorForm
+from .forms.so_form import SoForm
+
 
 # Create your views here.
 
@@ -33,6 +38,16 @@ def listado_marcas(request):
 def listado_tipo_equipos(request):
     tipos = Modelo_tipo.objects.all()  # Obtiene todos los objetos de Equipo
     return render(request, 'inventario/listados/listado_tipo_equipos.html', {'tipos': tipos})
+
+def listado_procesadores(request):
+    procesadores = Procesador.objects.all()
+    return render(request, 'inventario/listados/listado_procesador.html', {'procesadores': procesadores})
+
+def listado_sistemas_operativos(request):
+    sistemas_operativos = Sistema_operativo.objects.all()
+    return render(request, 'inventario/listados/listado_so.html', {'sistemas_operativos': sistemas_operativos})
+
+
 ##############################
 
 ##############################
@@ -116,6 +131,43 @@ def detalle_tipo_equipo(request, id):
 
     return render(request, 'inventario/detalle/detalle_tipo_equipo.html', {'tipo': tipo, 'form': form}) 
 
+
+def detalle_procesador(request, id):
+    procesador = get_object_or_404(Procesador, id=id)
+
+    if request.method == 'POST':
+        if 'eliminar' in request.POST:
+            procesador.delete()
+            return redirect('listado_procesadores')
+        else:
+            form = ProcesadorForm(request.POST, instance=procesador)
+            if form.is_valid():
+                form.save()
+                return redirect('detalle_procesador', id=procesador.id)
+    else:
+        form = ProcesadorForm(instance=procesador)
+
+    return render(request, 'inventario/detalle/detalle_procesador.html', {'procesador': procesador, 'form': form})
+
+def detalle_sistema_operativo(request, id):
+    so = get_object_or_404(Sistema_operativo, id=id)
+
+    if request.method == 'POST':
+        if 'eliminar' in request.POST:
+            so.delete()
+            return redirect('listado_sistemas_operativos')
+        else:
+            form = SoForm(request.POST, instance=so)
+            if form.is_valid():
+                form.save()
+                return redirect('detalle_so', id=so.id)
+    else:
+        form = SoForm(instance=so)
+
+    return render(request, 'inventario/detalle/detalle_so.html', {'so': so, 'form': form})
+
+
+
 ##############################
 
 ##############################
@@ -168,3 +220,23 @@ def registrar_tipo_equipo(request):
     else:
         form = Tipo_equipoForm()
     return render(request, 'inventario/registro/registrar_tipo_equipo.html', {'modelo_tipo': Modelo_tipo,'form': form})
+
+def registrar_procesador(request):
+    if request.method == 'POST':
+        form = ProcesadorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listado_procesadores')
+    else:
+        form = ProcesadorForm()
+    return render(request, 'inventario/registro/registrar_procesador.html', {'form': form})
+
+def registrar_sistema_operativo(request):
+    if request.method == 'POST':
+        form = SoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listado_sistemas_operativos ')
+    else:
+        form = SoForm()
+    return render(request, 'inventario/registro/registrar_so.html', {'form': form})
