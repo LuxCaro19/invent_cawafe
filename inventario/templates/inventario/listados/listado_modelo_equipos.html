@@ -1,4 +1,4 @@
-{% extends 'lista/listado_base.html' %} <!-- Hereda de la plantilla base -->
+{% extends 'base/lista/listado_base.html' %} <!-- Hereda de la plantilla base -->
 
 {% block title %}Modelos de Equipos{% endblock %} <!-- Sobrescribe el título de la página -->
 
@@ -13,7 +13,7 @@
 
 {% block table_body %}
     {% for modelo in modelos %}
-    <tr class="clickable-row" data-href="#">
+    <tr class="clickable-row" data-href="{% url 'detalle_modelo_equipo' modelo.id %}">
         <td>{{ modelo.id }}</td>
         <td>{{ modelo.nombre }}</td>
         <td>{{ modelo.marca.marca }}</td>

@@ -1,0 +1,20 @@
+{% extends 'base/lista/listado_base.html' %}
+
+{% block title %}Procesadores{% endblock %}
+{% block subtitle %}Procesadores{% endblock %}
+
+{% block table_headers %}
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Marca</th>
+{% endblock %}
+
+{% block table_body %}
+    {% for procesador in procesadores %}
+    <tr class="clickable-row" data-href="{% url 'detalle_procesador' procesador.id %}">
+        <td>{{ procesador.id }}</td>
+        <td>{{ procesador.nombre }}</td>
+        <td>{{ procesador.marca.marca }}</td>
+    </tr>
+    {% endfor %}
+{% endblock %}

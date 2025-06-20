@@ -10,3 +10,16 @@ class Modelo_equipo(models.Model):
 
     def __str__(self):  
         return self.nombre
+    
+
+    def modificar_modelo(self, form):
+        # Actualiza otros campos del formulario
+        for campo in form.cleaned_data:
+            setattr(self, campo, form.cleaned_data[campo])
+
+        self.save()
+
+    def eliminar_modelo(self):
+        self.delete()
+
+    

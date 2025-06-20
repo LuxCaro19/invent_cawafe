@@ -1,0 +1,19 @@
+{% extends 'base/lista/listado_base.html' %} <!-- Hereda de la plantilla base -->
+
+{% block title %}Fabricantes{% endblock %} <!-- Sobrescribe el título de la página -->
+
+{% block subtitle %}Fabricantes{% endblock %} <!-- Título secundario (puedes personalizarlo) -->
+
+{% block table_headers %}
+    <th>ID</th>
+    <th>Marca</th>
+{% endblock %}
+
+{% block table_body %}
+    {% for marca in marcas %}
+    <tr class="clickable-row" data-href="{% url 'detalle_marca' marca.id %}">
+        <td>{{ marca.id }}</td>
+        <td>{{ marca.marca }}</td>
+    </tr>
+    {% endfor %}
+{% endblock %}
