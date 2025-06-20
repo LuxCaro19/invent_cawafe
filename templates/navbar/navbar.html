@@ -54,14 +54,15 @@
                         </ul>
                     </li>
 
-                    <!-- Otro menú ejemplo -->
+                    <!-- Modulo ventas menú -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Facturas
+                            Ventas de equipos
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Ver lista de facturas</a></li>
-                            <li><a class="dropdown-item" href="#">Registrar factura</a></li>
+                            <li><a class="dropdown-item" href="{% url 'listado_equipos_venta' %}">Equipos para venta</a></li>
+                            <li><a class="dropdown-item" href="{% url 'listado_equipos_rrhh' %}">Equipos por aprobar RRHH</a></li>
+                            <li><a class="dropdown-item" href="{% url 'listado_equipos_por_entregar' %}">Equipos por entregar</a></li>
                         </ul>
                     </li>
                 </ul>

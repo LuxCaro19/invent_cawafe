@@ -1,0 +1,63 @@
+{% extends 'navbar/navbar.html' %}
+{% load static %}
+{% block body_class %}detalle-body{% endblock %}
+{% block extra_head %}{% endblock %}
+{% block content %}
+
+<style>
+    .detalle-body {
+        overflow: auto;
+    }
+</style>
+
+<body class="detalle-body">
+    <div class="container d-flex justify-content-center">
+        <div class="card shadow-lg w-100 mt-4" style="max-width: 1000px;">
+            <div class="card-body">
+
+                <!-- Vista previa del equipo (sin edición/eliminación) -->
+                <div id="vista-detalle">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="text-dark mb-0"><strong>{{ equipo.etiqueta }}</strong></h4>
+                    </div>
+                    <hr>
+
+                    <!-- Mini cards internos -->
+                    <div class="row">
+                        <!-- Columna 1 -->
+                        <div class="col-12 col-md-6 mb-3">
+                            <div class="border rounded p-3 h-100">
+                                <p><strong>Marca:</strong> {{ equipo.modelo.marca.marca }}</p>
+                                <p><strong>Modelo:</strong> {{ equipo.modelo.nombre }}</p>
+                                <p><strong>Sistema Operativo:</strong> {{ equipo.sistema_operativo.nombre }}</p>
+                                <p><strong>Procesador:</strong> {{ equipo.procesador.nombre }}</p>
+                                <p><strong>Memoria RAM:</strong> {{ equipo.memoria_ram }} GB</p>
+                                <p><strong>Almacenamiento:</strong> {{ equipo.almacenamiento }} GB</p>
+                                <p><strong>Estado:</strong> {{ equipo.estado.nombre }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Columna 2 -->
+                        <div class="col-12 col-md-6 mb-3">
+                            <div class="border rounded p-3 h-100">
+                                <p><strong>N° Serie:</strong> {{ equipo.numero_serie }}</p>
+                                <p><strong>Precio:</strong> $ {{ equipo.modelo.precio|floatformat:2 }}</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón para comprar -->
+                    <div class="text-center mt-4">
+                        <form method="POST" action="{% url 'comprar_equipo' equipo.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-lg">Comprar equipo</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
