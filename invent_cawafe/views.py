@@ -1,30 +1,26 @@
-from django.shortcuts import render
-
-def bienvenido(request):
-    return render(request, 'bienvenido.html')
-
-def login_view(request):
-    return render(request, 'login.html')
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+
+def bienvenido(request):
+    return render(request, 'bienvenido.html')
+
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        correo = request.POST.get('correo')
         password = request.POST.get('password')
 
-        user = authenticate(request, username=username, password=password)
+        usuario = authenticate(request, correo=correo, password=password)
 
-        if user is not None:
-            login(request, user)
+        if usuario  is not None:
+            login(request, usuario)
             # Si el usuario es staff (admin), redirige a menú admin
-            if user.is_staff:
+            if usuario.is_staff:
                 return redirect('menu_admin')
             else:
-                return redirect('ventas:listado_equipos_venta')  # ejemplo de vista de empleado
+                return redirect('listado_equipos')  # ejemplo de vista de empleado
         else:
             messages.error(request, 'Credenciales inválidas. Intente de nuevo.')
 

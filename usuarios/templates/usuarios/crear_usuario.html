@@ -1,7 +1,52 @@
-<!-- {% extends "base.html" %}
+{% include 'navbar/navbar.html' %}
 
-{% block content %}
-<h2>Formulario para crear empleado (en construcción)</h2>
-{% endblock %} -->
+<div class="container mt-4">
+    <h2 class="mb-4">Registrar Usuario</h2>
+    <form method="post">
+        {% csrf_token %}
 
-<a class="nav-link" href="#">Crear</a>
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre completo</label>
+            <input type="text" class="form-control" id="nombre" name="nombre">
+        </div>
+
+        <div class="mb-3">
+            <label for="correo" class="form-label">Correo</label>
+            <input type="email" class="form-control" id="correo" name="correo">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="password" name="password">
+        </div>
+
+        <div class="mb-3">
+            <label for="rut" class="form-label">RUT</label>
+            <input type="text" class="form-control" id="rut" name="rut">
+        </div>
+
+        <div class="mb-3">
+            <label for="obra" class="form-label">Obra</label>
+            <input type="text" class="form-control" id="obra" name="obra">
+        </div>
+
+        <div class="mb-3">
+            <label for="sala" class="form-label">Sala de venta</label>
+            <input type="text" class="form-control" id="sala" name="sala">
+        </div>
+
+        <div class="mb-3">
+            <label for="cargo" class="form-label">Cargo</label>
+            <input type="text" class="form-control" id="cargo" name="cargo">
+        </div>
+
+        <div class="mb-3">
+            <label for="rol" class="form-label">Rol</label>
+            <select class="form-select" id="rol" name="rol">
+                <option value="admin">Administrador</option>
+                <option value="empleado">Empleado</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-danger">Guardar</button>
+    </form>
+</div>

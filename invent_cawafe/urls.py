@@ -26,5 +26,4 @@ urlpatterns = [
     path('ventas/', include('ventas.urls')),
     path('menu_admin/', menu_admin, name='menu_admin'),
     path('usuarios/', include('usuarios.urls')),
-
 ]

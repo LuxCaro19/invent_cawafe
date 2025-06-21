@@ -22,8 +22,10 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     rut = models.CharField(max_length=12)
     obra = models.CharField(max_length=100)
     sala_venta = models.CharField(max_length=100)
+    cargo = models.CharField(max_length=100, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+   
 
     objects = UsuarioManager()
 

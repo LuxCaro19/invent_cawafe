@@ -42,21 +42,26 @@
         <th>RUT</th>
         <th>Obra</th>
         <th>Sala de Venta</th>
-        <th>Rol</th> <!-- nueva columna -->
-        </tr>
+        <th>Cargo</th>
+        <th>Rol</th> 
+        <th>Acciones</th> 
     </thead>
     <tbody>
-        {% for empleado in empleados %}
-        <tr>
-            <td>{{ empleado.first_name }} {{ empleado.last_name }}</td>
-            <td>{{ empleado.email }}</td>
-            <td>{{ empleado.rut }}</td>
-            <td>{{ empleado.obra }}</td>
-            <td>{{ empleado.sala_venta }}</td>
-            <td>{{ empleado.get_rol_display }}</td> <!-- muestra el nombre legible del rol -->
-        </tr>
-        {% endfor %}
-    </tbody>
+      {% for usuario in usuarios %}
+          <tr>
+              <td>{{ usuario.nombre_completo }}</td>
+              <td>{{ usuario.correo }}</td>
+              <td>{{ usuario.rut }}</td>
+              <td>{{ usuario.obra }}</td>
+              <td>{{ usuario.sala_venta }}</td>
+              <td>{{ usuario.cargo }}</td>
+              <td>{% if usuario.is_staff %}Administrador{% else %}Empleado{% endif %}</td>
+               <td>
+                  <a href="{% url 'usuario_editar' usuario.id %}" class="btn btn-secondary btn-sm">Editar</a>
+              </td> 
+          </tr>
+      {% endfor %}
+  </tbody>
     </table>
 
 </div>

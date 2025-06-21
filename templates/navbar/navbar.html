@@ -21,48 +21,51 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        {% if user.is_staff %}
                     <!-- Módulo Empleados -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="empleadosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Empleados
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="empleadosDropdown">
-                            <li><a class="dropdown-item" href="{% url 'usuarios_lista' %}">Lista de usuarios</a></li>
-                            <li><a class="dropdown-item" href="{% url 'usuario_crear' %}">Registrar usuario</a></li>
-                        </ul>
-                    </li>
-                    <!-- Menú Inventario -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="inventarioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Inventario
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="inventarioDropdown">
-                            <!-- Submenú Listas -->
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-submenu-toggle" href="#" data-bs-toggle="dropdown">Listas</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{% url 'listado_equipos' %}">Lista de equipos</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'listado_modelo_equipos' %}">Lista de modelos</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'listado_marcas' %}">Lista de marcas</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'listado_tipo_equipos' %}">Lista de tipos de equipo</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'listado_procesadores' %}">Lista de procesadores</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'listado_sistemas_operativos' %}">Lista de sistemas operativos</a></li>
-                                </ul>
-                            </li>
-                            <!-- Submenú Registrar -->
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-submenu-toggle" href="#" data-bs-toggle="dropdown">Registrar</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{% url 'registrar_equipo' %}">Registrar equipo</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'registrar_modelo_equipo' %}">Registrar modelo</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'registrar_marca' %}">Registrar marca</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'registrar_tipo_equipo' %}">Registrar tipo equipo</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'registrar_procesador' %}">Registrar procesador</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'registrar_so' %}">Registrar sistema operativo</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="empleadosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Empleados
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="empleadosDropdown">
+                                <li><a class="dropdown-item" href="{% url 'usuarios_lista' %}">Lista de usuarios</a></li>
+                                <li><a class="dropdown-item" href="{% url 'usuario_crear' %}">Registrar usuario</a></li>
+                            </ul>
+                        </li>
+                        <!-- Menú Inventario -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="inventarioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Inventario
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="inventarioDropdown">
+                                <!-- Submenú Listas -->
+                                <li class="dropdown-submenu">
+                                    <a class="dropdown-item dropdown-submenu-toggle" href="#" data-bs-toggle="dropdown">Listas</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'listado_equipos' %}">Lista de equipos</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'listado_modelo_equipos' %}">Lista de modelos</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'listado_marcas' %}">Lista de marcas</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'listado_tipo_equipos' %}">Lista de tipos de equipo</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'listado_procesadores' %}">Lista de procesadores</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'listado_sistemas_operativos' %}">Lista de sistemas operativos</a></li>
+                                    </ul>
+                                </li>
+                                <!-- Submenú Registrar -->
+                                <li class="dropdown-submenu">
+                                    <a class="dropdown-item dropdown-submenu-toggle" href="#" data-bs-toggle="dropdown">Registrar</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'registrar_equipo' %}">Registrar equipo</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'registrar_modelo_equipo' %}">Registrar modelo</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'registrar_marca' %}">Registrar marca</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'registrar_tipo_equipo' %}">Registrar tipo equipo</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'registrar_procesador' %}">Registrar procesador</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'registrar_so' %}">Registrar sistema operativo</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        {% endif %}
 
                     <!-- Modulo ventas menú -->
                     <li class="nav-item dropdown">
@@ -74,6 +77,13 @@
                             <li><a class="dropdown-item" href="{% url 'listado_equipos_rrhh' %}">Equipos por aprobar RRHH</a></li>
                             <li><a class="dropdown-item" href="{% url 'listado_equipos_por_entregar' %}">Equipos por entregar</a></li>
                         </ul>
+                    </li>
+                 {% endif %}   
+                </ul>
+                  <!-- Botón cerrar sesión alineado a la derecha -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'logout' %}">Cerrar sesión</a>
                     </li>
                 </ul>
             </div>
