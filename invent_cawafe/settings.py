@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+AUTH_USER_MODEL = 'usuarios.Usuario'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -38,8 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'inventario'
+    'inventario',
+    'ventas',
+    'usuarios'
 ]
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -82,16 +87,28 @@ WSGI_APPLICATION = 'invent_cawafe.wsgi.application'
 #    }
 #}
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'defaultdb',
+#         'USER': 'app_user',
+#         'PASSWORD': 'appUser2025!',
+#         'HOST': 'inventariogalilea-felipe-49ac.e.aivencloud.com',  # o la IP del servidor PostgreSQL
+#         'PORT': '20531',  # el puerto predeterminado de PostgreSQL
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'defaultdb',
+        'NAME': 'invent_cawafe',
         'USER': 'app_user',
-        'PASSWORD': 'appUser2025!',
-        'HOST': 'inventariogalilea-felipe-49ac.e.aivencloud.com',  # o la IP del servidor PostgreSQL
-        'PORT': '20531',  # el puerto predeterminado de PostgreSQL
+        'PASSWORD': '1020',
+        'HOST': 'localhost',  # o la IP del servidor PostgreSQL
+        'PORT': '5432',  # el puerto predeterminado de PostgreSQL
     }
 }
+
 
 
 

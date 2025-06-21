@@ -1,0 +1,27 @@
+{% extends 'base/lista/listado_base.html' %} <!-- Hereda de la plantilla base -->
+
+{% block title %}Equipos por validar compra{% endblock %} <!-- Sobrescribe el título de la página -->
+
+{% block subtitle %}Equipos por validar compra{% endblock %} <!-- Título secundario (puedes personalizarlo) -->
+
+{% block table_headers %}
+    <th>ID</th>
+    <th>Etiqueta</th>
+    <th>S.O.</th>
+    <th>Marca</th>
+    <th>Modelo</th>
+    <th>Precio</th>
+{% endblock %}
+
+{% block table_body %}
+    {% for equipo in equipos %}
+    <tr class="clickable-row" data-href="{% url 'detalleequipo_por_entregar' equipo.id %}">
+        <td>{{ equipo.id }}</td>
+        <td>{{ equipo.etiqueta }}</td>
+        <td>{{ equipo.sistema_operativo.nombre }}</td>
+        <td>{{ equipo.modelo.marca.marca }}</td>
+        <td>{{ equipo.modelo.nombre }}</td>
+        <td>{{ equipo.modelo.precio }}</td>
+    </tr>
+    {% endfor %}
+{% endblock %}

@@ -10,7 +10,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    
 </head>
 <body>
     <!-- Navbar fija en la parte superior -->
@@ -22,66 +21,72 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
+                    <!-- Módulo Empleados -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="empleadosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Empleados
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="empleadosDropdown">
+                            <li><a class="dropdown-item" href="{% url 'usuarios_lista' %}">Lista de usuarios</a></li>
+                            <li><a class="dropdown-item" href="{% url 'usuario_crear' %}">Registrar usuario</a></li>
+                        </ul>
+                    </li>
+                    <!-- Menú Inventario -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="inventarioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                           Inventario
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="inventarioDropdown">
+                            <!-- Submenú Listas -->
                             <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-submenu-toggle" href="#" data-bs-toggle="dropdown">
-                                    Listas
-                                </a>
+                                <a class="dropdown-item dropdown-submenu-toggle" href="#" data-bs-toggle="dropdown">Listas</a>
                                 <ul class="dropdown-menu">
-                                  <li><a class="dropdown-item" href="{% url 'listado_equipos' %}">Lista de equipos</a></li>
-                                  <li><a class="dropdown-item" href="{% url 'listado_modelo_equipos' %}">Lista de modelos</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'listado_equipos' %}">Lista de equipos</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'listado_modelo_equipos' %}">Lista de modelos</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'listado_marcas' %}">Lista de marcas</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'listado_tipo_equipos' %}">Lista de tipos de equipo</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'listado_procesadores' %}">Lista de procesadores</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'listado_sistemas_operativos' %}">Lista de sistemas operativos</a></li>
                                 </ul>
-                              </li>
-                          <li class="dropdown-submenu">
-                            <a class="dropdown-item dropdown-submenu-toggle" href="#" data-bs-toggle="dropdown">
-                                Registrar
-                            </a>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="{% url 'registrar_equipo' %}">Registrar equipo</a></li>
-                              <li><a class="dropdown-item" href="{% url 'registrar_modelo_equipo' %}">Registrar modelo</a></li>
-                            </ul>
-                          </li>
+                            </li>
+                            <!-- Submenú Registrar -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-submenu-toggle" href="#" data-bs-toggle="dropdown">Registrar</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'registrar_equipo' %}">Registrar equipo</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'registrar_modelo_equipo' %}">Registrar modelo</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'registrar_marca' %}">Registrar marca</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'registrar_tipo_equipo' %}">Registrar tipo equipo</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'registrar_procesador' %}">Registrar procesador</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'registrar_so' %}">Registrar sistema operativo</a></li>
+                                </ul>
+                            </li>
                         </ul>
-                      </li>
-                      
-                    
+                    </li>
+
+                    <!-- Modulo ventas menú -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Facturas
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Ventas de equipos
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{% url 'listado_modelo_equipos' %}">Ver lista de modelos</a></li>
-                            <li><a class="dropdown-item" href="{% url 'registrar_modelo_equipo' %}">Registrar modelo</a></li>
+                            <li><a class="dropdown-item" href="{% url 'listado_equipos_venta' %}">Equipos para venta</a></li>
+                            <li><a class="dropdown-item" href="{% url 'listado_equipos_rrhh' %}">Equipos por aprobar RRHH</a></li>
+                            <li><a class="dropdown-item" href="{% url 'listado_equipos_por_entregar' %}">Equipos por entregar</a></li>
                         </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"></a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Espacio para que el contenido no quede oculto bajo la navbar fija -->
+    <!-- Contenedor principal con margen superior por la navbar -->
     <div class="container mt-5 pt-4">
         {% block content %}
         {% endblock %}
     </div>
 
-<!-- Incluir jQuery antes de Select2 -->
-
+    <!-- Scripts -->
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <script>
-        .navbar-nav .dropdown:hover .dropdown-menu {
-            display: block;
-        }
-           
-    </script>
+</body>
 </html>

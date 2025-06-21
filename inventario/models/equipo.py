@@ -4,6 +4,7 @@ from .modelo_equipo import Modelo_equipo
 from .procesador import Procesador
 from .estado_equipo import Estado_equipo
 from .sistema_operativo import Sistema_operativo
+from ventas.models.venta import Venta
 
 # Clase Equipo.
 
@@ -54,3 +55,28 @@ class Equipo(models.Model):
 
     def eliminar_equipo(self):
         self.delete()
+
+
+    def aprobar_por_rrhh(self):
+        from inventario.models.estado_equipo import Estado_equipo
+        from ventas.models.venta import Venta
+
+        self.estado_id = 8  # ID de "Pendiente de entrega"
+        self.save()
+
+        venta = Venta.objects.filter(id_equipo=self).first()
+        if venta:
+            venta.flag_aprobado_remuneraciones = True
+            venta.save()
+
+
+    def rechazar_por_rrhh(self):
+        from inventario.models.estado_equipo import Estado_equipo
+
+        self.estado_id = 6  # ID de "Activo" o "Por vender"
+        self.en_bodega = True
+        self.save()
+        venta = Venta.objects.filter(id_equipo=self).first()
+        if venta:
+            venta.flag_aprobado_remuneraciones = False
+            venta.save()

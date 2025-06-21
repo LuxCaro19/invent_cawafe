@@ -1,0 +1,20 @@
+{% extends 'base/lista/listado_base.html' %}
+
+{% block title %}Sistemas Operativos{% endblock %}
+{% block subtitle %}Sistemas Operativos{% endblock %}
+
+{% block table_headers %}
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Marca</th>
+{% endblock %}
+
+{% block table_body %}
+    {% for so in sistemas_operativos %}
+    <tr class="clickable-row" data-href="{% url 'detalle_so' so.id %}">
+        <td>{{ so.id }}</td>
+        <td>{{ so.nombre }}</td>
+        <td>{{ so.marca.marca }}</td>
+    </tr>
+    {% endfor %}
+{% endblock %}

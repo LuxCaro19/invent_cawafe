@@ -1,0 +1,15 @@
+{% extends 'navbar/navbar.html' %}
+{% block content %}
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-lg" style="max-width: 600px; width: 100%;">
+        <div class="card-body text-center">
+            <div class="alert alert-success" role="alert">
+                <h4 class="alert-heading">¡Compra realizada con éxito!</h4>
+                <p>Se ha enviado la carta de descuento por planilla al correo del receptor.</p>
+                <hr>
+                <a href="{% url 'listado_equipos_venta' %}" class="btn btn-success">Aceptar</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
