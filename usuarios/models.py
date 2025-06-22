@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from parametro.models import Obra, SalaVenta
 
 class UsuarioManager(BaseUserManager):
     def create_user(self, correo, nombre_completo, password=None, **extra_fields):
@@ -20,8 +21,8 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     correo = models.EmailField(unique=True)
     nombre_completo = models.CharField(max_length=100)
     rut = models.CharField(max_length=12)
-    obra = models.CharField(max_length=100)
-    sala_venta = models.CharField(max_length=100)
+    obra = models.ForeignKey(Obra, on_delete=models.SET_NULL, null=True, blank=True)
+    sala_venta = models.ForeignKey(SalaVenta, on_delete=models.SET_NULL, null=True, blank=True)
     cargo = models.CharField(max_length=100, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

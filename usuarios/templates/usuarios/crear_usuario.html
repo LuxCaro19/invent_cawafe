@@ -1,5 +1,7 @@
 {% include 'navbar/navbar.html' %}
-
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
 <div class="container mt-4">
     <h2 class="mb-4">Registrar Usuario</h2>
     <form method="post">
@@ -26,12 +28,22 @@
 
         <div class="mb-3">
             <label for="obra" class="form-label">Obra</label>
-            <input type="text" class="form-control" id="obra" name="obra">
+            <select class="form-select" id="obra" name="obra" required>
+                <option value="" disabled selected>Seleccione una obra</option>
+                {% for obra in obras %}
+                    <option value="{{ obra.id }}">{{ obra.nombre }}</option>
+                {% endfor %}
+            </select>
         </div>
 
         <div class="mb-3">
             <label for="sala" class="form-label">Sala de venta</label>
-            <input type="text" class="form-control" id="sala" name="sala">
+            <select class="form-select" id="sala" name="sala" required>
+                <option value="" disabled selected>Seleccione una sala</option>
+                {% for sala in salas %}
+                    <option value="{{ sala.id }}">{{ sala.nombre }}</option>
+                {% endfor %}
+            </select>
         </div>
 
         <div class="mb-3">
@@ -47,6 +59,10 @@
             </select>
         </div>
 
-        <button type="submit" class="btn btn-danger">Guardar</button>
+         <div class="d-flex justify-content-end">
+            <a href="{% url 'usuarios_lista' %}" class="btn btn-secondary me-2">Cancelar</a>
+            <button type="submit" class="btn btn-danger">Guardar cambios</button>
+        </div>
     </form>
 </div>
+</html>

@@ -1,0 +1,16 @@
+{% include 'navbar/navbar.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-danger mb-4">{{ titulo }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label for="nombre">Nombre de la sala</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" value="{{ sala.nombre }}" required>
+        </div>
+        <button type="submit" class="btn btn-danger">Guardar</button>
+        <a href="{% url 'salas_listar' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% include 'navbar/navbar.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-danger">Administrar Salas de Venta</h2>
+    <a href="{% url 'sala_crear' %}" class="btn btn-danger mb-3">Crear sala</a>
+
+    <table class="table table-bordered table-striped bg-white">
+        <thead class="table-danger">
+            <tr>
+                <th>ID</th>
+                <th>Nombre de la sala</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí irán las salas -->
+             {% for sala in salas %}
+            <tr>
+                <td>{{ sala.id }}</td>
+                <td>{{ sala.nombre }}</td>
+                <td>
+                    <a href="{% url 'sala_editar' sala.id %}" class="btn btn-sm btn-warning">Editar</a>
+                    <a href="{% url 'sala_eliminar' sala.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
