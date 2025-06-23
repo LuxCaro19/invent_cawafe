@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'inventario',
     'ventas',
     'usuarios',
-    'parametro'
+    'parametro',
+    'mantenciones',
 ]
 
 
@@ -104,7 +105,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'invent_cawafe',
         'USER': 'app_user',
-        'PASSWORD': '1020',
+        'PASSWORD': 'appUser2025!',
         'HOST': 'localhost',  # o la IP del servidor PostgreSQL
         'PORT': '5432',  # el puerto predeterminado de PostgreSQL
     }
