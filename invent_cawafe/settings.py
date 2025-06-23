@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+AUTH_USER_MODEL = 'usuarios.Usuario'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -40,8 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'inventario',
     'ventas',
-    'mantenciones',
+    'usuarios',
+    'parametro'
 ]
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -100,7 +104,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'invent_cawafe',
         'USER': 'app_user',
-        'PASSWORD': 'appUser2025!',
+        'PASSWORD': '1020',
         'HOST': 'localhost',  # o la IP del servidor PostgreSQL
         'PORT': '5432',  # el puerto predeterminado de PostgreSQL
     }
