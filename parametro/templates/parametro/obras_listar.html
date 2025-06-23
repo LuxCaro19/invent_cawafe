@@ -1,0 +1,30 @@
+{% include 'navbar/navbar.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-danger mb-4">Administrar Obras</h2>
+    <a href="{% url 'obra_crear' %}" class="btn btn-danger mb-3">Agregar obra</a>
+    <table class="table table-bordered">
+        <thead class="table-danger text-center">
+            <tr>
+                <th>ID</th>
+                <th>Nombre de la obra</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obra in obras %}
+            <tr>
+                <td>{{ obra.id }}</td>
+                <td>{{ obra.nombre }}</td>
+                <td>
+                    <a href="{% url 'obra_editar' obra.id %}" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="{% url 'obra_eliminar' obra.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
