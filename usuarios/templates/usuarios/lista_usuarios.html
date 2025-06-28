@@ -43,8 +43,7 @@
         <th>Nombre</th>
         <th>Correo</th>
         <th>RUT</th>
-        <th>Obra</th>
-        <th>Sala de Venta</th>
+        <th>Ubicacion</th>
         <th>Cargo</th>
         <th>Rol</th> 
         <th>Acciones</th> 
@@ -55,8 +54,7 @@
               <td>{{ usuario.nombre_completo }}</td>
               <td>{{ usuario.correo }}</td>
               <td>{{ usuario.rut }}</td>
-              <td>{{ usuario.obra }}</td>
-              <td>{{ usuario.sala_venta }}</td>
+              <td>{{ usuario.ubicacion.nombre }}</td>
               <td>{{ usuario.cargo }}</td>
               <td>{% if usuario.is_staff %}Administrador{% else %}Empleado{% endif %}</td>
                <td>

@@ -34,21 +34,11 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="obra" class="form-label">Obra</label>
-                        <select class="form-select" id="obra" name="obra" required>
-                            <option value="" disabled>Seleccione una obra</option>
-                            {% for obra in obras %}
-                                <option value="{{ obra.id }}" {% if usuario.obra.id == obra.id %}selected{% endif %}>{{ obra.nombre }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="sala" class="form-label">Sala de venta</label>
-                        <select class="form-select" id="sala" name="sala" required>
-                            <option value="" disabled>Seleccione una sala</option>
-                            {% for sala in salas %}
-                                <option value="{{ sala.id }}" {% if usuario.sala_venta.id == sala.id %}selected{% endif %}>{{ sala.nombre }}</option>
+                        <label for="ubicacion" class="form-label">Ubicación:</label>
+                        <select class="form-select" id="ubicacion" name="ubicacion" required>
+                            <option value="" disabled {% if not usuario.ubicacion %}selected{% endif %}>Seleccione una ubicación</option>
+                            {% for u in ubicaciones %}
+                                <option value="{{ u.id }}" {% if usuario.ubicacion.id == u.id %}selected{% endif %}>{{ u.nombre }}</option>
                             {% endfor %}
                         </select>
                     </div>
