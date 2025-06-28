@@ -1,19 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2 class="mb-4">Registrar Ejecución de Mantención</h2>
+<h2 class="mb-4">Mantencion en curso</h2>
+
+<div class="alert alert-info mb-4">
+  Ejecución está siendo realizada por: <strong>{{ usuario.nombre_completo }}</strong>
+</div>
 
 <div class="card">
   <div class="card-body">
     <form method="post">
       {% csrf_token %}
-TEMPORAL, SE DEBE SACAR DEL USUARIO ACTIVO
-      <div class="mb-3">
-        
-        <label for="responsable" class="form-label">Responsable</label>
-        <input type="text" name="responsable" id="responsable" class="form-control" required>
-      </div>
-        TEMPORAL, SE DEBE SACAR DEL EQUIPO
+
       <div class="mb-3">
         <label for="ubicacion" class="form-label">Ubicación</label>
         <input type="text" name="ubicacion" id="ubicacion" class="form-control" required>
@@ -38,11 +36,14 @@ TEMPORAL, SE DEBE SACAR DEL USUARIO ACTIVO
         <textarea name="observaciones" id="observaciones" class="form-control" rows="3"></textarea>
       </div>
 
+      <div class="d-flex justify-content-between mt-3">
+        <a href="{% url 'detalle_mantencion' mantencion.id %}" class="btn btn-secondary">Volver</a>
+        <button type="submit" class="btn btn-success">Guardar</button>
+      </div>
 
-      <button type="submit" class="btn btn-success">Guardar registro</button>
-      <a href="{% url 'detalle_mantencion' mantencion.id %}" class="btn btn-secondary">Cancelar</a>
     </form>
   </div>
 </div>
+
 
 {% endblock %}

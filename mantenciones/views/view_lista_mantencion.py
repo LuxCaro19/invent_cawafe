@@ -57,4 +57,5 @@ def lista_mantenciones(request):
         'filtro_busqueda': buscar,
         'campo': campo,
         'agrupar': agrupar,
+        'today': hoy,
     })

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Listado{% endblock %}</title>
+  <title>{% block title %}Formulario{% endblock %}</title>
 
   <!-- Bootstrap y estilos -->
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -14,15 +14,23 @@
 </head>
 <body class="bg-light d-flex flex-column min-vh-100" style="overflow-y: auto !important;">
 
+
   <!-- Barra de navegación -->
   {% include 'navbar/navbar.html' %}
 
   <!-- Contenedor principal -->
   <main class="flex-fill d-flex justify-content-center align-items-start overflow-auto">
-    <div class="container-fluid px-2" style="max-width: 1600px;">
+    <div class="w-100 px-3 py-4" style="max-width: 800px;">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="card-title mb-4">{% block formulario_header %}Formulario{% endblock %}</h2>
 
-      {% block content %}
-      {% endblock %}
+          {% block formulario_content %}
+          <!-- Aquí va el contenido del formulario específico -->
+          {% endblock %}
+
+        </div>
+      </div>
     </div>
   </main>
 

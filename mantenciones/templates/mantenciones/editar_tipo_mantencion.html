@@ -1,0 +1,97 @@
+{% extends "base_tarjeta.html" %}
+
+{% block formulario_title %}Editar Tipo de Mantención{% endblock %}
+{% block formulario_header %}Editar Tipo de Mantención{% endblock %}
+
+{% block formulario_content %}
+<!-- FORMULARIO PRINCIPAL -->
+<form method="post" id="form-edicion" class="needs-validation" novalidate>
+  {% csrf_token %}
+
+  <!-- Nombre -->
+  <div class="row mb-3 align-items-center">
+    <div class="col-md-4">
+      <label for="id_nombre" class="form-label mb-0">Nombre</label>
+    </div>
+    <div class="col-md-8">
+      {{ form.nombre }}
+      {% if form.nombre.errors %}
+        <div class="text-danger">{{ form.nombre.errors.0 }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Frecuencia -->
+  <div class="row mb-3 align-items-center">
+    <div class="col-md-4">
+      <label for="id_frecuencia_dias" class="form-label mb-0">Frecuencia (días)</label>
+    </div>
+    <div class="col-md-8">
+      {{ form.frecuencia_dias }}
+      {% if form.frecuencia_dias.errors %}
+        <div class="text-danger">{{ form.frecuencia_dias.errors.0 }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Sistema Operativo -->
+  <div class="row mb-3 align-items-center">
+    <div class="col-md-4">
+      <label for="id_sistema_operativo" class="form-label mb-0">Sistema Operativo (opcional)</label>
+    </div>
+    <div class="col-md-8">
+      {{ form.sistema_operativo }}
+    </div>
+  </div>
+
+  <!-- Tipo de Equipo -->
+  <div class="row mb-4 align-items-center">
+    <div class="col-md-4">
+      <label for="id_modelo_tipo" class="form-label mb-0">Tipo de Equipo (opcional)</label>
+    </div>
+    <div class="col-md-8">
+      {{ form.modelo_tipo }}
+    </div>
+  </div>
+</form>
+
+<hr class="my-2">
+<h5 class="mb-3">Tareas asociadas</h5>
+
+<!-- Lista de tareas asociadas -->
+{% for tarea in tareas_asociadas %}
+<div class="row g-2 mb-2">
+  <div class="col-10">
+    <input type="text" class="form-control bg-light" value="{{ tarea.descripcion }}" disabled>
+  </div>
+  <div class="col-2">
+    <form method="post" action="{% url 'eliminar_tarea_tipo_mantencion' tipo.id tarea.id %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline-danger w-100">Eliminar</button>
+    </form>
+  </div>
+</div>
+{% empty %}
+<p class="text-muted">No hay tareas asociadas aún.</p>
+{% endfor %}
+
+<!-- Formulario para agregar tarea (fuera del form principal) -->
+<form method="post" action="{% url 'agregar_tarea_tipo_mantencion' tipo.id %}" class="row g-2 mb-4">
+  {% csrf_token %}
+  <div class="col-10">
+    <input type="text" name="nueva_tarea_texto" class="form-control" placeholder="Nombre de la nueva tarea" required>
+  </div>
+  <div class="col-2">
+    <button type="submit" class="btn btn-success w-100">Agregar</button>
+  </div>
+</form>
+
+<!-- Botón que envía el form-edicion -->
+<div class="d-flex justify-content-between mt-4">
+  <a href="{% url 'lista_tipos_mantencion' %}" class="btn btn-outline-secondary">← Volver</a>
+  <button type="submit" form="form-edicion" class="btn btn-primary">Guardar cambios</button>
+</div>
+
+
+
+{% endblock %}

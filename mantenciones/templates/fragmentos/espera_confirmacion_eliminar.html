@@ -1,0 +1,44 @@
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const botonesConfirmacion = document.querySelectorAll("[id^='confirmar-btn-']");
+
+  botonesConfirmacion.forEach(btn => {
+    const id = btn.id.replace("confirmar-btn-", "");
+    const modal = document.getElementById("confirmarEliminacion-" + id);
+    let countdown = null;
+
+    modal.addEventListener("shown.bs.modal", () => {
+      let segundos = 5;
+
+      // Reiniciar estado inicial
+      btn.disabled = true;
+      btn.innerText = `Espera ${segundos}s...`;
+
+      // Evita múltiples contadores
+      if (countdown) clearInterval(countdown);
+
+      countdown = setInterval(() => {
+        segundos--;
+        if (segundos <= 0) {
+          btn.disabled = false;
+          btn.innerText = "Sí, eliminar definitivamente";
+          clearInterval(countdown);
+          countdown = null;
+        } else {
+          btn.innerText = `Espera ${segundos}s...`;
+        }
+      }, 1000);
+    });
+
+    modal.addEventListener("hidden.bs.modal", () => {
+      // Limpia y reinicia al cerrar
+      if (countdown) {
+        clearInterval(countdown);
+        countdown = null;
+      }
+      btn.disabled = true;
+      btn.innerText = "Espera 5s...";
+    });
+  });
+});
+</script>

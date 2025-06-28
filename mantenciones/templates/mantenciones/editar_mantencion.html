@@ -1,16 +1,37 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base_tarjeta.html' %}
 
-<h2>Editar Tipo de Mantención</h2>
+{% block title %}Editar Tipo de Mantención{% endblock %}
+{% block formulario_header %}Editar Tipo de Mantención{% endblock %}
 
-<form method="post">
-  {% csrf_token %}
-  <div class="mb-3">
-    {{ form.tipo.label_tag }}
-    {{ form.tipo }}
-  </div>
-  <button type="submit" class="btn btn-primary">Guardar cambios</button>
-  <a href="{% url 'detalle_mantencion' mantencion.id %}" class="btn btn-secondary">Cancelar</a>
-</form>
+{% block formulario_content %}
+  <form method="post" class="needs-validation">
+    {% csrf_token %}
 
+    <!-- Campo de selección de tipo -->
+    <div class="mb-3">
+      <label for="{{ form.tipo.id_for_label }}" class="form-label">{{ form.tipo.label }}</label>
+      {{ form.tipo }}
+      {% if form.tipo.errors %}
+        <div class="text-danger">{{ form.tipo.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Lista de tareas asociadas -->
+    {% if tareas %}
+      <div class="mb-3">
+        <label class="form-label">Tareas asociadas:</label>
+        <ul class="list-group">
+          {% for tarea in tareas %}
+            <li class="list-group-item">{{ tarea.descripcion }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <!-- Botones -->
+    <div class="d-flex justify-content-between mt-4">
+      <a href="{% url 'detalle_mantencion' mantencion.id %}" class="btn btn-outline-secondary">← Volver</a>
+      <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+  </form>
 {% endblock %}

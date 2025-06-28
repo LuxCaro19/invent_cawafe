@@ -1,41 +1,29 @@
-from django.utils.timezone import now
-from mantenciones.models import Mantencion, Registro_mantencion, Tipo_mantencion
-from inventario.models import Equipo
+from mantenciones.models import Tipo_mantencion, Mantencion, Registro_mantencion
+from usuarios.models import Usuario
 
-def sincronizar_mantenciones():
-    try:
-        tipo_creacion = Tipo_mantencion.objects.get(nombre__iexact='Creación')
-    except Tipo_mantencion.DoesNotExist:
-        print("Tipo de mantención 'Creación' no existe.")
-        return
+def crear_mantencion_inicial_para_equipo(equipo, usuario=None):
+    tipo, _ = Tipo_mantencion.objects.get_or_create(
+        nombre='Creación',
+        defaults={'frecuencia_dias': 0}
+    )
 
-    total_creadas = 0
-    total_registros_agregados = 0
-    Tipo_mantencion.objects.create(nombre='Creación', frecuencia_dias=30)
-    
-    # Crear mantenciones para equipos que no tienen
-    for equipo in Equipo.objects.all():
-        if not Mantencion.objects.filter(equipo=equipo).exists():
-            mantencion = Mantencion.objects.create(equipo=equipo, tipo=tipo_creacion)
-            Registro_mantencion.objects.create(
-                mantencion=mantencion,
-                fecha=now(),
-                responsable='Sincronización automática',
-                ubicacion=getattr(equipo, 'ubicacion', 'Desconocida'),
-                observaciones='Registro inicial por sincronización'
-            )
-            total_creadas += 1
+    mantencion = Mantencion.objects.create(equipo=equipo, tipo=tipo)
 
-    # Asegurar que todas las mantenciones tengan al menos un registro
-    for mantencion in Mantencion.objects.all():
-        if not mantencion.registros.exists():
-            Registro_mantencion.objects.create(
-                mantencion=mantencion,
-                fecha=now(),
-                responsable='Sincronización automática',
-                ubicacion=getattr(mantencion.equipo, 'ubicacion', 'Desconocida'),
-                observaciones='Registro agregado por sincronización'
-            )
-            total_registros_agregados += 1
+    if usuario is None:
+        usuario, _ = Usuario.objects.get_or_create(
+            correo='sistema@local',
+            defaults={
+                'nombre_completo': 'Sistema Mantenciones',
+                'rut': '0-0',
+                'is_active': False,
+                'is_staff': False
+            }
+        )
 
-    print(f"Sincronización completa. Mantenciones nuevas: {total_creadas}, registros agregados: {total_registros_agregados}")
+    Registro_mantencion.objects.create(
+        mantencion=mantencion,
+        responsable=usuario,
+        observaciones='Mantención inicial al crear equipo',
+        ubicacion='Desconocida',
+        tipo='Inicial'
+    )

@@ -107,7 +107,7 @@ DATABASES = {
         'USER': 'app_user',
         'PASSWORD': 'appUser2025!',
         'HOST': 'localhost',  # o la IP del servidor PostgreSQL
-        'PORT': '5434',  # el puerto predeterminado de PostgreSQL
+        'PORT': '5432',  # el puerto predeterminado de PostgreSQL
     }
 }
 

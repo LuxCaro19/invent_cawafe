@@ -1,0 +1,22 @@
+<script>
+// Mostrar ícono ▼/▲ en títulos de grupo colapsables
+document.querySelectorAll('.grupo-titulo').forEach(titulo => {
+  const icono = document.createElement('span');
+  icono.classList.add('collapse-icon', 'ms-2', 'text-muted');
+  icono.textContent = '▼';
+  titulo.appendChild(icono);
+
+  const targetId = titulo.getAttribute('data-bs-target');
+  const colapsable = document.querySelector(targetId);
+
+  if (!colapsable) return;
+
+  colapsable.addEventListener('show.bs.collapse', () => {
+    icono.textContent = '▲';
+  });
+
+  colapsable.addEventListener('hide.bs.collapse', () => {
+    icono.textContent = '▼';
+  });
+});
+</script>

@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2 class="mb-3">Detalles</h2>
+<h2 class="">Detalles</h2>
 
-<div class="mb-3 d-flex gap-1">
+<div class="d-flex justify-content-between mt-3 mb-3">
   <a href="{% url 'lista_mantenciones' %}" class="btn btn-outline-secondary">← Volver</a>
-  <a href="{% url 'nueva_mantencion' mantencion.id %}" class="btn btn-outline-success">Ejecutar nueva mantención</a>
+  <a href="{% url 'nueva_mantencion' mantencion.id %}" class="btn btn-outline-success">Iniciar mantenimiento</a>
 </div>
+
 
 <div class="card mb-4">
   <div class="card-body">
@@ -32,7 +33,7 @@
   <div class="card-body border-top">
     <h4 class="">
       Tipo de mantención: 
-      <a href="{% url 'editar_mantencion' mantencion.id %}" class="btn btn-outline-primary btn-sm">
+      <a href="{% url 'cambiar_mantencion' mantencion.id %}" class="btn btn-outline-primary btn-sm">
         {{ mantencion.tipo.nombre }}
       </a>
     </h4>

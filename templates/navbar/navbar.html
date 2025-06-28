@@ -68,13 +68,15 @@
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="empleadosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="mantenimientoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Mantenimiento
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="empleadosDropdown">
-                                <li><a class="dropdown-item" href="{% url 'lista_mantenciones' %}">Lista de mantenciones</a></li>
+                            <ul class="dropdown-menu" aria-labelledby="mantenimientoDropdown">
+                                <li><a class="dropdown-item" href="{% url 'lista_mantenciones' %}">Control de mantenciones</a></li>
+                                <li><a class="dropdown-item" href="{% url 'lista_tipos_mantencion' %}">Tipos de mantención</a></li>
                             </ul>
                         </li>
+
 
                         {% endif %}
 

@@ -12,6 +12,7 @@ def nueva_mantencion_registro(request, mantencion_id):
             registro = form.save(commit=False)
             registro.mantencion = mantencion
             registro.tipo = mantencion.tipo.nombre if mantencion.tipo else 'Desconocido'
+            registro.responsable = request.user  # <<< aquí va el usuario actual
             registro.save()
 
             tareas_realizadas = request.POST.getlist('tareas_realizadas')
@@ -25,13 +26,9 @@ def nueva_mantencion_registro(request, mantencion_id):
     else:
         form = Ejecutar_Mantencion()
 
-    if form.is_valid():
-        print("Formulario válido")
-    else:
-        print("Errores:", form.errors)
-
     return render(request, 'mantenciones/ejecutar_mantencion.html', {
         'form': form,
         'mantencion': mantencion,
         'tareas': tareas,
+        'usuario': request.user,  # <<< lo pasamos al template
     })
