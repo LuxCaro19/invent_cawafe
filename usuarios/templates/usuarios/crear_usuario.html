@@ -27,24 +27,15 @@
         </div>
 
         <div class="mb-3">
-            <label for="obra" class="form-label">Obra</label>
-            <select class="form-select" id="obra" name="obra" required>
-                <option value="" disabled selected>Seleccione una obra</option>
-                {% for obra in obras %}
-                    <option value="{{ obra.id }}">{{ obra.nombre }}</option>
+            <label for="ubicacion">Ubicación:</label>
+            <select class="form-select" id="ubicacion" name="ubicacion" required>
+                <option value="" disabled selected>Seleccione una ubicación</option>
+                {% for u in ubicaciones %}
+                    <option value="{{ u.id }}">{{ u.nombre }}</option>
                 {% endfor %}
             </select>
         </div>
 
-        <div class="mb-3">
-            <label for="sala" class="form-label">Sala de venta</label>
-            <select class="form-select" id="sala" name="sala" required>
-                <option value="" disabled selected>Seleccione una sala</option>
-                {% for sala in salas %}
-                    <option value="{{ sala.id }}">{{ sala.nombre }}</option>
-                {% endfor %}
-            </select>
-        </div>
 
         <div class="mb-3">
             <label for="cargo" class="form-label">Cargo</label>

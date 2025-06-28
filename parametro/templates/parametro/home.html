@@ -6,13 +6,8 @@
     <h1 class="text-danger mb-4">Parámetros del Sistema</h1>
     <ul class="list-group">
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            Obras
-            <a href="{% url 'obras_listar' %}" class="btn btn-danger btn-sm">Administrar</a>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            Salas de Venta
-            <a href="{% url 'salas_listar' %}" class="btn btn-secondary btn-sm">Administrar</a>
-        </li>
+            Ubicaciones
+            <a href="{% url 'ubicacion_admin' %}" class="btn btn-secondary btn-sm">Administrar</a>
         <li class="list-group-item d-flex justify-content-between align-items-center">
             Equipos
             <a href="{% url 'registrar_equipo' %}" class="btn btn-danger btn-sm">Registrar</a>
@@ -42,5 +37,5 @@
             <a href="{% url 'registrar_estado' %}" class="btn btn-danger btn-sm">Registrar</a>
         </li>
     </ul>
-</div>
+
 {% endblock %}

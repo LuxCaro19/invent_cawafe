@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import SalaVenta, Obra
+from .models import SalaVenta, Obra, Ubicacion
+
 
 def parametro_home(request):
     return render(request, 'parametro/home.html')
@@ -51,3 +52,30 @@ def obra_eliminar(request, obra_id):
     obra = get_object_or_404(Obra, id=obra_id)
     obra.delete()
     return redirect('obras_listar')
+
+def ubicacion_admin(request):
+    ubicaciones = Ubicacion.objects.all()
+    return render(request, 'parametro/ubicaciones_listar.html', {'ubicaciones': ubicaciones})
+
+def ubicacion_nueva(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        Ubicacion.objects.create(nombre=nombre)
+        return redirect('ubicacion_admin')
+    return render(request, 'parametro/ubicacion_form.html', {'titulo': 'Nueva ubicación'})
+
+def ubicacion_editar(request, id):
+    ubicacion = get_object_or_404(Ubicacion, id=id)
+    if request.method == 'POST':
+        ubicacion.nombre = request.POST.get('nombre')
+        ubicacion.save()
+        return redirect('ubicacion_admin')
+    return render(request, 'parametro/ubicacion_form.html', {
+        'titulo': 'Editar ubicación',
+        'ubicacion': ubicacion
+    })
+
+def ubicacion_eliminar(request, id):
+    ubicacion = get_object_or_404(Ubicacion, id=id)
+    ubicacion.delete()
+    return redirect('ubicacion_admin')
