@@ -1,0 +1,16 @@
+{% include 'navbar/navbar.html' %}
+{% load static %}
+{% block content %}
+<h2>{{ Ubicacion }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre de la ubicación</label>
+        <input type="text" name="nombre" id="nombre" class="form-control" value="{{ ubicacion.nombre|default:'' }}" required>
+    </div>
+
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a href="{% url 'ubicacion_admin' %}" class="btn btn-secondary">Volver</a>
+</form>
+{% endblock %}

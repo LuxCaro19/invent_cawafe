@@ -185,7 +185,7 @@ def detalle_estado_equipo(request, id):
             form = Estado_equipoForm(request.POST, instance=estado)
             if form.is_valid():
                 form.save()
-                return redirect('detalle_estado_equipo', id=estado.id)
+                return redirect('detalle_estado', id=estado.id)
     else:
         form = Estado_equipoForm(instance=estado)
 
@@ -260,7 +260,7 @@ def registrar_sistema_operativo(request):
         form = SoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('listado_sistemas_operativos ')
+            return redirect('listado_sistemas_operativos')
     else:
         form = SoForm()
     return render(request, 'inventario/registro/registrar_so.html', {'form': form})
@@ -272,7 +272,7 @@ def registrar_estado_equipo(request):
         if form.is_valid():
             form.save()
             estados = Estado_equipo.objects.all()
-            return render(request, 'inventario/listados/listado_estado.html', {'estados': estados, 'form': form})
+            return render(request, 'inventario/listados/listado_estados.html', {'estados': estados, 'form': form})
     else:
         form = Estado_equipoForm()
     return render(request, 'inventario/registro/registrar_estado.html', {'form': form})

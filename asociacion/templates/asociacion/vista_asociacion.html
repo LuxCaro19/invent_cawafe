@@ -1,0 +1,98 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Asociar equipo a empleado</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body class="p-4">
+{% include 'navbar/navbar.html' %}
+<h2 class="text-center mb-4">Asociar equipo a empleado</h2>
+
+<form method="get" class="row mb-4">
+    <div class="col-md-5">
+        <label>Buscar por nombre de equipo:</label>
+        <input type="text" name="equipo" class="form-control" value="{{ query_equipo }}" list="listaEquipos">
+        <datalist id="listaEquipos">
+            {% for equipo in todos_los_equipos %}
+                <option value="{{ equipo.etiqueta }}">
+            {% endfor %}
+        </datalist>
+    </div>
+    <div class="col-md-5">
+        <label>Buscar por nombre de empleado:</label>
+        <input type="text" name="usuario" class="form-control" value="{{ query_usuario }}">
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Buscar</button>
+    </div>
+</form>
+
+{% for equipo, historial in equipos_con_historial %}
+<div class="card mb-4">
+    <div class="card-body">
+        <h5><strong>ID:</strong> {{ equipo.id }}</h5>
+        <p><strong>Marca:</strong> {{ equipo.modelo.marca.nombre }}</p>
+        <p><strong>Modelo:</strong> {{ equipo.modelo.nombre }}</p>
+        <p><strong>Estado actual:</strong> {{ equipo.estado }}</p>
+        <p><strong>Empleado asignado:</strong> {{ equipo.usuario_asignado.nombre_completo|default:"No asignado" }}</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="equipo_id" value="{{ equipo.id }}">
+
+            <div class="mb-3">
+                <label>Empleado asignado:</label>
+                <select name="empleado_id" class="form-control">
+                    <option value="">-- No asignar --</option>
+                    {% for empleado in empleados %}
+                        <option value="{{ empleado.id }}" {% if equipo.usuario_asignado == empleado %}selected{% endif %}>
+                            {{ empleado.nombre_completo }} ({{ empleado.rut }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label>Estado del equipo:</label>
+                <select name="estado" class="form-control">
+                    <option value="operativo" {% if equipo.estado.nombre == 'operativo' %}selected{% endif %}>Operativo</option>
+                    <option value="mantencion" {% if equipo.estado.nombre == 'mantencion' %}selected{% endif %}>Mantenimiento</option>
+                    <option value="en_bodega" {% if equipo.estado.nombre == 'en_bodega' %}selected{% endif %}>En bodega</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Guardar cambios</button>
+            <a href="{% url 'historial_equipo' equipo.id %}" class="btn btn-outline-info ms-2">Ver historial completo</a>
+        </form>
+
+        <h5 class="mt-4">Historial reciente</h5>
+        <div class="border p-3 rounded bg-light">
+            {% if historial %}
+                <ul class="mb-0">
+                    {% for h in historial %}
+                        <li>
+                            {{ h.fecha|date:"d/m/Y H:i" }} - {{ h.estado }}
+                            {% if h.usuario_asignado %}
+                                a {{ h.usuario_asignado.nombre_completo }}
+                            {% endif %}
+                            {% if h.registrado_por %}
+                                (por <span title="{{ h.registrado_por.correo }}">{{ h.registrado_por.nombre_completo }}</span>)
+                            {% else %}
+                                (por <em>usuario desconocido</em>)
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">Sin historial reciente.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+</body>
+</html>

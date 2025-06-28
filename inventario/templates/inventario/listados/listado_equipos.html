@@ -32,18 +32,13 @@
             {% endif %}
         </td>
         <td>
-            {% if equipo.usuario_asignado %}
-                {% if equipo.usuario_asignado.obra %}
-                {{ equipo.usuario_asignado.obra.nombre }}
-                {% elif equipo.usuario_asignado.sala_venta %}
-                {{ equipo.usuario_asignado.sala_venta.nombre }}
-                {% else %}
-                No asignado
-                {% endif %}
+            {% if equipo.usuario_asignado and equipo.usuario_asignado.ubicacion %}
+                {{ equipo.usuario_asignado.ubicacion.nombre }}
             {% else %}
                 No asignado
             {% endif %}
         </td>
+
 
 
     </tr>

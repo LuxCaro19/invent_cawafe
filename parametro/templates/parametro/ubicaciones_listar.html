@@ -1,0 +1,27 @@
+{% include 'navbar/navbar.html' %}
+{% load static %}
+{% block content %}
+<h2>Ubicaciones registradas</h2>
+
+<a href="{% url 'ubicacion_nueva' %}" class="btn btn-success mb-3">Agregar nueva ubicación</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ubicacion in ubicaciones %}
+        <tr>
+            <td>{{ ubicacion.nombre }}</td>
+            <td>
+                <a href="{% url 'ubicacion_editar' ubicacion.id %}" class="btn btn-primary btn-sm">Editar</a>
+                <a href="{% url 'ubicacion_eliminar' ubicacion.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

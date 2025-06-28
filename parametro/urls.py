@@ -11,5 +11,9 @@ urlpatterns = [
     path('salas/crear/', views.sala_crear, name='sala_crear'),
     path('salas/editar/<int:sala_id>/', views.sala_editar, name='sala_editar'),
     path('salas/eliminar/<int:sala_id>/', views.sala_eliminar, name='sala_eliminar'),
+    path('ubicaciones/', views.ubicacion_admin, name='ubicacion_admin'),
+    path('ubicaciones/nueva/', views.ubicacion_nueva, name='ubicacion_nueva'),
+    path('ubicaciones/editar/<int:id>/', views.ubicacion_editar, name='ubicacion_editar'),
+    path('ubicaciones/eliminar/<int:id>/', views.ubicacion_eliminar, name='ubicacion_eliminar'),
 
 ]

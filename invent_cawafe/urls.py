@@ -27,5 +27,6 @@ urlpatterns = [
     path('menu_admin/', menu_admin, name='menu_admin'),
     path('usuarios/', include('usuarios.urls')),
     path('parametro/', include('parametro.urls')),
-    path('mantenciones/', include('mantenciones.urls')),
+    path('asociacion/', include('asociacion.urls')),
+    path('mantenciones/', include('mantenciones.urls'))
 ]
