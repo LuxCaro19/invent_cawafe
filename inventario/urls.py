@@ -12,6 +12,7 @@ urlpatterns = [
     path('detalle_tipo/<int:id>/', views.detalle_tipo_equipo, name='detalle_tipo_equipo'),
     path('detalle_procesador/<int:id>/', views.detalle_procesador, name='detalle_procesador'),
     path('detalle_so/<int:id>/', views.detalle_sistema_operativo, name='detalle_so'),
+    path('detalle_estado/<int:id>/', views.detalle_estado_equipo, name='detalle_estado'),
 
     # URLS DE REGISTRO
     path('registrar_equipo/', views.registrar_equipo, name='registrar_equipo'),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('registrar_tipo_equipo/', views.registrar_tipo_equipo, name='registrar_tipo_equipo'),
     path('registrar_procesador/', views.registrar_procesador, name='registrar_procesador'),
     path('registrar_so/', views.registrar_sistema_operativo, name='registrar_so'),
+    path('registrar_estado_equipo/', views.registrar_estado_equipo, name='registrar_estado'),
 
     # URLS DE LISTAS
     path('lista_equipos/', views.listado_equipos, name='listado_equipos'),
@@ -28,4 +30,5 @@ urlpatterns = [
     path('lista_tipos_equipos/', views.listado_tipo_equipos, name='listado_tipo_equipos'),
     path('lista_procesadores/', views.listado_procesadores, name='listado_procesadores'),
     path('lista_sistemas_operativos/', views.listado_sistemas_operativos, name='listado_sistemas_operativos'),
+    path('lista_estado_equipos/', views.listado_estado_equipos, name='listado_estado_equipos')
 ]

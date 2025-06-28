@@ -1,0 +1,18 @@
+{% extends 'base/lista/listado_base.html' %}
+
+{% block title %}Estados{% endblock %}
+{% block subtitle %}Estados de Equipos{% endblock %}
+
+{% block table_headers %}
+   <!--<th>ID</th>-->
+    <th>Nombre del Estado</th>
+{% endblock %}
+
+{% block table_body %}
+    {% for estado in estados %}
+    <tr class="clickable-row" data-href="{% url 'detalle_estado' estado.id %}">
+        <!--<td>{{ estado.id }}</td>-->
+        <td>{{ estado.nombre }}</td>
+    </tr>
+    {% endfor %}
+{% endblock %}

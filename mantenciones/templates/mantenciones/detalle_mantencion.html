@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2 class="mb-3">Detalles</h2>
+
+<div class="mb-3 d-flex gap-1">
+  <a href="{% url 'lista_mantenciones' %}" class="btn btn-outline-secondary">← Volver</a>
+  <a href="{% url 'nueva_mantencion' mantencion.id %}" class="btn btn-outline-success">Ejecutar nueva mantención</a>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <p><strong>Equipo:</strong> {{ mantencion.equipo.etiqueta }}</p>
+    <p><strong>Tipo de Equipo:</strong> {{ mantencion.equipo.modelo.tipo.tipo }}</p>
+    <p><strong>Ubicación:</strong> {{ mantencion.ubicacion|default:"Sin ubicación" }}</p>
+    <p><strong>Última Mantención:</strong> 
+      {% if mantencion.ultima_fecha %}
+        {{ mantencion.ultima_fecha|date:"d-m-Y" }}
+      {% else %}
+        <span class="text-muted">Sin registros</span>
+      {% endif %}
+    </p>
+    <p><strong>Próxima Mantención:</strong> 
+      {% if mantencion.fecha_proxima %}
+        {{ mantencion.fecha_proxima|date:"d-m-Y" }}
+      {% else %}
+        <span class="text-muted">Sin fecha asignada</span>
+      {% endif %}
+    </p>
+  </div>
+
+  <div class="card-body border-top">
+    <h4 class="">
+      Tipo de mantención: 
+      <a href="{% url 'editar_mantencion' mantencion.id %}" class="btn btn-outline-primary btn-sm">
+        {{ mantencion.tipo.nombre }}
+      </a>
+    </h4>
+    </h4>Tareas</h4>
+    {% if tareas_tipo %}
+      <div class="overflow-auto mb-1 border-top border-bottom" style="max-height: 180px;">
+        <h6 class="list-group">
+          {% for t in tareas_tipo %}
+            <li class="list-group-item">• {{ t.descripcion }}</li>
+          {% endfor %}
+        </h6>
+      </div>
+    {% else %}
+      <div class="alert alert-secondary">
+        Este tipo de mantención no tiene tareas definidas.
+      </div>
+    {% endif %}
+    <h6 class="mb-1" >Se realiza cada {{ mantencion.tipo.frecuencia_dias }} dias</h6>
+  </div>
+</div>
+
+<h4 class="mb-3">Mantenciones realizadas</h4>
+
+{% if registros %}
+  <div class="d-flex flex-nowrap overflow-auto mb-4">
+    {% for r in registros %}
+      <div class="card me-2" style="min-width: 160px;">
+        <div class="card-body p-2 text-center d-flex flex-column justify-content-center">
+          <h6 class="card-title">{{ r.tipo }}</h6>
+          <h6 class="card-title">{{ r.fecha|date:"d-m-Y" }}</h6>
+          <p class="card-text small text-muted mb-0">{{ r.observaciones|default:"(Sin descripción)" }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="alert alert-warning">No hay registros para esta mantención.</div>
+{% endif %}
+
+
+{% endblock %}

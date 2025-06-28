@@ -5,14 +5,14 @@
 {% block subtitle %}Fabricantes{% endblock %} <!-- Título secundario (puedes personalizarlo) -->
 
 {% block table_headers %}
-    <th>ID</th>
+    <!--<th>ID</th>-->
     <th>Marca</th>
 {% endblock %}
 
 {% block table_body %}
     {% for marca in marcas %}
     <tr class="clickable-row" data-href="{% url 'detalle_marca' marca.id %}">
-        <td>{{ marca.id }}</td>
+        <!--<td>{{ marca.id }}</td>-->
         <td>{{ marca.marca }}</td>
     </tr>
     {% endfor %}

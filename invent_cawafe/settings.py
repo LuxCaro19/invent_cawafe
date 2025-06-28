@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'inventario',
     'ventas',
     'usuarios',
-    'parametro'
+    'parametro',
+    'mantenciones',
 ]
 
 
@@ -101,7 +102,7 @@ WSGI_APPLICATION = 'invent_cawafe.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django .db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'invent_cawafe',
         'USER': 'app_user',
         'PASSWORD': 'appUser2025!',
@@ -135,7 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-es'
 
 TIME_ZONE = 'UTC'
 

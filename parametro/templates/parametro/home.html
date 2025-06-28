@@ -13,6 +13,34 @@
             Salas de Venta
             <a href="{% url 'salas_listar' %}" class="btn btn-secondary btn-sm">Administrar</a>
         </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Equipos
+            <a href="{% url 'registrar_equipo' %}" class="btn btn-danger btn-sm">Registrar</a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Modelos
+            <a href="{% url 'registrar_modelo_equipo' %}" class="btn btn-secondary btn-sm">Registrar</a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Marcas
+            <a href="{% url 'registrar_marca' %}" class="btn btn-danger btn-sm">Registrar</a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Tipos de Equipo
+            <a href="{% url 'registrar_tipo_equipo' %}" class="btn btn-secondary btn-sm">Registrar</a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Procesadores
+            <a href="{% url 'registrar_procesador' %}" class="btn btn-danger btn-sm">Registrar</a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Sistemas Operativos
+            <a href="{% url 'registrar_so' %}" class="btn btn-secondary btn-sm">Registrar</a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Estados de Equipo
+            <a href="{% url 'registrar_estado' %}" class="btn btn-danger btn-sm">Registrar</a>
+        </li>
     </ul>
 </div>
 {% endblock %}
