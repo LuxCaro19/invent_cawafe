@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Editar Tipo de Mantención</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    {{ form.tipo.label_tag }}
+    {{ form.tipo }}
+  </div>
+  <button type="submit" class="btn btn-primary">Guardar cambios</button>
+  <a href="{% url 'detalle_mantencion' mantencion.id %}" class="btn btn-secondary">Cancelar</a>
+</form>
+
+{% endblock %}

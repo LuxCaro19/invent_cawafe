@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2 class="mb-4">Registrar Ejecución de Mantención</h2>
+
+<div class="card">
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+TEMPORAL, SE DEBE SACAR DEL USUARIO ACTIVO
+      <div class="mb-3">
+        
+        <label for="responsable" class="form-label">Responsable</label>
+        <input type="text" name="responsable" id="responsable" class="form-control" required>
+      </div>
+        TEMPORAL, SE DEBE SACAR DEL EQUIPO
+      <div class="mb-3">
+        <label for="ubicacion" class="form-label">Ubicación</label>
+        <input type="text" name="ubicacion" id="ubicacion" class="form-control" required>
+      </div>
+
+      {% if tareas %}
+        <h5 class="mt-4">Tareas realizadas</h5>
+        <div class="mb-3">
+          {% for tarea in tareas %}
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="tareas_realizadas" value="{{ tarea.descripcion }}" id="tarea{{ forloop.counter }}">
+              <label class="form-check-label" for="tarea{{ forloop.counter }}">
+                {{ tarea.descripcion }}
+              </label>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="mb-3">
+        <label for="observaciones" class="form-label">Observaciones</label>
+        <textarea name="observaciones" id="observaciones" class="form-control" rows="3"></textarea>
+      </div>
+
+
+      <button type="submit" class="btn btn-success">Guardar registro</button>
+      <a href="{% url 'detalle_mantencion' mantencion.id %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
