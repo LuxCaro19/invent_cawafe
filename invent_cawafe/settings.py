@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'inventario',
     'ventas',
     'usuarios',
-    'parametro'
+    'parametro',
+    'asociacion'
 ]
 
 

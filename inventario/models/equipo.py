@@ -5,6 +5,10 @@ from .procesador import Procesador
 from .estado_equipo import Estado_equipo
 from .sistema_operativo import Sistema_operativo
 from ventas.models.venta import Venta
+from usuarios.models import Usuario  # Asegúrate que esta línea esté al inicio del archivo
+
+
+
 
 # Clase Equipo.
 
@@ -21,6 +25,7 @@ class Equipo(models.Model):
     sistema_operativo = models.ForeignKey(Sistema_operativo, on_delete=models.SET_NULL, null=True )
     procesador = models.ForeignKey(Procesador, on_delete=models.SET_NULL, null=True )
     estado = models.ForeignKey(Estado_equipo, on_delete=models.SET_NULL, null=True )
+    usuario_asignado = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.etiqueta
