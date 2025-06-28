@@ -5,23 +5,47 @@
 {% block subtitle %}Equipos informáticos{% endblock %} <!-- Título secundario (puedes personalizarlo) -->
 
 {% block table_headers %}
-    <th>ID</th>
+    <!--<th>ID</th>-->
     <th>Etiqueta</th>
     <th>S.O.</th>
     <th>Marca</th>
     <th>Modelo</th>
     <th>Estado</th>
+    <th>Usuario asignado</th>
+    <th>Ubicacion</th>
 {% endblock %}
 
 {% block table_body %}
     {% for equipo in equipos %}
     <tr class="clickable-row" data-href="{% url 'detalle_equipo' equipo.id %}">
-        <td>{{ equipo.id }}</td>
+        <!--<td>{{ equipo.id }}</td>-->
         <td>{{ equipo.etiqueta }}</td>
         <td>{{ equipo.sistema_operativo.nombre }}</td>
         <td>{{ equipo.modelo.marca.marca }}</td>
         <td>{{ equipo.modelo.nombre }}</td>
         <td>{{ equipo.estado.nombre }}</td>
+        <td>
+            {% if equipo.usuario_asignado %}
+                {{ equipo.usuario_asignado.nombre_completo }}
+            {% else %}
+                No asignado
+            {% endif %}
+        </td>
+        <td>
+            {% if equipo.usuario_asignado %}
+                {% if equipo.usuario_asignado.obra %}
+                {{ equipo.usuario_asignado.obra.nombre }}
+                {% elif equipo.usuario_asignado.sala_venta %}
+                {{ equipo.usuario_asignado.sala_venta.nombre }}
+                {% else %}
+                No asignado
+                {% endif %}
+            {% else %}
+                No asignado
+            {% endif %}
+        </td>
+
+
     </tr>
     {% endfor %}
 {% endblock %}

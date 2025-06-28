@@ -4,6 +4,7 @@ from .models import Equipo, Equipo_historial
 from .models.modelo_equipo import Modelo_equipo
 from .models.modelo_marca import Modelo_marca
 from .models.modelo_tipo import Modelo_tipo
+from .models.estado_equipo import Estado_equipo
 from django.shortcuts import get_list_or_404, get_object_or_404,redirect
 from .forms.equipo_form import EquipoForm
 from .forms.modelo_equipo_form import Modelo_equipoForm
@@ -13,6 +14,7 @@ from .models.procesador import Procesador
 from .models.sistema_operativo import Sistema_operativo
 from .forms.procesador_form import ProcesadorForm
 from .forms.so_form import SoForm
+from .forms.estado_equipo_form import Estado_equipoForm
 
 
 # Create your views here.
@@ -47,6 +49,10 @@ def listado_sistemas_operativos(request):
     sistemas_operativos = Sistema_operativo.objects.all()
     return render(request, 'inventario/listados/listado_so.html', {'sistemas_operativos': sistemas_operativos})
 
+
+def listado_estado_equipos(request):
+    estados = Estado_equipo.objects.all()  # Obtiene todos los objetos de Estado_equipo
+    return render(request, 'inventario/listados/listado_estados.html', {'estados': estados})
 
 ##############################
 
@@ -167,6 +173,24 @@ def detalle_sistema_operativo(request, id):
     return render(request, 'inventario/detalle/detalle_so.html', {'so': so, 'form': form})
 
 
+def detalle_estado_equipo(request, id):
+    estado = get_object_or_404(Estado_equipo, id=id)
+
+    if request.method == 'POST':
+        if 'eliminar' in request.POST:
+            estado.delete()
+            estados = Estado_equipo.objects.all()
+            return render(request, 'inventario/listados/listado_estado.html', {'estados': estados})
+        else:
+            form = Estado_equipoForm(request.POST, instance=estado)
+            if form.is_valid():
+                form.save()
+                return redirect('detalle_estado_equipo', id=estado.id)
+    else:
+        form = Estado_equipoForm(instance=estado)
+
+    return render(request, 'inventario/detalle/detalle_estado.html', {'estado': estado, 'form': form})
+
 
 ##############################
 
@@ -240,3 +264,15 @@ def registrar_sistema_operativo(request):
     else:
         form = SoForm()
     return render(request, 'inventario/registro/registrar_so.html', {'form': form})
+
+
+def registrar_estado_equipo(request):
+    if request.method == 'POST':
+        form = Estado_equipoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            estados = Estado_equipo.objects.all()
+            return render(request, 'inventario/listados/listado_estado.html', {'estados': estados, 'form': form})
+    else:
+        form = Estado_equipoForm()
+    return render(request, 'inventario/registro/registrar_estado.html', {'form': form})
