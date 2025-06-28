@@ -6,7 +6,7 @@ def lista_mantenciones(request):
     buscar = request.GET.get('buscar', '').strip()
     campo = request.GET.get('campo', '')
     agrupar = request.GET.get('agrupar', '')
-
+    hoy = date.today()
     mantenciones = Mantencion.objects.select_related('equipo__modelo__tipo', 'tipo')
 
     # Filtro de texto
