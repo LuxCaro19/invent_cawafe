@@ -1,0 +1,56 @@
+{% extends "base_tarjeta.html" %}
+
+{% block formulario_title %}Crear Tipo de Mantención{% endblock %}
+{% block formulario_header %}Crear Tipo de Mantención{% endblock %}
+
+{% block formulario_content %}
+<form method="post" class="needs-validation" novalidate>
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label for="id_nombre" class="form-label">Nombre</label>
+    <input type="text" name="nombre" id="id_nombre" class="form-control" value="{{ form.nombre.value|default:'' }}">
+    {% if form.nombre.errors %}
+      <div class="text-danger">{{ form.nombre.errors.0 }}</div>
+    {% endif %}
+  </div>
+
+  <div class="mb-3">
+    <label for="id_frecuencia_dias" class="form-label">Frecuencia (días)</label>
+    <input type="number" name="frecuencia_dias" id="id_frecuencia_dias" class="form-control" value="{{ form.frecuencia_dias.value|default:'' }}">
+    {% if form.frecuencia_dias.errors %}
+      <div class="text-danger">{{ form.frecuencia_dias.errors.0 }}</div>
+    {% endif %}
+  </div>
+
+  <div class="mb-3">
+    <label for="id_modelo_tipo" class="form-label">Tipo de Equipo (opcional)</label>
+    <select name="modelo_tipo" id="id_modelo_tipo" class="form-select">
+      <option value="">---------</option>
+      {% for tipo in form.fields.modelo_tipo.queryset %}
+        <option value="{{ tipo.id }}" {% if form.modelo_tipo.value == tipo.id %}selected{% endif %}>
+          {{ tipo }}
+        </option>
+      {% endfor %}
+    </select>
+    <div class="form-text">Puedes dejar esto vacío si no quieres asociarlo aún.</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="id_sistema_operativo" class="form-label">Sistema Operativo (opcional)</label>
+    <select name="sistema_operativo" id="id_sistema_operativo" class="form-select">
+      <option value="">---------</option>
+      {% for so in form.fields.sistema_operativo.queryset %}
+        <option value="{{ so.id }}" {% if form.sistema_operativo.value == so.id %}selected{% endif %}>
+          {{ so }}
+        </option>
+      {% endfor %}
+    </select>
+    <div class="form-text">Puedes dejar esto vacío si no quieres asociarlo aún.</div>
+  </div>
+
+  <div class="d-grid">
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </div>
+</form>
+{% endblock %}

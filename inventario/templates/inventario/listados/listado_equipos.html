@@ -4,15 +4,35 @@
 
 {% block subtitle %}Equipos informáticos{% endblock %} <!-- Título secundario (puedes personalizarlo) -->
 
+{% block group_dropdown %}
+<div class="dropdown">
+  <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="groupDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Agrupar por...
+  </button>
+  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="groupDropdown">
+    <button class="dropdown-item group-option" data-column-name="S.O.">S.O.</button>
+    <button class="dropdown-item group-option" data-column-name="Marca">Marca</button>
+    <button class="dropdown-item group-option" data-column-name="Modelo">Modelo</button>
+    <button class="dropdown-item group-option" data-column-name="Procesador">Procesador</button>
+    <button class="dropdown-item group-option" data-column-name="Estado">Estado</button>
+    <button class="dropdown-item group-option" data-column-name="Usuario asignado">Usuario asignado</button>
+    <button class="dropdown-item group-option" data-column-name="Ubicación">Ubicación</button>
+  </div>
+</div>
+{% endblock %}
+
+
 {% block table_headers %}
     <!--<th>ID</th>-->
-    <th>Etiqueta</th>
-    <th>S.O.</th>
-    <th>Marca</th>
-    <th>Modelo</th>
-    <th>Estado</th>
-    <th>Usuario asignado</th>
-    <th>Ubicacion</th>
+    <th class="sorting">Etiqueta</th>
+    <th class="sorting">S.O.</th>
+    <th class="sorting">Marca</th>
+    <th class="sorting">Modelo</th>
+    <th class="sorting">Procesador</th>
+    <th class="sorting">Numero de serie</th>
+    <th class="sorting">Estado</th>
+    <th class="sorting">Usuario asignado</th>
+    <th class="sorting">Ubicación</th>
 {% endblock %}
 
 {% block table_body %}
@@ -23,6 +43,8 @@
         <td>{{ equipo.sistema_operativo.nombre }}</td>
         <td>{{ equipo.modelo.marca.marca }}</td>
         <td>{{ equipo.modelo.nombre }}</td>
+        <td>{{ equipo.procesador.nombre }}</td>
+        <td>{{ equipo.numero_serie }}</td>
         <td>{{ equipo.estado.nombre }}</td>
         <td>
             {% if equipo.usuario_asignado %}
@@ -32,18 +54,13 @@
             {% endif %}
         </td>
         <td>
-            {% if equipo.usuario_asignado %}
-                {% if equipo.usuario_asignado.obra %}
-                {{ equipo.usuario_asignado.obra.nombre }}
-                {% elif equipo.usuario_asignado.sala_venta %}
-                {{ equipo.usuario_asignado.sala_venta.nombre }}
-                {% else %}
-                No asignado
-                {% endif %}
+            {% if equipo.usuario_asignado and equipo.usuario_asignado.ubicacion %}
+                {{ equipo.usuario_asignado.ubicacion.nombre }}
             {% else %}
                 No asignado
             {% endif %}
         </td>
+
 
 
     </tr>

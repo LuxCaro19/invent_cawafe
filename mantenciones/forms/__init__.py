@@ -1,2 +1,5 @@
 from .ejecucion_mantencion import Ejecutar_Mantencion
 from .editar_mantencion import Editar_mantencion
+from .crear_tipo_mantencion import TipoMantencionForm
+from .crear_tarea_mantencion import TareaTipoMantencionForm
+from .editar_tipo_mantencion import TipoMantencionEditarForm

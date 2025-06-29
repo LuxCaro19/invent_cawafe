@@ -5,3 +5,6 @@ class Editar_mantencion(forms.ModelForm):
     class Meta:
         model = Mantencion
         fields = ['tipo']
+        widgets = {
+            'tipo': forms.Select(attrs={'class': 'form-select'}),
+        }

@@ -20,7 +20,7 @@ def login_view(request):
             if usuario.is_staff:
                 return redirect('menu_admin')
             else:
-                return redirect('listado_equipos')  # ejemplo de vista de empleado
+                return redirect('listado_equipos_venta')  # ejemplo de vista de empleado
         else:
             messages.error(request, 'Credenciales inválidas. Intente de nuevo.')
 

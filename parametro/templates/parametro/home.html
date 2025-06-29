@@ -4,43 +4,71 @@
 {% block content %}
 <div class="container mt-5">
     <h1 class="text-danger mb-4">Parámetros del Sistema</h1>
-    <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            Obras
-            <a href="{% url 'obras_listar' %}" class="btn btn-danger btn-sm">Administrar</a>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            Salas de Venta
-            <a href="{% url 'salas_listar' %}" class="btn btn-secondary btn-sm">Administrar</a>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            Equipos
-            <a href="{% url 'registrar_equipo' %}" class="btn btn-danger btn-sm">Registrar</a>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            Modelos
-            <a href="{% url 'registrar_modelo_equipo' %}" class="btn btn-secondary btn-sm">Registrar</a>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            Marcas
-            <a href="{% url 'registrar_marca' %}" class="btn btn-danger btn-sm">Registrar</a>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            Tipos de Equipo
-            <a href="{% url 'registrar_tipo_equipo' %}" class="btn btn-secondary btn-sm">Registrar</a>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            Procesadores
-            <a href="{% url 'registrar_procesador' %}" class="btn btn-danger btn-sm">Registrar</a>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            Sistemas Operativos
-            <a href="{% url 'registrar_so' %}" class="btn btn-secondary btn-sm">Registrar</a>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            Estados de Equipo
-            <a href="{% url 'registrar_estado' %}" class="btn btn-danger btn-sm">Registrar</a>
-        </li>
-    </ul>
+
+    <div class="accordion" id="accordionParametros">
+
+        <!-- Parámetros de Usuario -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingUsuario">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUsuario" aria-expanded="true" aria-controls="collapseUsuario">
+                    Parámetros de Usuario
+                </button>
+            </h2>
+            <div id="collapseUsuario" class="accordion-collapse collapse show" aria-labelledby="headingUsuario" data-bs-parent="#accordionParametros">
+                <div class="accordion-body">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Ubicaciones
+                            <a href="{% url 'ubicacion_admin' %}" class="btn btn-secondary btn-sm">Administrar</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parámetros de Equipos -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingEquipos">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEquipos" aria-expanded="false" aria-controls="collapseEquipos">
+                    Parámetros de Equipos
+                </button>
+            </h2>
+            <div id="collapseEquipos" class="accordion-collapse collapse" aria-labelledby="headingEquipos" data-bs-parent="#accordionParametros">
+                <div class="accordion-body">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Equipos
+                            <a href="{% url 'registrar_equipo' %}" class="btn btn-danger btn-sm">Registrar</a>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Modelos
+                            <a href="{% url 'registrar_modelo_equipo' %}" class="btn btn-secondary btn-sm">Registrar</a>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Marcas
+                            <a href="{% url 'registrar_marca' %}" class="btn btn-danger btn-sm">Registrar</a>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Tipos de Equipo
+                            <a href="{% url 'registrar_tipo_equipo' %}" class="btn btn-secondary btn-sm">Registrar</a>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Procesadores
+                            <a href="{% url 'registrar_procesador' %}" class="btn btn-danger btn-sm">Registrar</a>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Sistemas Operativos
+                            <a href="{% url 'registrar_so' %}" class="btn btn-secondary btn-sm">Registrar</a>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Estados de Equipo
+                            <a href="{% url 'registrar_estado' %}" class="btn btn-danger btn-sm">Registrar</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
 {% endblock %}

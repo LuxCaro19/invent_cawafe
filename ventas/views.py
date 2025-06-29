@@ -7,7 +7,8 @@ from inventario.models.equipo_historial import Equipo_historial
 from django.views.decorators.http import require_POST
 
 
-# Create your views here.
+
+
 def listado_equipos(request):
     equipos = Equipo.objects.filter(estado_id=6)  # Filtra los equipos con estado "Activo"
     return render(request, 'listado_equipos.html', {'equipos': equipos})
@@ -19,6 +20,7 @@ def listado_equipos_rrhh(request):
 def listado_equipos_por_entregar(request):
     equipos = Equipo.objects.filter(estado_id=8)  # Filtra los equipos con estado "Pendiente RRHH"
     return render(request, 'listado_equipos_por_entregar.html', {'equipos': equipos})
+
 
 def detalle_equipo(request, id):
     equipo = Equipo.objects.get(id=id)

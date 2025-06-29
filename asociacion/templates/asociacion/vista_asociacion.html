@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Asociar equipo a empleado</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+</head>
+<body class="p-4">
+{% include 'navbar/navbar.html' %}
+<h2 class="text-center mb-4">Asociar equipo a empleado</h2>
+
+<form method="get" class="row mb-4">
+    <div class="col-md-5">
+        <label>Buscar por nombre de equipo:</label>
+        <input type="text" id="busqueda_equipo" name="equipo" class="form-control" value="{{ query_equipo }}">
+    </div>
+    <div class="col-md-5">
+        <label>Buscar por nombre de empleado:</label>
+        <input type="text" id="busqueda_usuario" name="usuario" class="form-control" value="{{ query_usuario }}">
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Buscar</button>
+    </div>
+</form>
+
+{% for equipo, historial in equipos_con_historial %}
+<div class="card mb-4">
+    <div class="card-body">
+        <h5><strong>ID:</strong> {{ equipo.id }}</h5>
+        <p><strong>Marca:</strong> {{ equipo.modelo.marca.nombre }}</p>
+        <p><strong>Modelo:</strong> {{ equipo.modelo.nombre }}</p>
+        <p><strong>Estado actual:</strong> {{ equipo.estado }}</p>
+        <p><strong>Empleado asignado:</strong> {{ equipo.usuario_asignado.nombre_completo|default:"No asignado" }}</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="equipo_id" value="{{ equipo.id }}">
+
+            <div class="mb-3">
+                <label>Empleado asignado:</label>
+                <select name="usuario_id" class="form-control">
+                    <option value="">-- No asignar --</option>
+                    {% for usuario in usuarios %}
+                        <option value="{{ usuario.id }}" {% if equipo.usuario_asignado == usuario %}selected{% endif %}>
+                            {{ usuario.nombre_completo }} ({{ usuario.rut }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label>Estado del equipo:</label>
+                <select name="estado" class="form-control">
+                {% for estado in estados %}
+                    <option value="{{ estado.nombre }}" {% if equipo.estado.nombre == estado.nombre %}selected{% endif %}>
+                    {{ estado.nombre }}
+                    </option>
+                {% endfor %}
+                </select>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="bodega" id="bodegaCheckbox{{ equipo.id }}" {% if equipo.en_bodega %}checked{% endif %}>
+                <label class="form-check-label" for="bodegaCheckbox{{ equipo.id }}">
+                    Enviar equipo a bodega
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-success">Guardar cambios</button>
+            <a href="{% url 'historial_equipo' equipo.id %}" class="btn btn-outline-info ms-2">Ver historial completo</a>
+        </form>
+
+        <h5 class="mt-4">Historial reciente</h5>
+        <div class="border p-3 rounded bg-light">
+            {% if historial %}
+                <ul class="mb-0">
+                    {% for h in historial %}
+                        <li>
+                            {{ h.fecha|date:"d/m/Y H:i" }} - {{ h.estado }}
+                            {% if h.usuario_asignado %}
+                                a {{ h.usuario_asignado.nombre_completo }}
+                            {% endif %}
+                            {% if h.registrado_por %}
+                                (por <span title="{{ h.registrado_por.correo }}">{{ h.registrado_por.nombre_completo }}</span>)
+                            {% else %}
+                                (por <em>usuario desconocido</em>)
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">Sin historial reciente.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Scripts para autocompletado -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+
+<script>
+    $(function() {
+        $("#busqueda_equipo").autocomplete({
+            source: "{% url 'autocomplete_equipos' %}"
+        });
+
+        $("#busqueda_usuario").autocomplete({
+            source: "{% url 'autocomplete_usuarios' %}"
+        });
+    });
+</script>
+
+</body>
+</html>

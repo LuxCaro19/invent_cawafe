@@ -1,0 +1,46 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial - {{ equipo.nombre }}</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body class="p-4">
+    {% include 'navbar/navbar.html' %}
+    <h3>Historial de equipo: {{ equipo.nombre }}</h3>
+
+
+    <table class="table table-bordered mt-3">
+        <thead class="table-light">
+            <tr>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Usuario asignado</th>
+                <th>Registrado por</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registro in historial %}
+            <tr>
+                <td>{{ registro.fecha|date:"d/m/Y H:i" }}</td>
+                <td>{{ registro.estado }}</td>
+                <td>
+                    {% if registro.usuario_asignado %}
+                        {{ registro.usuario_asignado.nombre_completo }}
+                    {% else %}
+                        <em>Sin usuario</em>
+                    {% endif %}
+                </td>
+                <td>{{ registro.registrado_por.nombre_completo }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center text-muted">Sin registros.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

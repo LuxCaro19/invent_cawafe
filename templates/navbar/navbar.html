@@ -50,7 +50,7 @@
                                         <li><a class="dropdown-item" href="{% url 'listado_tipo_equipos' %}">Lista de tipos de equipo</a></li>
                                         <li><a class="dropdown-item" href="{% url 'listado_procesadores' %}">Lista de procesadores</a></li>
                                         <li><a class="dropdown-item" href="{% url 'listado_sistemas_operativos' %}">Lista de sistemas operativos</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'listado_estado_equipos' %}">Lista de estados de equipos</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'listado_estados' %}">Lista de estados</a></li>
                                     </ul>
                                 </li>
                                 <!-- Submenú Registrar -->
@@ -63,18 +63,27 @@
                                         <li><a class="dropdown-item" href="{% url 'registrar_tipo_equipo' %}">Registrar tipo equipo</a></li>
                                         <li><a class="dropdown-item" href="{% url 'registrar_procesador' %}">Registrar procesador</a></li>
                                         <li><a class="dropdown-item" href="{% url 'registrar_so' %}">Registrar sistema operativo</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'registrar_estado' %}">Registrar estado de equipo</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'registrar_estado' %}">Registrar estado</a></li>
                                     </ul>
                                 </li>
                             </ul>
                         </li>
-
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="empleadosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="asociacionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Asociación
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="asociacionDropdown">
+                                <li><a class="dropdown-item" href="{% url 'vista_asociacion' %}">Asociar equipo</a></li>
+                                <li><a class="dropdown-item" href="{% url 'lista_asociaciones' %}">Ver asociaciones</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="mantenimientoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Mantenimiento
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="empleadosDropdown">
-                                <li><a class="dropdown-item" href="{% url 'lista_mantenciones' %}">Lista de mantenciones</a></li>
+                            <ul class="dropdown-menu" aria-labelledby="mantenimientoDropdown">
+                                <li><a class="dropdown-item" href="{% url 'lista_mantenciones' %}">Control de mantenciones</a></li>
+                                <li><a class="dropdown-item" href="{% url 'lista_tipos_mantencion' %}">Tipos de mantención</a></li>
                             </ul>
                         </li>
 

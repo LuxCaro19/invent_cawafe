@@ -1,76 +1,184 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2 class="mb-3">Detalles</h2>
 
-<div class="mb-3 d-flex gap-1">
-  <a href="{% url 'lista_mantenciones' %}" class="btn btn-outline-secondary">← Volver</a>
-  <a href="{% url 'nueva_mantencion' mantencion.id %}" class="btn btn-outline-success">Ejecutar nueva mantención</a>
+
+<div class="d-flex align-items-center gap-3 mt-3 mb-3">
+  <a href="{% url 'lista_mantenciones' %}" class="btn btn-outline-secondary position-relative">
+    ←
+  </a>
+
+  <h2 class="mb-0">Detalles de equipo en mantenimiento</h2>
 </div>
 
 <div class="card mb-4">
-  <div class="card-body">
-    <p><strong>Equipo:</strong> {{ mantencion.equipo.etiqueta }}</p>
-    <p><strong>Tipo de Equipo:</strong> {{ mantencion.equipo.modelo.tipo.tipo }}</p>
-    <p><strong>Ubicación:</strong> {{ mantencion.ubicacion|default:"Sin ubicación" }}</p>
-    <p><strong>Última Mantención:</strong> 
-      {% if mantencion.ultima_fecha %}
-        {{ mantencion.ultima_fecha|date:"d-m-Y" }}
-      {% else %}
-        <span class="text-muted">Sin registros</span>
-      {% endif %}
-    </p>
-    <p><strong>Próxima Mantención:</strong> 
+  <!-- Parte superior: Info y vigencia -->
+  <div class="card-body row">
+    <!-- IZQUIERDA (50%) -->
+    <div class="col-md-6">
+      <p><strong>Equipo:</strong> {{ mantencion.equipo.etiqueta }}</p>
+      <p><strong>Tipo de Equipo:</strong> {{ mantencion.equipo.modelo.tipo.tipo }}</p>
+      <p><strong>Asignado a:</strong> {{ mantencion.equipo.usuario_asignado.nombre_completo|default:"Sin asignar" }}</p>
+      <p><strong>Ubicación:</strong> {{ mantencion.equipo.usuario_asignado.ubicacion|default:"Sin ubicación" }}</p>  
+      <p><strong>Última Mantención:</strong>
+        {% if mantencion.ultima_fecha %}
+          {{ mantencion.ultima_fecha|date:"d-m-Y" }}
+        {% else %}
+          <span class="text-muted">Sin registros</span>
+        {% endif %}
+      </p>
+      <p><strong>Próxima Mantención:</strong> 
+        {% if mantencion.fecha_proxima %}
+          {{ mantencion.fecha_proxima|date:"d-m-Y" }}
+        {% else %}
+          <span class="text-muted">Sin fecha asignada</span>
+        {% endif %}
+      </p>
+    </div>
+
+    <!-- DERECHA (50%) centrado vertical y horizontal -->
+    <div class="col-md-6 d-flex flex-column align-items-center justify-content-center text-center">
       {% if mantencion.fecha_proxima %}
-        {{ mantencion.fecha_proxima|date:"d-m-Y" }}
+        {% if mantencion.fecha_proxima <= today %}
+          <div class="display-6 fw-bold text-danger">Vencida</div>
+          <div class="text-muted">Mantención vencida</div>
+        {% else %}
+          <div class="display-6 fw-bold text-success">
+            {{ mantencion.fecha_proxima|timeuntil:today }}
+          </div>
+          <div class="text-muted">de vigencia</div>
+        {% endif %}
       {% else %}
-        <span class="text-muted">Sin fecha asignada</span>
+        <div class="fs-4 text-muted">Sin fecha asignada</div>
       {% endif %}
-    </p>
+
+      {% if mantencion.tipo and mantencion.tipo.nombre != "Creación" %}
+        <a href="{% url 'nueva_mantencion' mantencion.id %}" class="btn btn-success mt-3">
+          <i class="bi bi-wrench-adjustable-circle"></i> Iniciar mantenimiento
+        </a>
+      {% else %}
+        <div class="alert alert-warning text-center mt-3 w-100">
+          Primero debes definir qué tipo de mantención debe ser realizada antes de iniciar el Mantenimiento.
+        </div>
+      {% endif %}
+    </div>
   </div>
 
-  <div class="card-body border-top">
-    <h4 class="">
+  <!-- Parte inferior: Tareas -->
+<div class="card-body border-top">
+  {% if mantencion.tipo and mantencion.tipo.nombre != "Creación" %}
+    <h4 class="mb-3">
       Tipo de mantención: 
-      <a href="{% url 'editar_mantencion' mantencion.id %}" class="btn btn-outline-primary btn-sm">
+      <a href="{% url 'cambiar_mantencion' mantencion.id %}" class="btn btn-outline-primary btn-sm ms-2">
         {{ mantencion.tipo.nombre }}
       </a>
     </h4>
-    </h4>Tareas</h4>
+    <h6 class="text-muted">Tareas:</h6>
     {% if tareas_tipo %}
-      <div class="overflow-auto mb-1 border-top border-bottom" style="max-height: 180px;">
-        <h6 class="list-group">
+      <div class="overflow-auto border-top border-bottom mb-2" style="max-height: 180px;">
+        <ul class="list-group list-group-flush">
           {% for t in tareas_tipo %}
             <li class="list-group-item">• {{ t.descripcion }}</li>
           {% endfor %}
-        </h6>
+        </ul>
       </div>
     {% else %}
-      <div class="alert alert-secondary">
-        Este tipo de mantención no tiene tareas definidas.
-      </div>
+      <div class="alert alert-secondary">Este tipo de mantención no tiene tareas definidas.</div>
     {% endif %}
-    <h6 class="mb-1" >Se realiza cada {{ mantencion.tipo.frecuencia_dias }} dias</h6>
-  </div>
+    <h6 class="text-muted">Se realiza cada <strong>{{ mantencion.tipo.frecuencia_dias }}</strong> días</h6>
+  {% else %}
+    <div class="alert alert-warning">
+      Este equipo aún no tiene un tipo de mantención definido.  
+      <a href="{% url 'cambiar_mantencion' mantencion.id %}" class="btn btn-warning btn-sm ms-2">
+        Haz clic aquí para establecerlo
+      </a>
+    </div>
+  {% endif %}
 </div>
 
-<h4 class="mb-3">Mantenciones realizadas</h4>
+<div class="card-body border-top">
+  <h4 class="mb-3">Mantenciones realizadas</h4>
+ 
+    {% if registros %}
+      <ul class="list-group mb-4">
+        {% for r in registros %}
+          <li class="list-group-item list-group-item-action py-2 px-3" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalRegistro{{ r.id }}">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="text-truncate" style="max-width: 75%;">
+                <span class="text-muted">{{ r.fecha|date:"d-m-Y" }}</span> |
+                <span><strong>Tipo:</strong> {{ r.tipo }}</span> |
+                <span><strong>Realizada por:</strong> {{ r.responsable|default:"Sin responsable" }}</span>
+              </div>
+              <div>
+              {% with r.tareas_realizadas.all as tareas %}
+                {% with tareas|length as total %}
+                  {% with tareas|dictsort:"realizada" as tareas_ordenadas %}
+                    {% with tareas_ordenadas|yesno:"1" as hechas %}
+                      <span class="badge bg-secondary">Tareas realizadas: {{ r.tareas_hechas }}/{{ r.total_tareas }}</span>
 
-{% if registros %}
-  <div class="d-flex flex-nowrap overflow-auto mb-4">
+                    {% endwith %}
+                  {% endwith %}
+                {% endwith %}
+              {% endwith %}
+            </div>
+
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+
+    <!-- 🔄 Colocamos los modales después del ul para evitar conflicto con scroll -->
     {% for r in registros %}
-      <div class="card me-2" style="min-width: 160px;">
-        <div class="card-body p-2 text-center d-flex flex-column justify-content-center">
-          <h6 class="card-title">{{ r.tipo }}</h6>
-          <h6 class="card-title">{{ r.fecha|date:"d-m-Y" }}</h6>
-          <p class="card-text small text-muted mb-0">{{ r.observaciones|default:"(Sin descripción)" }}</p>
+      <div class="modal fade" id="modalRegistro{{ r.id }}" tabindex="-1" aria-labelledby="modalLabel{{ r.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalLabel{{ r.id }}">Detalles de mantención</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+
+              <div class="mb-2 small">
+                <div><strong>Tipo:</strong> {{ r.tipo }}</div>
+                <div><strong>Fecha:</strong> {{ r.fecha|date:"d-m-Y" }}</div>
+                <div><strong>Responsable:</strong> {{ r.responsable|default:"N/D" }}</div>
+                <div><strong>Ubicación:</strong> {{ r.ubicacion }}</div>
+                <div>
+                  <strong>Observaciones:</strong>
+                  <div class="border rounded bg-light p-1 "">
+                    {{ r.observaciones|default:"(Sin descripción)" }}
+                  </div>
+                </div>
+
+              </div>
+
+              <hr class="my-2">
+
+              <h6 class="mb-2">Tareas realizadas:</h6>
+
+              <ul class="list-group">
+                {% for t in r.tareas_realizadas.all %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+                    <span>{{ t.descripcion }}</span>
+                    {% if t.realizada %}
+                      <span class="badge bg-success">✔ Realizada</span>
+                    {% else %}
+                      <span class="badge bg-secondary">✗ Pendiente</span>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+
+            </div>
+          </div>
         </div>
       </div>
     {% endfor %}
-  </div>
-{% else %}
-  <div class="alert alert-warning">No hay registros para esta mantención.</div>
-{% endif %}
-
+  {% else %}
+    <div class="alert alert-warning">No hay registros para esta mantención.</div>
+  {% endif %}
+</div>
 
 {% endblock %}

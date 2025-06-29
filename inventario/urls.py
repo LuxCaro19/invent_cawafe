@@ -30,5 +30,8 @@ urlpatterns = [
     path('lista_tipos_equipos/', views.listado_tipo_equipos, name='listado_tipo_equipos'),
     path('lista_procesadores/', views.listado_procesadores, name='listado_procesadores'),
     path('lista_sistemas_operativos/', views.listado_sistemas_operativos, name='listado_sistemas_operativos'),
-    path('lista_estado_equipos/', views.listado_estado_equipos, name='listado_estado_equipos')
+    path('lista_estado_equipos/', views.listado_estado_equipos, name='listado_estados'),
+
+    # URLS ADICIONALES
+    path('obtener_marca/', views.obtener_marca, name='obtener_marca')
 ]
