@@ -3,6 +3,9 @@ from inventario.models import Equipo, Estado_equipo
 from usuarios.models import Usuario
 from .models import HistorialEquipo
 from collections import defaultdict
+from django.http import JsonResponse
+from django.db.models import Q
+
 
 def vista_asociacion(request):
     equipos = []
@@ -34,19 +37,22 @@ def vista_asociacion(request):
 
     if request.method == 'POST':
         equipo_id = request.POST.get('equipo_id')
-        usuario_id = request.POST.get('empleado_id')
+        usuario_id = request.POST.get('usuario_id')  # este debe llamarse igual que en el HTML
         estado_nombre = request.POST.get('estado')
+        a_bodega = request.POST.get('bodega') == 'on'
 
         equipo = Equipo.objects.get(id=equipo_id)
 
-        # Actualizar usuario asignado
-        if estado_nombre.lower() == 'en_bodega':
+        if a_bodega:
             equipo.usuario_asignado = None
-        elif usuario_id:
-            nuevo_usuario = Usuario.objects.get(id=usuario_id)
-            equipo.usuario_asignado = nuevo_usuario
+            equipo.en_bodega = True
         else:
-            equipo.usuario_asignado = None
+            equipo.en_bodega = False
+            if usuario_id:
+                nuevo_usuario = Usuario.objects.get(id=usuario_id)
+                equipo.usuario_asignado = nuevo_usuario
+            else:
+                equipo.usuario_asignado = None
 
         # Actualizar estado
         estado_instancia = Estado_equipo.objects.get(nombre__iexact=estado_nombre)
@@ -65,7 +71,7 @@ def vista_asociacion(request):
 
     return render(request, 'asociacion/vista_asociacion.html', {
         'equipos': equipos,
-        'empleados': usuarios,
+        'usuarios': usuarios,
         'query_equipo': query_equipo or '',
         'query_usuario': query_usuario or '',
         'equipos_con_historial': equipos_con_historial,
@@ -97,3 +103,15 @@ def vista_lista_asociaciones(request):
     return render(request, 'asociacion/lista_asociaciones.html', {
         'equipos': equipos,
     })
+
+def autocomplete_equipos(request):
+    term = request.GET.get('term', '')
+    qs = Equipo.objects.filter(etiqueta__icontains=term)
+    etiquetas = list(qs.values_list('etiqueta', flat=True)[:10])  # máximo 10 resultados
+    return JsonResponse(etiquetas, safe=False)
+    
+def autocomplete_usuarios(request):
+    term = request.GET.get('term', '')
+    usuarios = Usuario.objects.filter(nombre_completo__icontains=term)[:10]
+    results = [{"label": u.nombre_completo, "value": u.nombre_completo} for u in usuarios]
+    return JsonResponse(results, safe=False)
