@@ -1,8 +1,8 @@
 {% extends 'base/lista/listado_base.html' %} <!-- Hereda de la plantilla base -->
 
-{% block title %}Equipos informáticos{% endblock %} <!-- Sobrescribe el título de la página -->
+{% block title %}Equipos informáticos{% endblock %}
 
-{% block subtitle %}Equipos informáticos{% endblock %} <!-- Título secundario (puedes personalizarlo) -->
+{% block subtitle %}Equipos informáticos{% endblock %}
 
 {% block group_dropdown %}
 <div class="dropdown">
@@ -20,9 +20,7 @@
 </div>
 {% endblock %}
 
-
 {% block table_headers %}
-    <!--<th>ID</th>-->
     <th class="sorting">Etiqueta</th>
     <th class="sorting">S.O.</th>
     <th class="sorting">Marca</th>
@@ -35,7 +33,6 @@
 {% block table_body %}
     {% for equipo in equipos %}
     <tr class="clickable-row" data-href="{% url 'detalle_equipo' equipo.id %}">
-        <!--<td>{{ equipo.id }}</td>-->
         <td>{{ equipo.etiqueta }}</td>
         <td>{{ equipo.sistema_operativo.nombre }}</td>
         <td>{{ equipo.modelo.marca.marca }}</td>
@@ -49,15 +46,14 @@
             {% endif %}
         </td>
         <td>
-            {% if equipo.usuario_asignado and equipo.usuario_asignado.ubicacion %}
+            {% if equipo.en_bodega and equipo.ubicacion %}
+                {{ equipo.ubicacion.nombre }}
+            {% elif equipo.usuario_asignado and equipo.usuario_asignado.ubicacion %}
                 {{ equipo.usuario_asignado.ubicacion.nombre }}
             {% else %}
-                No asignado
+                Sin ubicación
             {% endif %}
         </td>
-
-
-
     </tr>
     {% endfor %}
 {% endblock %}

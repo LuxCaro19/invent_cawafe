@@ -33,6 +33,21 @@
         <p><strong>Modelo:</strong> {{ equipo.modelo.nombre }}</p>
         <p><strong>Estado actual:</strong> {{ equipo.estado }}</p>
         <p><strong>Empleado asignado:</strong> {{ equipo.usuario_asignado.nombre_completo|default:"No asignado" }}</p>
+        <p><strong>Ubicación:</strong>
+            {% if equipo.en_bodega %}
+                En bodega
+            {% elif equipo.usuario_asignado %}
+                {% if equipo.usuario_asignado.obra %}
+                    {{ equipo.usuario_asignado.obra }}
+                {% elif equipo.usuario_asignado.sala_venta %}
+                    {{ equipo.usuario_asignado.sala_venta }}
+                {% else %}
+                    Sin ubicación
+                {% endif %}
+            {% else %}
+                No asignado
+            {% endif %}
+        </p>
 
         <form method="post">
             {% csrf_token %}
@@ -53,13 +68,14 @@
             <div class="mb-3">
                 <label>Estado del equipo:</label>
                 <select name="estado" class="form-control">
-                {% for estado in estados %}
-                    <option value="{{ estado.nombre }}" {% if equipo.estado.nombre == estado.nombre %}selected{% endif %}>
-                    {{ estado.nombre }}
-                    </option>
-                {% endfor %}
+                    {% for estado in estados %}
+                        <option value="{{ estado.nombre }}" {% if equipo.estado.nombre == estado.nombre %}selected{% endif %}>
+                            {{ estado.nombre }}
+                        </option>
+                    {% endfor %}
                 </select>
             </div>
+
             <div class="form-check mb-3">
                 <input class="form-check-input" type="checkbox" name="bodega" id="bodegaCheckbox{{ equipo.id }}" {% if equipo.en_bodega %}checked{% endif %}>
                 <label class="form-check-label" for="bodegaCheckbox{{ equipo.id }}">
