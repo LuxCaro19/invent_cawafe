@@ -8,10 +8,9 @@
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 </head>
 <body class="p-4">
-    <a href="/asociacion/" class="btn btn-secondary mb-3">← Volver</a>
     {% include 'navbar/navbar.html' %}
     <h3>Historial de equipo: {{ equipo.nombre }}</h3>
-    <p><strong>UUID:</strong> {{ equipo.uuid }}</p>
+
 
     <table class="table table-bordered mt-3">
         <thead class="table-light">

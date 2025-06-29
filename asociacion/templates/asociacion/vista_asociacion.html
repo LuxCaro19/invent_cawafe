@@ -53,9 +53,11 @@
             <div class="mb-3">
                 <label>Estado del equipo:</label>
                 <select name="estado" class="form-control">
-                    <option value="operativo" {% if equipo.estado.nombre == 'operativo' %}selected{% endif %}>Operativo</option>
-                    <option value="mantencion" {% if equipo.estado.nombre == 'mantencion' %}selected{% endif %}>Mantenimiento</option>
-                    <option value="en_bodega" {% if equipo.estado.nombre == 'en_bodega' %}selected{% endif %}>En bodega</option>
+                {% for estado in estados %}
+                    <option value="{{ estado.nombre }}" {% if equipo.estado.nombre == estado.nombre %}selected{% endif %}>
+                    {{ estado.nombre }}
+                    </option>
+                {% endfor %}
                 </select>
             </div>
             <div class="form-check mb-3">

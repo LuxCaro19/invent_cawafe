@@ -37,8 +37,7 @@ def vista_asociacion(request):
 
     if request.method == 'POST':
         equipo_id = request.POST.get('equipo_id')
-        usuario_id = request.POST.get('usuario_id')  # este debe llamarse igual que en el HTML
-        estado_nombre = request.POST.get('estado')
+        usuario_id = request.POST.get('usuario_id')
         a_bodega = request.POST.get('bodega') == 'on'
 
         equipo = Equipo.objects.get(id=equipo_id)
@@ -46,28 +45,31 @@ def vista_asociacion(request):
         if a_bodega:
             equipo.usuario_asignado = None
             equipo.en_bodega = True
+            nuevo_estado = Estado_equipo.objects.get(nombre__iexact="En bodega")
         else:
             equipo.en_bodega = False
             if usuario_id:
                 nuevo_usuario = Usuario.objects.get(id=usuario_id)
                 equipo.usuario_asignado = nuevo_usuario
+                nuevo_estado = Estado_equipo.objects.get(nombre__iexact="Asignado")
             else:
                 equipo.usuario_asignado = None
+                nuevo_estado = Estado_equipo.objects.get(nombre__iexact="Operativo")
 
-        # Actualizar estado
-        estado_instancia = Estado_equipo.objects.get(nombre__iexact=estado_nombre)
-        equipo.estado = estado_instancia
+        equipo.estado = nuevo_estado
         equipo.save()
 
-        # Registrar historial
         HistorialEquipo.objects.create(
             equipo=equipo,
             usuario_asignado=equipo.usuario_asignado,
-            estado=estado_instancia,
+            estado=nuevo_estado,
             registrado_por=request.user
         )
 
         return redirect(f'/asociacion/?equipo={query_equipo or ""}&usuario={query_usuario or ""}')
+
+    # Asegúrate de enviar los estados si necesitas renderizar el dropdown
+    estados = Estado_equipo.objects.all()
 
     return render(request, 'asociacion/vista_asociacion.html', {
         'equipos': equipos,
@@ -76,8 +78,8 @@ def vista_asociacion(request):
         'query_usuario': query_usuario or '',
         'equipos_con_historial': equipos_con_historial,
         'todos_los_equipos': Equipo.objects.all(),
+        'estados': estados,
     })
-
 
 def historial_equipo(request, equipo_id):
     equipo = Equipo.objects.get(id=equipo_id)
