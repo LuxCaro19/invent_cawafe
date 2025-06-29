@@ -19,17 +19,43 @@
         </div>
     </div>
 
-
     <div class="row">
         <div class="col-12 col-md-6 mb-3">
             <div class="border rounded p-3 h-100">
                 <div class="mb-2">
-                    <label><strong>Marca:</strong></label>
-                    <input type="text" id="marca-display" class="form-control" value="{{ marca_actual }}" readonly>
+                    <label><strong>Modelo:</strong></label>
+                    <select id="id_modelo" name="modelo" class="form-control select2" data-url="{% url 'obtener_marca' %}">
+                        {% for option in form.modelo.field.choices %}
+                            <option value="{{ option.0 }}" {% if option.0 == form.modelo.value %}selected{% endif %}>{{ option.1 }}</option>
+                        {% endfor %}
+                    </select>
+                    <script>
+                        $(document).ready(function () {
+                            $('#id_modelo').on('select2:select', function (e) {
+                                const modeloId = $(this).val();
+                                const url = $(this).data('url');
+                                const marcaDisplay = document.getElementById("marca-display");
+
+                                if (modeloId && url) {
+                                    fetch(`${url}?modelo_id=${modeloId}`)
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            marcaDisplay.value = data.marca || "";
+                                        })
+                                        .catch(err => {
+                                            console.error("Error al obtener marca:", err);
+                                            marcaDisplay.value = "";
+                                        });
+                                } else {
+                                    marcaDisplay.value = "";
+                                }
+                            });
+                        });
+                    </script>
                 </div>
                 <div class="mb-2">
-                    <label><strong>Modelo:</strong></label>
-                    {{ form.modelo }}
+                    <label><strong>Marca:</strong></label>
+                    <input type="text" id="marca-display" class="form-control" value="{{ marca_actual }}" readonly>
                 </div>
                 <div class="mb-2">
                     <label><strong>Sistema Operativo:</strong></label>
@@ -48,6 +74,10 @@
                     {{ form.almacenamiento }}
                 </div>
                 <div class="mb-2">
+                    <label><strong>Número de serie:</strong></label>
+                    {{ form.numero_serie }}
+                </div>
+                <div class="mb-2">
                     <label><strong>Estado:</strong></label>
                     {{ form.estado }}
                 </div>
@@ -56,21 +86,43 @@
 
         <div class="col-12 col-md-6 mb-3">
             <div class="border rounded p-3 h-100">
-                
+                <!-- Panel adicional vacío -->
             </div>
         </div>
-
     </div>
-
 </form>
 
+<!-- Select2 y marca dinámica -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         $('.select2').select2({
-          width: '100%',  // Para que se vea igual al form-control
-          placeholder: "Selecciona un modelo",
-          allowClear: true
+            width: '100%',
+            placeholder: "Selecciona un modelo",
+            allowClear: true
         });
-      });
 
+        const modeloSelect = document.getElementById("id_modelo");
+        const marcaDisplay = document.getElementById("marca-display");
+
+        if (modeloSelect) {
+            modeloSelect.addEventListener("change", function () {
+                const modeloId = this.value;
+                const url = this.dataset.url;
+
+                if (modeloId && url) {
+                    fetch(`${url}?modelo_id=${modeloId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            marcaDisplay.value = data.marca || "";
+                        })
+                        .catch(err => {
+                            console.error("Error al obtener marca:", err);
+                            marcaDisplay.value = "";
+                        });
+                } else {
+                    marcaDisplay.value = "";
+                }
+            });
+        }
+    });
 </script>
