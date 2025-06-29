@@ -34,7 +34,7 @@ def crear_mantencion_al_crear_equipo(sender, instance, created, **kwargs):
     Registro_mantencion.objects.create(
         mantencion=mantencion,
         responsable=sistema,
-        observaciones='Mantención inicial al crear equipo',
+        observaciones='Equipo agregado al sistema de mantencion.',
         ubicacion='Desconocida',
         tipo='Inicial'
     )

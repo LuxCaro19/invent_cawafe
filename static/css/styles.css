@@ -139,6 +139,10 @@ body {
     border-left: 0.3em solid rgba(0, 0, 0, 0.6);
     margin-left: auto;
 }
+.scroll-b {
+  min-height: 100vh;
+  overflow-y: auto;
+}
 
 /* ------------------ MEDIA QUERIES ------------------ */
 @media (max-width: 768px) {

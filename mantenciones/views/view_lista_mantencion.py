@@ -7,7 +7,12 @@ def lista_mantenciones(request):
     campo = request.GET.get('campo', '')
     agrupar = request.GET.get('agrupar', '')
     hoy = date.today()
-    mantenciones = Mantencion.objects.select_related('equipo__modelo__tipo', 'tipo')
+
+    mantenciones = Mantencion.objects.select_related(
+        'equipo__modelo__tipo',
+        'tipo',
+        'equipo__usuario_asignado__ubicacion'
+    )
 
     # Filtro de texto
     if buscar:
@@ -18,7 +23,6 @@ def lista_mantenciones(request):
         elif campo == 'tipo':
             mantenciones = mantenciones.filter(tipo__nombre__icontains=buscar)
         elif campo == 'vigencia':
-            hoy = date.today()
             if buscar.lower() == 'vigente':
                 mantenciones = mantenciones.filter(fecha_proxima__gte=hoy)
             elif buscar.lower() == 'atrasado':
@@ -27,7 +31,6 @@ def lista_mantenciones(request):
     # Anotamos última fecha y vigencia en cada mantención
     for m in mantenciones:
         m.ultima_fecha_valor = m.ultima_fecha()
-        hoy = date.today()
         if m.fecha_proxima:
             m.vigencia = 'Vigente' if m.fecha_proxima >= hoy else 'Atrasado'
         else:
@@ -44,13 +47,12 @@ def lista_mantenciones(request):
             elif agrupar == 'vigencia':
                 clave = m.vigencia
             elif agrupar == 'ubicacion':
-                clave = m.ubicacion if m.ubicacion else 'Sin ubicación'
+                clave = m.equipo.usuario_asignado.ubicacion.nombre if getattr(m.equipo.usuario_asignado, 'ubicacion', None) else 'Sin ubicación'
             else:
                 clave = 'Otros'
             grupos.setdefault(clave, []).append(m)
     else:
         grupos[''] = list(mantenciones)
-
 
     return render(request, 'mantenciones/lista_mantenciones.html', {
         'grupos': grupos,

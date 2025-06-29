@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let countdown = null;
 
     modal.addEventListener("shown.bs.modal", () => {
-      let segundos = 5;
+      let segundos = 2;
 
       // Reiniciar estado inicial
       btn.disabled = true;
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
         countdown = null;
       }
       btn.disabled = true;
-      btn.innerText = "Espera 5s...";
+      btn.innerText = "Espera 2s...";
     });
   });
 });
