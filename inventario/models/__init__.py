@@ -6,3 +6,4 @@ from .procesador import Procesador
 from .estado_equipo import Estado_equipo
 from .sistema_operativo import Sistema_operativo
 from .equipo import Equipo
+from .ubicacion import Ubicacion

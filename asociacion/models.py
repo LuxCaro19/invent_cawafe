@@ -1,10 +1,6 @@
 from django.db import models
 from inventario.models import Equipo
 from usuarios.models import Usuario
-from django.contrib.auth.models import User
-from django.db import models
-from inventario.models import Equipo
-from usuarios.models import Usuario
 from django.conf import settings
 
 class HistorialEquipo(models.Model):

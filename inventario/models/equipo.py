@@ -26,6 +26,7 @@ class Equipo(models.Model):
     procesador = models.ForeignKey(Procesador, on_delete=models.SET_NULL, null=True )
     estado = models.ForeignKey(Estado_equipo, on_delete=models.SET_NULL, null=True )
     usuario_asignado = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True)
+    ubicacion = models.ForeignKey('Ubicacion', on_delete=models.SET_NULL, null=True, blank=True)  # NUEVO
 
     def __str__(self):
         return self.etiqueta
