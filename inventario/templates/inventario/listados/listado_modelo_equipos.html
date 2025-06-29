@@ -4,6 +4,17 @@
 
 {% block subtitle %}Modelos de Equipos{% endblock %} <!-- Título secundario (puedes personalizarlo) -->
 
+{% block group_dropdown %}
+    <div class="dropdown">
+    <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="groupDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Agrupar por...
+    </button>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="groupDropdown">
+        <button class="dropdown-item group-option" data-column-name="Marca">Marca</button>
+    </div>
+    </div>
+{% endblock %}
+
 {% block table_headers %}
     <th>ID</th>
     <th>Nombre</th>
