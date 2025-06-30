@@ -73,12 +73,19 @@ def vista_asociacion(request):
         equipo.save()
 
         # Registrar historial
-        HistorialEquipo.objects.create(
-            equipo=equipo,
-            usuario_asignado=equipo.usuario_asignado,
-            estado=equipo.estado,
-            registrado_por=request.user
-        )
+        ultimo_historial = HistorialEquipo.objects.filter(equipo=equipo).order_by('-fecha').first()
+
+        if (
+            not ultimo_historial or
+            ultimo_historial.usuario_asignado != equipo.usuario_asignado or
+            ultimo_historial.estado != equipo.estado
+        ):
+            HistorialEquipo.objects.create(
+                equipo=equipo,
+                usuario_asignado=equipo.usuario_asignado,
+                estado=equipo.estado,
+                registrado_por=request.user
+            )
 
         return redirect(f'/asociacion/?equipo={query_equipo or ""}&usuario={query_usuario or ""}')
 

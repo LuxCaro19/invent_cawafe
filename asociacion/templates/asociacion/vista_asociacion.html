@@ -89,24 +89,19 @@
 
         <h5 class="mt-4">Historial reciente</h5>
         <div class="border p-3 rounded bg-light">
+            <h5 class="text-secondary mt-4">Historial reciente</h5>
+            <hr>
+
             {% if historial %}
-                <ul class="mb-0">
-                    {% for h in historial %}
-                        <li>
-                            {{ h.fecha|date:"d/m/Y H:i" }} - {{ h.estado }}
-                            {% if h.usuario_asignado %}
-                                a {{ h.usuario_asignado.nombre_completo }}
-                            {% endif %}
-                            {% if h.registrado_por %}
-                                (por <span title="{{ h.registrado_por.correo }}">{{ h.registrado_por.nombre_completo }}</span>)
-                            {% else %}
-                                (por <em>usuario desconocido</em>)
-                            {% endif %}
+                <ul class="list-group">
+                    {% for registro in historial %}
+                        <li class="list-group-item">
+                            {{ registro.fecha|date:"d/m/Y H:i" }} - {{ registro.estado }} {% if registro.usuario_asignador %}(por {{ registro.usuario_asignador }}){% endif %}
                         </li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <p class="text-muted">Sin historial reciente.</p>
+                <p class="text-muted">Este equipo aún no ha sido asociado a ningún empleado.</p>
             {% endif %}
         </div>
     </div>
