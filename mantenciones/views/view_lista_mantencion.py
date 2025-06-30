@@ -60,6 +60,7 @@ def lista_mantenciones(request):
         grupos = {}
 
     return render(request, 'mantenciones/lista_mantenciones.html', {
+
         'grupos': grupos,
         'filtro_busqueda': buscar,
         'campo': campo,

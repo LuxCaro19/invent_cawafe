@@ -36,13 +36,10 @@
   <!-- 1/3: Botón agregar alineado a la derecha -->
   <div class="col-md-4">
     <div class="d-flex align-items-center gap-2">
-      <button type="button" class="btn btn-outline-danger" disabled>
+      <button type="button" class="btn btn-outline-danger"  disabled>
         🗑️ Eliminar
       </button>
-      <button type="button" class="btn btn-outline-warning" disabled>
-        🛠️  tipo 
-      </button>
-      <button type="button" class="btn btn-outline-secondary" disabled title="Enviar correo a los usuarios asignados de los equipos seleccionados">
+      <button type="button" class="btn btn-outline-secondary hidden"  disabled title="Enviar correo a los usuarios asignados de los equipos seleccionados">
         ✉️ Contactar
       </button>
       <a href="{% url 'equipos_sin_mantencion' %}" class="btn btn-outline-success ms-auto">
@@ -54,131 +51,125 @@
 
 
 {% if grupos %}
-  {% with total=0 %}
-    {% for g, i in grupos.items %}
-      {% if i %}
-        {% with total=total|add:i|length %}{% endwith %}
+  {% for grupo, items in grupos.items %}
+    {% if items %}
+      {% if forloop.first %}
+        <div class="table-responsive overflow-hidden">
       {% endif %}
-    {% endfor %}
-    {% if total > 0 %}
-      <div class="table-responsive overflow-hidden">
-        {% for grupo, items in grupos.items %}
-          {% if items %}
-            {% if grupo %}
-              <h5 class="ps-3 pt-3 grupo-titulo" data-bs-toggle="collapse" data-bs-target="#grupo-{{ forloop.counter }}" role="button" aria-expanded="false" aria-controls="grupo-{{ forloop.counter }}" style="cursor: pointer;">
-                {{ grupo }}
-              </h5>
-              <div id="grupo-{{ forloop.counter }}" class="collapse">
-            {% else %}
-              <div id="grupo-unico" class="collapse show">
-            {% endif %}
-              <div class="table-responsive overflow-hidden">
-                <table class="table table-striped table-bordered align-middle mantencion-table rounded-3 overflow-hidden">
-                  <thead class="table-danger">
-                    <tr>
-                      <th><div class="form-check d-flex justify-content-center">
-                        <input class="form-check-input check-cabecera" type="checkbox" style="width: 1.2em; height: 1.2em;">
-                      </div></th>
-                      <th><a>Equipo</a></th>
-                      <th><a>Tipo de Equipo</a></th>
-                      <th><a>Usuario Asignado</a></th>
-                      <th><a>Ubicación</a></th>
-                      <th><a>Tipo Mantención</a></th>
-                      <th><a>Última Mantención</a></th>
-                      <th><a>Vigencia</a></th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for m in items %}
-                    <tr>
-                      <td>
-                        <div class="form-check d-flex justify-content-center m-0">
-                          <input class="form-check-input check-mantencion" type="checkbox" value="{{ m.id }}" style="width: 1.2em; height: 1.2em;">
-                        </div>
-                      </td>
-                      <td>
-                        <a href="{% url 'detalle_equipo' m.equipo.id %}" class="text-decoration-none fw-semibold">
-                          {{ m.equipo.etiqueta }}
-                        </a>
-                      </td>
-                      <td>{{ m.equipo.modelo.tipo }}</td>
-                      <td>
-                        {% if m.equipo.usuario_asignado %}
-                          {{ m.equipo.usuario_asignado.nombre }}
-                        {% else %}
-                          <span class="text-muted">(No asignado)</span>
-                        {% endif %}
-                      </td>
-                      <td>
-                        {% if m.equipo.usuario_asignado and m.equipo.usuario_asignado.ubicacion %}
-                          {{ m.equipo.usuario_asignado.ubicacion }}
-                        {% else %}
-                          <span class="text-muted">Sin ubicación</span>
-                        {% endif %}
-                      </td>
-                      <td>{{ m.tipo.nombre }}</td>
-                      <td>{{ m.ultima_fecha|date:"m-y" }}</td>
-                      <td>
-                        {% if m.fecha_proxima %}
-                          {% if m.fecha_proxima < today %}
-                            <span class="text-danger">
-                              Atrasado por {{ m.fecha_proxima|timesince:today|cut:"minutes"|cut:"hours"|cut:"weeks"|cut:"months"|cut:"years"|cut:"ago"|slice:":10" }}
-                            </span>
-                          {% else %}
-                            <span class="text-success">
-                              {{ m.fecha_proxima|timeuntil:today|cut:"minutes"|cut:"hours"|cut:"weeks"|cut:"months"|cut:"years"|cut:"ago"|slice:":10" }}
-                            </span>
-                          {% endif %}
-                        {% else %}
-                          <span class="text-muted">Sin fecha</span>
-                        {% endif %}
-                      </td>
-                      <td class="text-nowrap">
-                        <a href="{% url 'detalle_mantencion' m.id %}" class="btn btn-sm btn-outline-primary me-2">Detalles</a>
-                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmarEliminacion-{{ m.id }}">Eliminar</button>
-                      </td>
-                    </tr>
 
-                    <div class="modal fade" id="confirmarEliminacion-{{ m.id }}" tabindex="-1" aria-labelledby="modalLabel{{ m.id }}" aria-hidden="true">
-                      <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                          <div class="modal-header bg-danger text-white">
-                            <h5 class="modal-title text-center" id="modalLabel{{ m.id }}">Confirmación de eliminación de mantención</h5>
-                          </div>
-                          <div class="modal-body text-center">
-                            Esta acción eliminará el equipo <strong>{{ m.equipo.etiqueta }}</strong> del sistema de mantención, incluyendo todo su historial asociado.<br>
-                            <strong>¿Está seguro de que desea continuar?</strong>
-                          </div>
-                          <div class="modal-footer justify-content-center">
-                            <button type="button" class="btn btn-secondary me-3" data-bs-dismiss="modal">Cancelar</button>
-                            <form method="post" action="{% url 'eliminar_mantencion' m.id %}">
-                              {% csrf_token %}
-                              <button id="confirmar-btn-{{ m.id }}" type="submit" class="btn btn-danger" disabled>Espera 2s...</button>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
+      {% if grupo %}
+        <h5 class="ps-3 pt-3 grupo-titulo" data-bs-toggle="collapse" data-bs-target="#grupo-{{ forloop.counter }}" role="button" aria-expanded="false" aria-controls="grupo-{{ forloop.counter }}" style="cursor: pointer;">
+          {{ grupo }}
+        </h5>
+        <div id="grupo-{{ forloop.counter }}" class="collapse">
+      {% else %}
+        <div id="grupo-unico" class="collapse show">
+      {% endif %}
+
+        <div class="table-responsive overflow-hidden">
+          <table class="table table-striped table-bordered align-middle mantencion-table rounded-3 overflow-hidden">
+            <thead class="table-danger">
+              <tr>
+                <th><div class="form-check d-flex justify-content-center">
+                  <input class="form-check-input check-cabecera" type="checkbox" style="width: 1.2em; height: 1.2em;">
+                </div></th>
+                <th>Equipo</th>
+                <th>Tipo de Equipo</th>
+                <th>Usuario Asignado</th>
+                <th>Ubicación</th>
+                <th>Tipo Mantención</th>
+                <th>Última Mantención</th>
+                <th>Vigencia</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in items %}
+              <tr>
+                <td>
+                  <div class="form-check d-flex justify-content-center m-0">
+                    <input class="form-check-input check-mantencion" type="checkbox" value="{{ m.id }}" style="width: 1.2em; height: 1.2em;">
+                  </div>
+                </td>
+                <td>
+                  <a href="{% url 'detalle_equipo' m.equipo.id %}" class="text-decoration-none fw-semibold">
+                    {{ m.equipo.etiqueta }}
+                  </a>
+                </td>
+                <td>{{ m.equipo.modelo.tipo }}</td>
+                <td>
+                  {% if m.equipo.usuario_asignado %}
+                    {{ m.equipo.usuario_asignado.nombre }}
+                  {% else %}
+                    <span class="text-muted">(No asignado)</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if m.equipo.usuario_asignado and m.equipo.usuario_asignado.ubicacion %}
+                    {{ m.equipo.usuario_asignado.ubicacion }}
+                  {% else %}
+                    <span class="text-muted">Sin ubicación</span>
+                  {% endif %}
+                </td>
+                <td>{{ m.tipo.nombre }}</td>
+                <td>{{ m.ultima_fecha|date:"m-y" }}</td>
+                <td>
+                  {% if m.fecha_proxima %}
+                    {% if m.fecha_proxima < today %}
+                      <span class="text-danger">
+                        Atrasado por {{ m.fecha_proxima|timesince:today|cut:"minutes"|cut:"hours"|cut:"weeks"|cut:"months"|cut:"years"|cut:"ago"|slice:":10" }}
+                      </span>
+                    {% else %}
+                      <span class="text-success">
+                        {{ m.fecha_proxima|timeuntil:today|cut:"minutes"|cut:"hours"|cut:"weeks"|cut:"months"|cut:"years"|cut:"ago"|slice:":10" }}
+                      </span>
+                    {% endif %}
+                  {% else %}
+                    <span class="text-muted">Sin fecha</span>
+                  {% endif %}
+                </td>
+                <td class="text-nowrap">
+                  <a href="{% url 'detalle_mantencion' m.id %}" class="btn btn-sm btn-outline-primary me-2">Detalles</a>
+                  <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmarEliminacion-{{ m.id }}">Eliminar</button>
+                </td>
+              </tr>
+
+              <div class="modal fade" id="confirmarEliminacion-{{ m.id }}" tabindex="-1" aria-labelledby="modalLabel{{ m.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                      <h5 class="modal-title text-center" id="modalLabel{{ m.id }}">Confirmación de eliminación de mantención</h5>
                     </div>
-                    {% endfor %}
-                  </tbody>
-                </table>
+                    <div class="modal-body text-center">
+                      Esta acción eliminará el equipo <strong>{{ m.equipo.etiqueta }}</strong> del sistema de mantención, incluyendo todo su historial asociado.<br>
+                      <strong>¿Está seguro de que desea continuar?</strong>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                      <button type="button" class="btn btn-secondary me-3" data-bs-dismiss="modal">Cancelar</button>
+                      <form method="post" action="{% url 'eliminar_mantencion' m.id %}">
+                        {% csrf_token %}
+                        <button id="confirmar-btn-{{ m.id }}" type="submit" class="btn btn-danger" disabled>Espera 2s...</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          {% endif %}
-        {% endfor %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
-    {% else %}
-      <div class="alert alert-info mt-3">
-        No hay mantenciones registradas en el sistema.
-      </div>
+      {% if forloop.last %}
+        </div> {# cierra el .table-responsive principal #}
+      {% endif %}
     {% endif %}
-  {% endwith %}
+  {% endfor %}
 {% else %}
   <div class="alert alert-info mt-3">
     No hay mantenciones registradas en el sistema.
   </div>
 {% endif %}
+
 
 
 <script>

@@ -18,6 +18,7 @@
     <div class="col-md-6">
       <p><strong>Equipo:</strong> {{ mantencion.equipo.etiqueta }}</p>
       <p><strong>Tipo de Equipo:</strong> {{ mantencion.equipo.modelo.tipo.tipo }}</p>
+      <p><strong>Sistema operativo:</strong> {{ mantencion.equipo.sistema_operativo }}</p>
       <p><strong>Asignado a:</strong> {{ mantencion.equipo.usuario_asignado.nombre_completo|default:"Sin asignar" }}</p>
       <p><strong>Ubicación:</strong> {{ mantencion.equipo.usuario_asignado.ubicacion|default:"Sin ubicación" }}</p>  
       <p><strong>Última Mantención:</strong>

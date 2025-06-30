@@ -3,9 +3,19 @@ from mantenciones.models import Mantencion, Tipo_mantencion
 from mantenciones.forms import Editar_mantencion
 from django.http import JsonResponse
 
+from django.db.models import Q
+
 def cambiar_mantencion(request, pk):
     mantencion = get_object_or_404(Mantencion, pk=pk)
-    form = Editar_mantencion(request.POST or None, instance=mantencion)
+    equipo = mantencion.equipo
+
+    tipos_filtrados = Tipo_mantencion.objects.filter(
+        Q(sistema_operativo=equipo.sistema_operativo) | Q(sistema_operativo__isnull=True),
+        Q(modelo_tipo=equipo.modelo.tipo) | Q(modelo_tipo__isnull=True)
+
+    ).exclude(nombre__iexact="creación").distinct()
+
+    form = Editar_mantencion(request.POST or None, instance=mantencion, tipos_queryset=tipos_filtrados)
 
     tareas = []
     tipo = mantencion.tipo if mantencion.tipo_id else None

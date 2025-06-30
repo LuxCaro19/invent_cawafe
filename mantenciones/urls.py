@@ -16,6 +16,8 @@ urlpatterns = [
     path('mantenciones/tipo/<int:id>/editar/', views.editar_tipo_mantencion, name='editar_tipo_mantencion'),
     path('mantenciones/tipo/<int:tipo_id>/agregar_tarea/', views.agregar_tarea_tipo_mantencion, name='agregar_tarea_tipo_mantencion'),
     path('mantenciones/tipo/<int:tipo_id>/tarea/<int:tarea_id>/eliminar/', views.eliminar_tarea_tipo_mantencion, name='eliminar_tarea_tipo_mantencion'),
-
+    path('mantenciones/api/tipo/<int:tipo_id>/tareas/', views.obtener_tareas_por_tipo, name='obtener_tareas_por_tipo'),
+     path('mantenciones/template_mantenciones/', views.lista_template_mantencion, name='lista_template_mantencion'),
 ]
+
 

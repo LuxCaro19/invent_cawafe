@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventario', '0002_carga_inicial_estados'),
+        ('inventario', '0001_initial'),
     ]
 
     operations = [
