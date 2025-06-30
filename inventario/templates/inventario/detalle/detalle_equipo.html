@@ -48,12 +48,13 @@
                         <!-- Columna 1 -->
                         <div class="col-12 col-md-6 mb-3">
                             <div class="border rounded p-3 h-100">
-                                <p><strong>Marca:</strong> {{ equipo.modelo.marca.marca }}</p>
                                 <p><strong>Modelo:</strong> {{ equipo.modelo.nombre }}</p>
+                                <p><strong>Marca:</strong> {{ equipo.modelo.marca.marca }}</p>
                                 <p><strong>Sistema Operativo:</strong> {{ equipo.sistema_operativo.nombre }}</p>
                                 <p><strong>Procesador:</strong> {{ equipo.procesador.nombre }}</p>
                                 <p><strong>Memoria RAM:</strong> {{ equipo.memoria_ram }} GB</p>
                                 <p><strong>Almacenamiento:</strong> {{ equipo.almacenamiento }} GB</p>
+                                <p><strong>Numero de serie:</strong> {{ equipo.numero_serie }}</p>
                                 <p><strong>Estado:</strong> {{ equipo.estado.nombre }}</p>
                             </div>
                         </div>
@@ -67,6 +68,22 @@
                                 {% else %}
                                     <p class="text-muted text-center">QR no disponible</p>
                                 {% endif %}
+                            </div>
+                            <div class="border rounded p-3 h-100">
+                                <p><strong>Usuario asignado:</strong> 
+                                    {% if equipo.usuario_asignado.nombre_completo %}
+                                        {{ equipo.usuario_asignado.nombre_completo }}
+                                    {% else %}
+                                        No asignado
+                                    {% endif %}
+                                
+                                </p>
+                                <p><strong>Ubicación:</strong> 
+                                    {% if equipo.usuario_asignado.ubicacion %}
+                                        {{ equipo.usuario_asignado.ubicacion.nombre }}
+                                    {% else %}
+                                        No asignado
+                                    {% endif %}
                             </div>
                         </div>
                     </div>

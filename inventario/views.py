@@ -15,7 +15,7 @@ from .models.sistema_operativo import Sistema_operativo
 from .forms.procesador_form import ProcesadorForm
 from .forms.so_form import SoForm
 from .forms.estado_equipo_form import Estado_equipoForm
-
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -276,3 +276,18 @@ def registrar_estado_equipo(request):
     else:
         form = Estado_equipoForm()
     return render(request, 'inventario/registro/registrar_estado.html', {'form': form})
+
+
+# Adicionales 
+def obtener_marca(request):
+    modelo_id = request.GET.get('modelo_id')
+
+    if not modelo_id:
+        return JsonResponse({'marca': ''})
+
+    try:
+        modelo = Modelo_equipo.objects.get(id=modelo_id)
+        marca_nombre = modelo.marca.marca  # Asegúrate que modelo.marca es ForeignKey a Modelo_marca
+        return JsonResponse({'marca': marca_nombre})
+    except Modelo_equipo.DoesNotExist:
+        return JsonResponse({'marca': ''})

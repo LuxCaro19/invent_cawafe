@@ -13,6 +13,7 @@
     <button class="dropdown-item group-option" data-column-name="S.O.">S.O.</button>
     <button class="dropdown-item group-option" data-column-name="Marca">Marca</button>
     <button class="dropdown-item group-option" data-column-name="Modelo">Modelo</button>
+    <button class="dropdown-item group-option" data-column-name="Procesador">Procesador</button>
     <button class="dropdown-item group-option" data-column-name="Estado">Estado</button>
     <button class="dropdown-item group-option" data-column-name="Usuario asignado">Usuario asignado</button>
     <button class="dropdown-item group-option" data-column-name="Ubicación">Ubicación</button>
@@ -25,6 +26,8 @@
     <th class="sorting">S.O.</th>
     <th class="sorting">Marca</th>
     <th class="sorting">Modelo</th>
+    <th class="sorting">Procesador</th>
+    <th class="sorting">Numero de serie</th>
     <th class="sorting">Estado</th>
     <th class="sorting">Usuario asignado</th>
     <th class="sorting">Ubicación</th>
@@ -37,6 +40,8 @@
         <td>{{ equipo.sistema_operativo.nombre }}</td>
         <td>{{ equipo.modelo.marca.marca }}</td>
         <td>{{ equipo.modelo.nombre }}</td>
+        <td>{{ equipo.procesador.nombre }}</td>
+        <td>{{ equipo.numero_serie }}</td>
         <td>{{ equipo.estado.nombre }}</td>
         <td>
             {% if equipo.usuario_asignado %}
