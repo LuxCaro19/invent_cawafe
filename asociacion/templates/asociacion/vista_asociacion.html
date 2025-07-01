@@ -33,6 +33,21 @@
         <p><strong>Modelo:</strong> {{ equipo.modelo.nombre }}</p>
         <p><strong>Estado actual:</strong> {{ equipo.estado }}</p>
         <p><strong>Empleado asignado:</strong> {{ equipo.usuario_asignado.nombre_completo|default:"No asignado" }}</p>
+        <p><strong>Ubicación:</strong>
+            {% if equipo.en_bodega %}
+                En bodega
+            {% elif equipo.usuario_asignado %}
+                {% if equipo.usuario_asignado.obra %}
+                    {{ equipo.usuario_asignado.obra }}
+                {% elif equipo.usuario_asignado.sala_venta %}
+                    {{ equipo.usuario_asignado.sala_venta }}
+                {% else %}
+                    Sin ubicación
+                {% endif %}
+            {% else %}
+                No asignado
+            {% endif %}
+        </p>
 
         <form method="post">
             {% csrf_token %}
@@ -53,13 +68,14 @@
             <div class="mb-3">
                 <label>Estado del equipo:</label>
                 <select name="estado" class="form-control">
-                {% for estado in estados %}
-                    <option value="{{ estado.nombre }}" {% if equipo.estado.nombre == estado.nombre %}selected{% endif %}>
-                    {{ estado.nombre }}
-                    </option>
-                {% endfor %}
+                    {% for estado in estados %}
+                        <option value="{{ estado.nombre }}" {% if equipo.estado.nombre == estado.nombre %}selected{% endif %}>
+                            {{ estado.nombre }}
+                        </option>
+                    {% endfor %}
                 </select>
             </div>
+
             <div class="form-check mb-3">
                 <input class="form-check-input" type="checkbox" name="bodega" id="bodegaCheckbox{{ equipo.id }}" {% if equipo.en_bodega %}checked{% endif %}>
                 <label class="form-check-label" for="bodegaCheckbox{{ equipo.id }}">
@@ -73,24 +89,19 @@
 
         <h5 class="mt-4">Historial reciente</h5>
         <div class="border p-3 rounded bg-light">
+            <h5 class="text-secondary mt-4">Historial reciente</h5>
+            <hr>
+
             {% if historial %}
-                <ul class="mb-0">
-                    {% for h in historial %}
-                        <li>
-                            {{ h.fecha|date:"d/m/Y H:i" }} - {{ h.estado }}
-                            {% if h.usuario_asignado %}
-                                a {{ h.usuario_asignado.nombre_completo }}
-                            {% endif %}
-                            {% if h.registrado_por %}
-                                (por <span title="{{ h.registrado_por.correo }}">{{ h.registrado_por.nombre_completo }}</span>)
-                            {% else %}
-                                (por <em>usuario desconocido</em>)
-                            {% endif %}
+                <ul class="list-group">
+                    {% for registro in historial %}
+                        <li class="list-group-item">
+                            {{ registro.fecha|date:"d/m/Y H:i" }} - {{ registro.estado }} {% if registro.usuario_asignador %}(por {{ registro.usuario_asignador }}){% endif %}
                         </li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <p class="text-muted">Sin historial reciente.</p>
+                <p class="text-muted">Este equipo aún no ha sido asociado a ningún empleado.</p>
             {% endif %}
         </div>
     </div>

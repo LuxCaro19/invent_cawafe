@@ -5,10 +5,11 @@ from django.shortcuts import get_object_or_404, redirect
 from inventario.models.estado_equipo import Estado_equipo
 from inventario.models.equipo_historial import Equipo_historial
 from django.views.decorators.http import require_POST
+from .decorators import empleado_required
+from django.db import transaction
 
 
-
-
+@empleado_required
 def listado_equipos(request):
     equipos = Equipo.objects.filter(estado_id=6)  # Filtra los equipos con estado "Activo"
     return render(request, 'listado_equipos.html', {'equipos': equipos})
@@ -21,7 +22,7 @@ def listado_equipos_por_entregar(request):
     equipos = Equipo.objects.filter(estado_id=8)  # Filtra los equipos con estado "Pendiente RRHH"
     return render(request, 'listado_equipos_por_entregar.html', {'equipos': equipos})
 
-
+@empleado_required
 def detalle_equipo(request, id):
     equipo = Equipo.objects.get(id=id)
     if request.method == 'POST':
@@ -65,14 +66,19 @@ def comprar_equipo(request, id):
     equipo = get_object_or_404(Equipo, id=id)
 
     if request.method == 'POST':
-        venta = Venta.objects.create(
-            id_equipo=equipo,
-            nombre_receptor='Juan Pérez',  # Podrás reemplazar esto luego por un input o usuario logueado
-        )
         try:
-            venta.procesar_compra()
+            with transaction.atomic():
+                venta = Venta.objects.create(
+                    id_equipo=equipo,
+                    id_usuario=request.user
+                )
+                venta.procesar_compra()  # Esto incluye guardar la venta y actualizar equipo
+
+            # Si todo fue exitoso (incluido el envío de correo dentro del método), mostrar éxito
             return render(request, 'compra_exitosa.html')
+
         except Exception as e:
+            print(f"Error al procesar la compra: {e}")
             return render(request, 'comprar_equipo.html', {
                 'equipo': equipo,
                 'error': 'Ocurrió un error al procesar la compra. Intenta nuevamente.'

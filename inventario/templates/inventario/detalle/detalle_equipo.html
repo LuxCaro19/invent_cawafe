@@ -8,6 +8,19 @@
     .detalle-body {
         overflow: auto;
     }
+
+    .qr-container img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .qr-label {
+        text-align: center;
+        font-weight: bold;
+        margin-top: 10px;
+    }
 </style>
 
 <body class="detalle-body">
@@ -46,8 +59,16 @@
                             </div>
                         </div>
 
-                        <!-- Columna 2 (vacía de momento) -->
+                        <!-- Columna 2: Muestra QR -->
                         <div class="col-12 col-md-6 mb-3">
+                            <div class="border rounded p-3 h-100 qr-container">
+                                {% if equipo.qr_code %}
+                                    <img src="{{ equipo.qr_code.url }}" alt="Código QR del equipo">
+                                    <div class="qr-label">Escanea para asociar</div>
+                                {% else %}
+                                    <p class="text-muted text-center">QR no disponible</p>
+                                {% endif %}
+                            </div>
                             <div class="border rounded p-3 h-100">
                                 <p><strong>Usuario asignado:</strong> 
                                     {% if equipo.usuario_asignado.nombre_completo %}

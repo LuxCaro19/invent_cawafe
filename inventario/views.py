@@ -24,35 +24,204 @@ def index(request):
     return HttpResponse("Index")
 
 # Vista de listados
+from django.db.models import F
+from collections import defaultdict
+from .models import Equipo
+
 def listado_equipos(request):
-    equipos = Equipo.objects.all()  # Obtiene todos los objetos de Equipo
-    return render(request, 'inventario/listados/listado_equipos.html', {'equipos': equipos})
+    equipos = Equipo.objects.select_related(
+        "modelo__marca", "modelo__tipo", "procesador", "sistema_operativo",
+        "estado", "usuario_asignado", "usuario_asignado__ubicacion", "ubicacion"
+    )
+
+    buscar = request.GET.get("buscar", "").strip()
+    campo = request.GET.get("campo", "")
+    agrupar = request.GET.get("agrupar", "")
+
+    if buscar and campo:
+        if campo == "etiqueta":
+            equipos = equipos.filter(etiqueta__icontains=buscar)
+        elif campo == "modelo":
+            equipos = equipos.filter(modelo__nombre__icontains=buscar)
+        elif campo == "procesador":
+            equipos = equipos.filter(procesador__nombre__icontains=buscar)
+
+    grupos = defaultdict(list)
+
+    if agrupar == "sistema_operativo":
+        for equipo in equipos:
+            clave = equipo.sistema_operativo.nombre if equipo.sistema_operativo else "Sin S.O."
+            grupos[clave].append(equipo)
+    elif agrupar == "marca":
+        for equipo in equipos:
+            clave = equipo.modelo.marca.marca if equipo.modelo and equipo.modelo.marca else "Sin Marca"
+            grupos[clave].append(equipo)
+    elif agrupar == "modelo":
+        for equipo in equipos:
+            clave = equipo.modelo.nombre if equipo.modelo else "Sin Modelo"
+            grupos[clave].append(equipo)
+    elif agrupar == "procesador":
+        for equipo in equipos:
+            clave = equipo.procesador.nombre if equipo.procesador else "Sin Procesador"
+            grupos[clave].append(equipo)
+    elif agrupar == "estado":
+        for equipo in equipos:
+            clave = equipo.estado.nombre if equipo.estado else "Sin Estado"
+            grupos[clave].append(equipo)
+    elif agrupar == "usuario":
+        for equipo in equipos:
+            clave = equipo.usuario_asignado.nombre_completo if equipo.usuario_asignado else "No asignado"
+            grupos[clave].append(equipo)
+    elif agrupar == "ubicacion":
+        for equipo in equipos:
+            if equipo.en_bodega and equipo.ubicacion:
+                clave = equipo.ubicacion.nombre
+            elif equipo.usuario_asignado and equipo.usuario_asignado.ubicacion:
+                clave = equipo.usuario_asignado.ubicacion.nombre
+            else:
+                clave = "Sin ubicación"
+            grupos[clave].append(equipo)
+    else:
+        grupos["Todos"] = equipos
+
+    return render(request, "inventario/listados/listado_equipos.html", {
+        "grupos": dict(grupos),
+        "filtro_busqueda": buscar,
+        "campo": campo,
+        "agrupar": agrupar,
+    })
+
 
 def listado_modelo_equipo(request):
-    modelos = Modelo_equipo.objects.all()  # Obtiene todos los objetos de Equipo
-    return render(request, 'inventario/listados/listado_modelo_equipos.html', {'modelos': modelos})
+    buscar = request.GET.get("buscar", "").strip()
+    agrupar = request.GET.get("agrupar", "")
+
+    modelos = Modelo_equipo.objects.select_related("marca", "tipo").all()
+
+    if buscar:
+        modelos = modelos.filter(
+            Q(nombre__icontains=buscar) |
+            Q(marca__marca__icontains=buscar)
+        )
+
+    grupos = defaultdict(list)
+
+    if agrupar == "marca":
+        for modelo in modelos:
+            clave = modelo.marca.marca if modelo.marca else "Sin Marca"
+            grupos[clave].append(modelo)
+    elif agrupar == "tipo":
+        for modelo in modelos:
+            clave = modelo.tipo.tipo if modelo.tipo else "Sin Tipo"
+            grupos[clave].append(modelo)
+    else:
+        grupos["Todos"] = modelos
+
+    return render(request, 'inventario/listados/listado_modelo_equipos.html', {
+        'grupos': dict(grupos),
+        'filtro_busqueda': buscar,
+        'agrupar': agrupar,
+    })
+
 
 def listado_marcas(request):
-    marcas = Modelo_marca.objects.all()  
-    return render(request, 'inventario/listados/listado_marcas.html', {'marcas': marcas})  # Obtiene todos los objetos de Equipo
+    buscar = request.GET.get("buscar", "").strip()
+    marcas = Modelo_marca.objects.all()
+
+    if buscar:
+        marcas = marcas.filter(marca__icontains=buscar)
+
+    return render(request, 'inventario/listados/listado_marcas.html', {
+        'marcas': marcas,
+        'filtro_busqueda': buscar,
+    })
 
 
 def listado_tipo_equipos(request):
-    tipos = Modelo_tipo.objects.all()  # Obtiene todos los objetos de Equipo
-    return render(request, 'inventario/listados/listado_tipo_equipos.html', {'tipos': tipos})
+    buscar = request.GET.get("buscar", "").strip()
+    tipos = Modelo_tipo.objects.all()
+
+    if buscar:
+        tipos = tipos.filter(tipo__icontains=buscar)
+
+    return render(request, 'inventario/listados/listado_tipo_equipos.html', {
+        'tipos': tipos,
+        'filtro_busqueda': buscar,
+    })
+
 
 def listado_procesadores(request):
-    procesadores = Procesador.objects.all()
-    return render(request, 'inventario/listados/listado_procesador.html', {'procesadores': procesadores})
+    buscar = request.GET.get("buscar", "").strip()
+    agrupar = request.GET.get("agrupar", "")
+
+    procesadores = Procesador.objects.select_related("marca").all()
+
+    if buscar:
+        procesadores = procesadores.filter(
+            Q(nombre__icontains=buscar) |
+            Q(marca__marca__icontains=buscar)
+        )
+
+    grupos = defaultdict(list)
+
+    if agrupar == "marca":
+        for proc in procesadores:
+            clave = proc.marca.marca if proc.marca else "Sin Marca"
+            grupos[clave].append(proc)
+    else:
+        grupos["Todos"] = procesadores
+
+    return render(request, 'inventario/listados/listado_procesador.html', {
+        'grupos': dict(grupos),
+        'filtro_busqueda': buscar,
+        'agrupar': agrupar,
+    })
+
+from collections import defaultdict
+from django.db.models import Q
 
 def listado_sistemas_operativos(request):
-    sistemas_operativos = Sistema_operativo.objects.all()
-    return render(request, 'inventario/listados/listado_so.html', {'sistemas_operativos': sistemas_operativos})
+    buscar = request.GET.get("buscar", "").strip()
+    agrupar = request.GET.get("agrupar", "")
+
+    sistemas_operativos = Sistema_operativo.objects.select_related("marca").all()
+
+    if buscar:
+        sistemas_operativos = sistemas_operativos.filter(
+            Q(nombre__icontains=buscar) |
+            Q(marca__marca__icontains=buscar)
+        )
+
+    grupos = defaultdict(list)
+
+    if agrupar == "marca":
+        for so in sistemas_operativos:
+            clave = so.marca.marca if so.marca else "Sin Marca"
+            grupos[clave].append(so)
+    else:
+        grupos["Todos"] = sistemas_operativos
+
+    return render(request, 'inventario/listados/listado_so.html', {
+        'sistemas_operativos': sistemas_operativos,
+        'grupos': dict(grupos),
+        'filtro_busqueda': buscar,
+        'agrupar': agrupar,
+    })
+
 
 
 def listado_estado_equipos(request):
-    estados = Estado_equipo.objects.all()  # Obtiene todos los objetos de Estado_equipo
-    return render(request, 'inventario/listados/listado_estados.html', {'estados': estados})
+    buscar = request.GET.get("buscar", "").strip()
+
+    estados = Estado_equipo.objects.all()
+    if buscar:
+        estados = estados.filter(nombre__icontains=buscar)
+
+    return render(request, 'inventario/listados/listado_estados.html', {
+        'estados': estados,
+        'filtro_busqueda': buscar,
+    })
+
 
 ##############################
 

@@ -6,8 +6,10 @@ from .estado_equipo import Estado_equipo
 from .sistema_operativo import Sistema_operativo
 from ventas.models.venta import Venta
 from usuarios.models import Usuario  # Asegúrate que esta línea esté al inicio del archivo
-
-
+import qrcode
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.db import models
 
 
 # Clase Equipo.
@@ -27,6 +29,8 @@ class Equipo(models.Model):
     estado = models.ForeignKey(Estado_equipo, on_delete=models.SET_NULL, null=True )
     usuario_asignado = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True)
     ubicacion = models.ForeignKey('Ubicacion', on_delete=models.SET_NULL, null=True, blank=True)  # NUEVO
+    qr_code = models.ImageField(upload_to='qr_codes/', blank=True, null=True)  # NUEVO
+
 
     def __str__(self):
         return self.etiqueta
@@ -86,3 +90,19 @@ class Equipo(models.Model):
         if venta:
             venta.flag_aprobado_remuneraciones = False
             venta.save()
+
+    def generar_qr(self):
+        # URL que debe abrir el QR, ajusta si cambia tu ruta
+        qr_data = f"http://127.0.0.1:8000/asociacion/?equipo={self.etiqueta}"
+
+        qr = qrcode.make(qr_data)
+        buffer = BytesIO()
+        qr.save(buffer, format='PNG')
+        filename = f'{self.etiqueta}_qr.png'
+        self.qr_code.save(filename, ContentFile(buffer.getvalue()), save=False)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Guarda primero
+        if not self.qr_code:
+            self.generar_qr()
+            super().save(update_fields=["qr_code"])

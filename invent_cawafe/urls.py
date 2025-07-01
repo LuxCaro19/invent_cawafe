@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import bienvenido, login_view,menu_admin
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', bienvenido, name='bienvenido'),  # Página raíz
@@ -29,4 +31,4 @@ urlpatterns = [
     path('parametro/', include('parametro.urls')),
     path('asociacion/', include('asociacion.urls')),
     path('mantenciones/', include('mantenciones.urls'))
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

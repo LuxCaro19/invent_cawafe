@@ -5,6 +5,7 @@ from .models import HistorialEquipo
 from collections import defaultdict
 from django.http import JsonResponse
 from django.db.models import Q
+from inventario.models import Equipo, Estado_equipo, Ubicacion  # ← agrega Ubicacion aquí
 
 
 def vista_asociacion(request):
@@ -45,28 +46,49 @@ def vista_asociacion(request):
         if a_bodega:
             equipo.usuario_asignado = None
             equipo.en_bodega = True
-            nuevo_estado = Estado_equipo.objects.get(nombre__iexact="En bodega")
+
+            # Estado: Operativo
+            estado_operativo = Estado_equipo.objects.get(nombre__iexact="Operativo")
+            equipo.estado = estado_operativo
+
+            # Ubicación: En Bodega
+            ubicacion_bodega = Ubicacion.objects.get(nombre__iexact="En Bodega")
+            equipo.ubicacion = ubicacion_bodega
+
         else:
             equipo.en_bodega = False
             if usuario_id:
                 nuevo_usuario = Usuario.objects.get(id=usuario_id)
                 equipo.usuario_asignado = nuevo_usuario
-                nuevo_estado = Estado_equipo.objects.get(nombre__iexact="Asignado")
+
+                # Estado: Asignado
+                estado_asignado = Estado_equipo.objects.get(nombre__iexact="Asignado")
+                equipo.estado = estado_asignado
+
+                # Borrar ubicación (opcional o puedes poner una por defecto)
+                equipo.ubicacion = None
             else:
                 equipo.usuario_asignado = None
-                nuevo_estado = Estado_equipo.objects.get(nombre__iexact="Operativo")
 
-        equipo.estado = nuevo_estado
         equipo.save()
 
-        HistorialEquipo.objects.create(
-            equipo=equipo,
-            usuario_asignado=equipo.usuario_asignado,
-            estado=nuevo_estado,
-            registrado_por=request.user
-        )
+        # Registrar historial
+        ultimo_historial = HistorialEquipo.objects.filter(equipo=equipo).order_by('-fecha').first()
+
+        if (
+            not ultimo_historial or
+            ultimo_historial.usuario_asignado != equipo.usuario_asignado or
+            ultimo_historial.estado != equipo.estado
+        ):
+            HistorialEquipo.objects.create(
+                equipo=equipo,
+                usuario_asignado=equipo.usuario_asignado,
+                estado=equipo.estado,
+                registrado_por=request.user
+            )
 
         return redirect(f'/asociacion/?equipo={query_equipo or ""}&usuario={query_usuario or ""}')
+
 
     # Asegúrate de enviar los estados si necesitas renderizar el dropdown
     estados = Estado_equipo.objects.all()

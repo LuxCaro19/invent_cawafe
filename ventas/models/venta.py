@@ -1,19 +1,19 @@
+import locale
 from django.db import models
 from django.utils import timezone
 from io import BytesIO
 from django.core.mail import EmailMessage
-from django.db.models import CASCADE
-#from reportlab.pdfgen import canvas
-from inventario.models.estado_equipo import Estado_equipo
-
+from django.conf import settings
+from xhtml2pdf import pisa
+from django.template.loader import render_to_string
+locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
 
 class Venta(models.Model):
     id = models.AutoField(primary_key=True)
-    fecha_venta = models.DateField(null=True)  
+    fecha_venta = models.DateField(null=True)
     id_equipo = models.ForeignKey('inventario.Equipo', on_delete=models.SET_NULL, null=True)
-    #id_usuario = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True)
-    nombre_receptor = models.CharField(max_length=100, null=True)
-    flag_aprobado_remuneraciones = models.BooleanField(default=None, null=True)  # Aprobación de remuneraciones
+    id_usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    flag_aprobado_remuneraciones = models.BooleanField(default=None, null=True)
     flag_entregado = models.BooleanField(default=False)
 
 
@@ -21,36 +21,59 @@ class Venta(models.Model):
     def procesar_compra(self):
         from inventario.models.equipo import Equipo  # evitar import circular
 
+        # Registrar la fecha y guardar la venta
         self.fecha_venta = timezone.now()
         self.save()
 
         # Actualizar equipo
         equipo = self.id_equipo
         equipo.en_bodega = False
-        equipo.estado_id = 7  # ID del estado 'Vendido'
+        equipo.estado_id = 7  # Estado "Vendido"
         equipo.save()
 
-        # Generar PDF
-        # buffer = BytesIO()
-        # p = canvas.Canvas(buffer)
-        # p.drawString(100, 800, "Carta de Descuento por Planilla")
-        # p.drawString(100, 780, f"Nombre: {self.nombre_receptor}")
-        # p.drawString(100, 760, f"Equipo: {equipo.etiqueta}")
-        # p.drawString(100, 740, f"Fecha: {self.fecha_venta}")
-        # p.drawString(100, 720, f"Precio: ${equipo.modelo.precio}")
-        # p.showPage()
-        # p.save()
-        # buffer.seek(0)
-        # pdf = buffer.getvalue()
+        # Datos para el PDF
+        usuario = self.id_usuario
+        fecha = timezone.now().strftime('%d de %B de %Y')
+        mes = timezone.now().strftime('%B del %Y')
 
-        # Enviar correo
+        contexto = {
+            'fecha': fecha,
+            'nombre_usuario': usuario.nombre_completo,  # o el campo corre,
+            'precio': equipo.modelo.precio,
+            'tipo_equipo': equipo.modelo.tipo.tipo.upper(),
+            'etiqueta': equipo.etiqueta,
+            'mes': mes,
+        }
+
+        # Renderizar HTML y generar PDF
+        html_string = render_to_string('pdf/hoja_descuento.html', contexto)
+        pdf_file = BytesIO()
+        pisa.CreatePDF(html_string, dest=pdf_file)
+        pdf_file.seek(0)
+
+        # Preparar y enviar correo
         email = EmailMessage(
-            'Compra realizada',
-            'Se adjunta su carta de descuento por planilla.',
-            'ventas@galilea.cl',
-            ['usuario@correo.cl'],  # Cambiar en producción
+            subject='Compra realizada – Carta de descuento',
+            body='¡Felicidades! Has realizado tu compra de equipo, adjunto encontrará su carta de autorización de descuento por planilla.\n \n'\
+            'Por favor dirijase al área de Remuneraciones con su hoja firmada para autorizar el descuento. \n' \
+            'Informamos que la entrega del equipo debe ser autorizada previamente por el departamento de Remuneraciones. \n' \
+            'Si tiene alguna duda, por favor contáctenos. \n'
+            'Saludos cordiales, \n \n \n'
+            'Equipo de Soporte Técnico.',
+            from_email='soporte.ti@galilea.cl',
+            to=[usuario.correo],
+            cc=[
+                'luis.caro@galilea.cl',
+                'jeremy.valencia@galilea.cl',
+                'carlos.munoz@galilea.cl',
+                'felipe.carreno@galilea.cl',
+                # soporte.ti@galilea.cl también puedes agregar aquí si quieres
+            ]
         )
-        #email.attach('carta_descuento.pdf', pdf, 'application/pdf')
-        email.send(fail_silently=True)
+        email.attach('autorizacion_descuento.pdf', pdf_file.getvalue(), 'application/pdf')
 
-
+        try:
+            email.send(fail_silently=False)
+        except Exception as e:
+            print(f"Error al enviar correo: {e}")
+            raise  # permite que el view capture y muestre mensaje de error

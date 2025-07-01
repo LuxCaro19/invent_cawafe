@@ -16,7 +16,7 @@ def crear_datos_iniciales(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventario', '0001_initial'),
+        ('inventario', '0002_ubicacion_equipo_ubicacion'),
     ]
 
     operations = [

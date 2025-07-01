@@ -40,32 +40,15 @@
                             Inventario
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="inventarioDropdown">
-                                <!-- Submenú Listas -->
-                                <li class="dropdown-submenu">
-                                    <a class="dropdown-item dropdown-submenu-toggle" href="#" data-bs-toggle="dropdown">Listas</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{% url 'listado_equipos' %}">Lista de equipos</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'listado_modelo_equipos' %}">Lista de modelos</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'listado_marcas' %}">Lista de marcas</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'listado_tipo_equipos' %}">Lista de tipos de equipo</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'listado_procesadores' %}">Lista de procesadores</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'listado_sistemas_operativos' %}">Lista de sistemas operativos</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'listado_estados' %}">Lista de estados</a></li>
-                                    </ul>
-                                </li>
-                                <!-- Submenú Registrar -->
-                                <li class="dropdown-submenu">
-                                    <a class="dropdown-item dropdown-submenu-toggle" href="#" data-bs-toggle="dropdown">Registrar</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{% url 'registrar_equipo' %}">Registrar equipo</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'registrar_modelo_equipo' %}">Registrar modelo</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'registrar_marca' %}">Registrar marca</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'registrar_tipo_equipo' %}">Registrar tipo equipo</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'registrar_procesador' %}">Registrar procesador</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'registrar_so' %}">Registrar sistema operativo</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'registrar_estado' %}">Registrar estado</a></li>
-                                    </ul>
-                                </li>
+
+                                        <li><a class="dropdown-item" href="{% url 'listado_equipos' %}">Equipos</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'listado_modelo_equipos' %}">Modelos</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'listado_marcas' %}">Marcas</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'listado_tipo_equipos' %}">Tipos de equipo</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'listado_procesadores' %}">Procesadores</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'listado_sistemas_operativos' %}">Sistemas operativos</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'listado_estados' %}">Estados</a></li>
+
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
@@ -87,7 +70,7 @@
                             </ul>
                         </li>
 
-                        {% endif %}
+                        
 
                     <!-- Modulo ventas menú -->
                     <li class="nav-item dropdown">
@@ -100,6 +83,7 @@
                             <li><a class="dropdown-item" href="{% url 'listado_equipos_por_entregar' %}">Equipos por entregar</a></li>
                         </ul>
                     </li>
+                    {% endif %}
                  {% endif %}   
                 </ul>
                   <!-- Botón cerrar sesión alineado a la derecha -->

@@ -4,53 +4,139 @@
 {% block formulario_header %}Crear Tipo de Mantención{% endblock %}
 
 {% block formulario_content %}
-<form method="post" class="needs-validation" novalidate>
+<form method="post" id="form-creacion" class="needs-validation" novalidate>
   {% csrf_token %}
-
-  <div class="mb-3">
-    <label for="id_nombre" class="form-label">Nombre</label>
-    <input type="text" name="nombre" id="id_nombre" class="form-control" value="{{ form.nombre.value|default:'' }}">
-    {% if form.nombre.errors %}
-      <div class="text-danger">{{ form.nombre.errors.0 }}</div>
-    {% endif %}
-  </div>
-
-  <div class="mb-3">
-    <label for="id_frecuencia_dias" class="form-label">Frecuencia (días)</label>
-    <input type="number" name="frecuencia_dias" id="id_frecuencia_dias" class="form-control" value="{{ form.frecuencia_dias.value|default:'' }}">
-    {% if form.frecuencia_dias.errors %}
-      <div class="text-danger">{{ form.frecuencia_dias.errors.0 }}</div>
-    {% endif %}
-  </div>
-
-  <div class="mb-3">
-    <label for="id_modelo_tipo" class="form-label">Tipo de Equipo (opcional)</label>
-    <select name="modelo_tipo" id="id_modelo_tipo" class="form-select">
-      <option value="">---------</option>
-      {% for tipo in form.fields.modelo_tipo.queryset %}
-        <option value="{{ tipo.id }}" {% if form.modelo_tipo.value == tipo.id %}selected{% endif %}>
-          {{ tipo }}
-        </option>
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+      {% for error in form.non_field_errors %}
+        <div>{{ error }}</div>
       {% endfor %}
-    </select>
-    <div class="form-text">Puedes dejar esto vacío si no quieres asociarlo aún.</div>
+    </div>
+  {% endif %}
+
+
+  <!-- Nombre -->
+  <div class="row mb-3 align-items-center">
+    <div class="col-md-4">
+      <label for="id_nombre" class="form-label mb-0">Nombre</label>
+    </div>
+    <div class="col-md-8">
+      {{ form.nombre }}
+      {% if form.nombre.errors %}
+        <div class="text-danger">{{ form.nombre.errors.0 }}</div>
+      {% endif %}
+    </div>
   </div>
 
-  <div class="mb-3">
-    <label for="id_sistema_operativo" class="form-label">Sistema Operativo (opcional)</label>
-    <select name="sistema_operativo" id="id_sistema_operativo" class="form-select">
-      <option value="">---------</option>
-      {% for so in form.fields.sistema_operativo.queryset %}
-        <option value="{{ so.id }}" {% if form.sistema_operativo.value == so.id %}selected{% endif %}>
-          {{ so }}
-        </option>
-      {% endfor %}
-    </select>
-    <div class="form-text">Puedes dejar esto vacío si no quieres asociarlo aún.</div>
+  <!-- Frecuencia -->
+  <div class="row mb-3 align-items-center">
+    <div class="col-md-4">
+      <label for="id_frecuencia_dias" class="form-label mb-0">Frecuencia (días)</label>
+    </div>
+    <div class="col-md-8">
+      {{ form.frecuencia_dias }}
+      {% if form.frecuencia_dias.errors %}
+        <div class="text-danger">{{ form.frecuencia_dias.errors.0 }}</div>
+      {% endif %}
+    </div>
   </div>
 
-  <div class="d-grid">
-    <button type="submit" class="btn btn-primary">Guardar</button>
+  <!-- Sistema Operativo -->
+  <div class="row mb-3 align-items-center">
+    <div class="col-md-4">
+      <label for="id_sistema_operativo" class="form-label mb-0">Sistema Operativo (opcional)</label>
+    </div>
+    <div class="col-md-8">
+      {{ form.sistema_operativo }}
+    </div>
+  </div>
+
+  <!-- Tipo de Equipo -->
+  <div class="row mb-4 align-items-center">
+    <div class="col-md-4">
+      <label for="id_modelo_tipo" class="form-label mb-0">Tipo de Equipo (opcional)</label>
+    </div>
+    <div class="col-md-8">
+      {{ form.modelo_tipo }}
+    </div>
+  </div>
+
+  <!-- Tareas -->
+  <hr class="my-2">
+  <h5 class="mb-3">Tareas asociadas</h5>
+
+  <div id="alerta-tareas" class="alert alert-danger d-none">Debes agregar al menos una tarea antes de guardar.</div>
+
+  <div id="contenedor-tareas">
+    <p class="text-muted">No hay tareas aún.</p>
+  </div>
+
+  <div class="row g-2 mb-4">
+    <div class="col-10">
+      <input type="text" id="nueva_tarea_input" class="form-control" placeholder="Descripción de la tarea">
+    </div>
+    <div class="col-2">
+      <button type="button" class="btn btn-success w-100" onclick="agregarTarea()">Agregar</button>
+    </div>
+  </div>
+
+  <input type="hidden" name="tareas_json" id="tareas_json">
+
+  <!-- Botones -->
+  <div class="d-flex justify-content-between mt-4">
+    <a href="{% url 'lista_tipos_mantencion' %}" class="btn btn-outline-secondary">← Volver</a>
+    <button type="submit" class="btn btn-primary">Crear</button>
   </div>
 </form>
+
+<script>
+  const tareas = [];
+
+  function actualizarVista() {
+    const contenedor = document.getElementById('contenedor-tareas');
+    contenedor.innerHTML = '';
+    if (tareas.length === 0) {
+      contenedor.innerHTML = '<p class="text-muted">No hay tareas aún.</p>';
+    } else {
+      tareas.forEach((desc, idx) => {
+        const row = document.createElement('div');
+        row.className = 'row g-2 mb-2';
+        row.innerHTML = `
+          <div class="col-10">
+            <input type="text" class="form-control bg-light input-tarea" value="${desc}" disabled>
+          </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-outline-danger w-100" onclick="eliminarTarea(${idx})">Eliminar</button>
+          </div>`;
+        contenedor.appendChild(row);
+      });
+    }
+
+    document.getElementById('tareas_json').value = JSON.stringify(tareas);
+  }
+
+  function agregarTarea() {
+    const input = document.getElementById('nueva_tarea_input');
+    const valor = input.value.trim();
+    if (valor) {
+      tareas.push(valor);
+      input.value = '';
+      actualizarVista();
+    }
+  }
+
+  function eliminarTarea(idx) {
+    tareas.splice(idx, 1);
+    actualizarVista();
+  }
+
+  document.getElementById('form-creacion').addEventListener('submit', function (e) {
+    if (tareas.length === 0) {
+      e.preventDefault();
+      const alerta = document.getElementById('alerta-tareas');
+      alerta.classList.remove('d-none');
+      alerta.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  });
+</script>
 {% endblock %}

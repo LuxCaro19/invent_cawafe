@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Template de Mantención Simple{% endblock %}
+{% block header %}Template de Mantención Simple{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Plantillas de mantención</h2>
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>Sistema operativo</th>
+      <th>Tipo de equipo</th>
+      <th>Nombre</th>
+      <th>Frecuencia (días)</th>
+      <th>Template de mantención</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for tipo in tipos_mantencion %}
+      <tr>
+        <td>
+          {% if tipo.sistema_operativo %}
+            {{ tipo.sistema_operativo.nombre }}
+          {% else %}
+            &mdash;
+          {% endif %}
+        </td>
+        <td>
+          {% if tipo.modelo_tipo %}
+            {{ tipo.modelo_tipo.tipo }}
+          {% else %}
+            &mdash;
+          {% endif %}
+        </td>
+        <td>{{ tipo.nombre }}</td>
+        <td>{{ tipo.frecuencia_dias }}</td>
+        <td>
+          <button type="button" class="btn btn-primary" onclick="alert('Agregar mantención')">Agregar</button>
+        </td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="5" class="text-center">No hay tipos de mantención disponibles.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
