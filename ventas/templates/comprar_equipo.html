@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2>Confirmar Compra de Equipo</h2>
+
+    {% if error %}
+      <div class="alert alert-danger">
+        {{ error }}
+      </div>
+    {% endif %}
+
+    <div class="card mt-3">
+      <div class="card-body">
+        <p><strong>Equipo:</strong> {{ equipo.etiqueta }}</p>
+        <p><strong>Modelo:</strong> {{ equipo.modelo }}</p>
+        <form method="post">
+          {% csrf_token %}
+          <a href="{% url 'listado_equipos' %}" class="btn btn-secondary">Volver</a>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

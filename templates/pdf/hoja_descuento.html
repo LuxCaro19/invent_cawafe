@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 12pt;
+            margin: 2cm;
+        }
+
+        .titulo {
+            text-align: center;
+            font-size: 18pt;
+            font-weight: bold;
+        }
+
+        .fecha {
+            text-align: right;
+            margin-top: 2em;
+        }
+
+        .firma {
+            text-align: center;
+            margin-top: 4em;
+        }
+
+        .contenido {
+            text-align: justify;
+            margin-top: 3em;
+        }
+    </style>
+</head>
+<body>
+    <p class="fecha">TALCA, {{ fecha }}</p>
+
+    <p class="titulo">AUTORIZACIÓN DE DESCUENTO</p>
+
+    <div class="contenido">
+        <p><b>NOMBRE: </b>{{ nombre_usuario|upper }}</p>
+        <p><b>RUT: ___________________________</b></p>
+
+        <p>A través de este instrumento autorizo a mi empleador, Constructora Galilea S.A. RUT 94.636.000-7, 
+        para que descuente de mis remuneraciones la cantidad de <b>${{ precio }}</b>, correspondiente a la venta del equipo 
+        <b>{{ tipo_equipo }}</b>, con etiqueta <b>{{etiqueta}}</b>, en 1 cuota(s) mensual(es) a partir del mes de {{ mes }}.</p>
+
+        <p>De existir finiquito antes de finalizarse dicho pago, autorizo a mi empleador para que me descuente 
+        de mis indemnizaciones y/o remuneraciones del mes, la cantidad que resulte de la diferencia entre lo prestado 
+        y lo cancelado al día del cese de mis funciones.</p>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="firma">
+        <p>____________________________________________</p>
+        <p><b>FIRMA DE TRABAJADOR</b></p>
+        <p><b>{{ nombre_usuario|upper }}</b></p>
+        <p><b>RUT: ______________________</b></p>
+    </div>
+</body>
+</html>
