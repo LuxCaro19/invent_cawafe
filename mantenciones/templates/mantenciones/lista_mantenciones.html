@@ -36,10 +36,10 @@
   <!-- 1/3: Botón agregar alineado a la derecha -->
   <div class="col-md-4">
     <div class="d-flex align-items-center gap-2">
-      <button type="button" class="btn btn-outline-danger"  disabled>
+      <button type="button" class="btn btn-outline-danger" hidden disabled>
         🗑️ Eliminar
       </button>
-      <button type="button" class="btn btn-outline-secondary hidden"  disabled title="Enviar correo a los usuarios asignados de los equipos seleccionados">
+      <button type="button" class="btn btn-outline-secondary "  hidden disabled title="Enviar correo a los usuarios asignados de los equipos seleccionados">
         ✉️ Contactar
       </button>
       <a href="{% url 'equipos_sin_mantencion' %}" class="btn btn-outline-success ms-auto">
@@ -99,7 +99,8 @@
                 <td>{{ m.equipo.modelo.tipo }}</td>
                 <td>
                   {% if m.equipo.usuario_asignado %}
-                    {{ m.equipo.usuario_asignado.nombre }}
+                    {{ m.equipo.usuario_asignado.nombre_completo }}
+
                   {% else %}
                     <span class="text-muted">(No asignado)</span>
                   {% endif %}
@@ -112,7 +113,7 @@
                   {% endif %}
                 </td>
                 <td>{{ m.tipo.nombre }}</td>
-                <td>{{ m.ultima_fecha|date:"m-y" }}</td>
+                <td>{{ m.ultima_fecha|date:"d-m-Y" }}</td>
                 <td>
                   {% if m.fecha_proxima %}
                     {% if m.fecha_proxima < today %}

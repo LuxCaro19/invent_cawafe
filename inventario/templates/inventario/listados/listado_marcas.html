@@ -1,19 +1,51 @@
-{% extends 'base/lista/listado_base.html' %} <!-- Hereda de la plantilla base -->
+{% extends 'base.html' %}
+{% block content %}
 
-{% block title %}Fabricantes{% endblock %} <!-- Sobrescribe el título de la página -->
+<h2 class="mb-4">Fabricantes</h2>
 
-{% block subtitle %}Fabricantes{% endblock %} <!-- Título secundario (puedes personalizarlo) -->
+<form method="get" class="row mb-4 align-items-center">
+  <div class="col-md-6">
+    <input type="text" name="buscar" placeholder="Buscar por nombre..." value="{{ filtro_busqueda }}" class="form-control">
+  </div>
 
-{% block table_headers %}
-    <!--<th>ID</th>-->
-    <th>Marca</th>
-{% endblock %}
+  <div class="col-md-2 d-flex gap-2 mt-2 mt-md-0">
+    <button type="submit" class="btn btn-primary w-100">🔍</button>
+    <a href="{% url 'listado_marcas' %}" class="btn btn-outline-secondary w-100">↺</a>
+  </div>
 
-{% block table_body %}
-    {% for marca in marcas %}
-    <tr class="clickable-row" data-href="{% url 'detalle_marca' marca.id %}">
-        <!--<td>{{ marca.id }}</td>-->
-        <td>{{ marca.marca }}</td>
-    </tr>
-    {% endfor %}
+  <div class="col-md-4 mt-2 mt-md-0 text-md-end">
+    <a href="{% url 'registrar_marca' %}" class="btn btn-outline-success">＋ Agregar fabricante</a>
+  </div>
+</form>
+
+{% if marcas %}
+  <div class="table-responsive overflow-hidden">
+    <table class="table table-striped table-bordered align-middle rounded-3 overflow-hidden">
+      <thead class="table-danger">
+        <tr>
+          <th>Marca</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for marca in marcas %}
+        <tr class="clickable-row" data-href="{% url 'detalle_marca' marca.id %}">
+          <td>{{ marca.marca }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="alert alert-info mt-3">No hay fabricantes registrados o coincidentes.</div>
+{% endif %}
+
+<script>
+  document.querySelectorAll(".clickable-row").forEach(row => {
+    row.addEventListener("click", () => {
+      const href = row.getAttribute("data-href");
+      if (href) window.location.href = href;
+    });
+  });
+</script>
+
 {% endblock %}

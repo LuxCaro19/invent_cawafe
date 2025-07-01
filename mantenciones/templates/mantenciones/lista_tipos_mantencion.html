@@ -6,10 +6,8 @@
 
 <div class="mb-3">
   <a href="{% url 'crear_tipo_mantencion' %}" class="btn rounded-3 px-4" style="background-color: #ad0000 !important; color: white; border: none;">
-  + Crear nuevo tipo de mantención
-</a>
-
-
+    + Crear nuevo tipo de mantención
+  </a>
 </div>
 
 <div class="table-responsive rounded-3 overflow-hidden border">
@@ -32,14 +30,73 @@
         <td>{{ tipo.sistema_operativo|default:"Cualquiera" }}</td>
         <td>
           <a href="{% url 'editar_tipo_mantencion' tipo.id %}" class="btn btn-sm btn-outline-primary">Editar</a>
-          <a href="#" class="btn btn-sm btn-outline-danger">Eliminar</a>
+          <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmarEliminacion-{{ tipo.id }}">Eliminar</button>
         </td>
       </tr>
+
+      <!-- Modal de Confirmación -->
+      <div class="modal fade" id="confirmarEliminacion-{{ tipo.id }}" tabindex="-1" aria-labelledby="modalLabel-{{ tipo.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title" id="modalLabel-{{ tipo.id }}">Confirmar eliminación</h5>
+            </div>
+            <div class="modal-body text-center">
+              ¿Estás seguro de que deseas eliminar el tipo de mantención <strong>{{ tipo.nombre }}</strong>?
+            </div>
+            <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-secondary me-3" data-bs-dismiss="modal">Cancelar</button>
+              <form method="post" action="{% url 'eliminar_tipo_mantencion' tipo.id %}">
+                {% csrf_token %}
+                <button id="confirmar-btn-{{ tipo.id }}" type="submit" class="btn btn-danger" disabled data-original-text="Eliminar">
+                  Espera 2s...
+                </button>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
       {% empty %}
       <tr><td colspan="5" class="text-center text-muted">No hay tipos de mantención registrados.</td></tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
+
+<!-- Script de retardo para botones de eliminación -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('[id^="confirmar-btn-"]').forEach(btn => {
+      const originalText = btn.dataset.originalText || "Eliminar";
+      let timeout;
+
+      const modal = btn.closest('.modal');
+
+      modal.addEventListener('shown.bs.modal', () => {
+        let seconds = 2;
+        btn.innerText = `Espera ${seconds}s...`;
+        btn.disabled = true;
+        timeout = setInterval(() => {
+          seconds--;
+          if (seconds <= 0) {
+            clearInterval(timeout);
+            btn.innerText = originalText;
+            btn.disabled = false;
+          } else {
+            btn.innerText = `Espera ${seconds}s...`;
+          }
+        }, 1000);
+      });
+
+      modal.addEventListener('hidden.bs.modal', () => {
+        clearInterval(timeout);
+        btn.innerText = `Espera 2s...`;
+        btn.disabled = true;
+      });
+    });
+  });
+</script>
+
 
 {% endblock %}
