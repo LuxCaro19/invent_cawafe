@@ -39,7 +39,8 @@
                 <div class="col-12 col-md-6 mb-3">
                     <div class="border rounded p-3 h-100">
                         {% if venta %}
-                            <p><strong>Receptor:</strong> {{ venta.nombre_receptor }}</p>
+                            <p><strong>Comprador:</strong> {{ venta.id_usuario.nombre_completo }}</p>
+                            <p><strong>Rut:</strong> {{ venta.id_usuario.rut }}</p>
                             <p><strong>Fecha de venta:</strong> {{ venta.fecha_venta }}</p>
                             <p><strong>Aprobado RRHH:</strong> 
                                 {% if venta.flag_aprobado_remuneraciones %}

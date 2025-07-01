@@ -5,14 +5,14 @@ from django.core.mail import EmailMessage
 from django.db.models import CASCADE
 #from reportlab.pdfgen import canvas
 from inventario.models.estado_equipo import Estado_equipo
+from django.conf import settings
 
 
 class Venta(models.Model):
     id = models.AutoField(primary_key=True)
     fecha_venta = models.DateField(null=True)  
     id_equipo = models.ForeignKey('inventario.Equipo', on_delete=models.SET_NULL, null=True)
-    #id_usuario = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True)
-    nombre_receptor = models.CharField(max_length=100, null=True)
+    id_usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     flag_aprobado_remuneraciones = models.BooleanField(default=None, null=True)  # Aprobación de remuneraciones
     flag_entregado = models.BooleanField(default=False)
 
