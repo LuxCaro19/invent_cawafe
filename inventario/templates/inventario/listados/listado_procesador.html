@@ -1,20 +1,91 @@
-{% extends 'base/lista/listado_base.html' %}
+{% extends 'base.html' %}
+{% block content %}
 
-{% block title %}Procesadores{% endblock %}
-{% block subtitle %}Procesadores{% endblock %}
+<h2 class="mb-4">Procesadores</h2>
 
-{% block table_headers %}
-    <th>ID</th>
-    <th>Nombre</th>
-    <th>Marca</th>
-{% endblock %}
+<form method="get" class="row mb-4 align-items-center">
+  <div class="col-md-6">
+    <input type="text" name="buscar" placeholder="Buscar por nombre o marca..." value="{{ filtro_busqueda }}" class="form-control">
+  </div>
 
-{% block table_body %}
-    {% for procesador in procesadores %}
-    <tr class="clickable-row" data-href="{% url 'detalle_procesador' procesador.id %}">
-        <td>{{ procesador.id }}</td>
-        <td>{{ procesador.nombre }}</td>
-        <td>{{ procesador.marca.marca }}</td>
-    </tr>
+  <div class="col-md-4 d-flex gap-2">
+    <select name="agrupar" class="form-select">
+      <option value="">Sin agrupar</option>
+      <option value="marca" {% if agrupar == "marca" %}selected{% endif %}>Marca</option>
+    </select>
+    <button type="submit" class="btn btn-primary">🔍</button>
+    <a href="{% url 'listado_procesadores' %}" class="btn btn-outline-secondary">↺</a>
+  </div>
+
+  <div class="col-md-2 text-end mt-2 mt-md-0">
+    <a href="{% url 'registrar_procesador' %}" class="btn btn-outline-success">＋ Agregar</a>
+  </div>
+</form>
+
+{% if grupos %}
+  {% if not agrupar %}
+    <div class="table-responsive overflow-hidden">
+      <table class="table table-striped table-bordered align-middle rounded-3 overflow-hidden">
+        <thead class="table-danger">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Marca</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for procesador in grupos.Todos %}
+          <tr class="clickable-row" data-href="{% url 'detalle_procesador' procesador.id %}">
+            <td>{{ procesador.id }}</td>
+            <td>{{ procesador.nombre }}</td>
+            <td>{{ procesador.marca.marca }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    {% for grupo, items in grupos.items %}
+      {% if items %}
+        <h5 class="ps-3 pt-3 grupo-titulo" data-bs-toggle="collapse" data-bs-target="#grupo-{{ forloop.counter }}" role="button" aria-expanded="true" aria-controls="grupo-{{ forloop.counter }}" style="cursor: pointer;">
+          {{ grupo }}
+        </h5>
+        <div id="grupo-{{ forloop.counter }}" class="collapse show">
+          <div class="table-responsive overflow-hidden">
+            <table class="table table-striped table-bordered align-middle rounded-3 overflow-hidden">
+              <thead class="table-danger">
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Marca</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for procesador in items %}
+                <tr class="clickable-row" data-href="{% url 'detalle_procesador' procesador.id %}">
+                  <td>{{ procesador.id }}</td>
+                  <td>{{ procesador.nombre }}</td>
+                  <td>{{ procesador.marca.marca }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      {% endif %}
     {% endfor %}
+  {% endif %}
+{% else %}
+  <div class="alert alert-info mt-3">No hay procesadores registrados o coincidentes.</div>
+{% endif %}
+
+<script>
+  document.querySelectorAll(".clickable-row").forEach(row => {
+    row.addEventListener("click", () => {
+      const href = row.getAttribute("data-href");
+      if (href) window.location.href = href;
+    });
+  });
+</script>
+
 {% endblock %}

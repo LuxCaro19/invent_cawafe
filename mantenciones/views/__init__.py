@@ -11,3 +11,4 @@ from .view_eliminar_mantencion import eliminar_mantencion
 from .view_editar_tipo_mantencion import editar_tipo_mantencion, agregar_tarea_tipo_mantencion, eliminar_tarea_tipo_mantencion
 from .AJAX_cargar_tareas_mantencion import obtener_tareas_por_tipo
 from .view_lista_template_mantencion import lista_template_mantencion
+from .view_eliminar_tipo_mantencion import eliminar_tipo_mantencion
