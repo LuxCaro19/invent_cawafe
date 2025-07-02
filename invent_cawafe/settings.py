@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'parametro',
     'asociacion',
     'mantenciones'
+
 ]
 
 

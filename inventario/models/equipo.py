@@ -15,7 +15,7 @@ from django.db import models
 # Clase Equipo.
 
 class Equipo(models.Model):
-    etiqueta = models.CharField()
+    etiqueta = models.CharField(max_length=100, unique=True)
     memoria_ram = models.IntegerField(null=True)
     almacenamiento = models.IntegerField(null=True)
     numero_serie = models.CharField(max_length=100, null=True)

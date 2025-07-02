@@ -6,35 +6,13 @@ from collections import defaultdict
 from django.http import JsonResponse
 from django.db.models import Q
 from inventario.models import Equipo, Estado_equipo, Ubicacion  # ← agrega Ubicacion aquí
-
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+from urllib.parse import urlencode
 
 def vista_asociacion(request):
-    equipos = []
-    usuarios = Usuario.objects.all()
-    historial_por_equipo = defaultdict(list)
-
-    # Obtener filtros de búsqueda
-    query_equipo = request.GET.get('equipo')
-    query_usuario = request.GET.get('usuario')
-
-    if query_equipo or query_usuario:
-        equipos_filtrados = Equipo.objects.all()
-
-        if query_equipo:
-            equipos_filtrados = equipos_filtrados.filter(etiqueta__icontains=query_equipo)
-
-        if query_usuario:
-            equipos_filtrados = equipos_filtrados.filter(usuario_asignado__nombre_completo__icontains=query_usuario)
-
-        equipos = equipos_filtrados
-
-        for equipo in equipos:
-            historial = HistorialEquipo.objects.filter(equipo=equipo).order_by('-fecha')[:5]
-            historial_por_equipo[equipo.id] = historial
-
-        equipos_con_historial = [(equipo, historial_por_equipo[equipo.id]) for equipo in equipos]
-    else:
-        equipos_con_historial = []
+    query_equipo = request.GET.get('equipo', '')
+    query_usuario = request.GET.get('usuario', '')
 
     if request.method == 'POST':
         equipo_id = request.POST.get('equipo_id')
@@ -46,33 +24,20 @@ def vista_asociacion(request):
         if a_bodega:
             equipo.usuario_asignado = None
             equipo.en_bodega = True
-
-            # Estado: Operativo
-            estado_operativo = Estado_equipo.objects.get(nombre__iexact="Operativo")
-            equipo.estado = estado_operativo
-
-            # Ubicación: En Bodega
-            ubicacion_bodega = Ubicacion.objects.get(nombre__iexact="En Bodega")
-            equipo.ubicacion = ubicacion_bodega
-
+            equipo.estado = Estado_equipo.objects.get(nombre__iexact="Operativo")
+            equipo.ubicacion = Ubicacion.objects.get(nombre__iexact="En Bodega")
         else:
             equipo.en_bodega = False
             if usuario_id:
                 nuevo_usuario = Usuario.objects.get(id=usuario_id)
                 equipo.usuario_asignado = nuevo_usuario
-
-                # Estado: Asignado
-                estado_asignado = Estado_equipo.objects.get(nombre__iexact="Asignado")
-                equipo.estado = estado_asignado
-
-                # Borrar ubicación (opcional o puedes poner una por defecto)
+                equipo.estado = Estado_equipo.objects.get(nombre__iexact="Asignado")
                 equipo.ubicacion = None
             else:
                 equipo.usuario_asignado = None
 
         equipo.save()
 
-        # Registrar historial
         ultimo_historial = HistorialEquipo.objects.filter(equipo=equipo).order_by('-fecha').first()
 
         if (
@@ -87,20 +52,40 @@ def vista_asociacion(request):
                 registrado_por=request.user
             )
 
-        return redirect(f'/asociacion/?equipo={query_equipo or ""}&usuario={query_usuario or ""}')
+        # Redirecciona SIN repetir la lógica
+        params = {}
+        if query_equipo:
+            params['equipo'] = query_equipo
+        if query_usuario:
+            params['usuario'] = query_usuario
 
+        url = reverse('vista_asociacion')
+        if params:
+            url += '?' + urlencode(params)
+        return HttpResponseRedirect(url)
 
-    # Asegúrate de enviar los estados si necesitas renderizar el dropdown
-    estados = Estado_equipo.objects.all()
+    # Solo ejecuta la lógica GET después de manejar el POST
+    filtros = Q()
+    if query_equipo:
+        filtros &= Q(etiqueta__icontains=query_equipo)
+    if query_usuario:
+        filtros &= Q(usuario_asignado__nombre_completo__icontains=query_usuario)
+
+    equipos = Equipo.objects.filter(filtros).distinct() if filtros else []
+    historial_por_equipo = defaultdict(list)
+
+    for equipo in equipos:
+        historial = HistorialEquipo.objects.filter(equipo=equipo).order_by('-fecha')[:5]
+        historial_por_equipo[equipo.id] = historial
+
+    equipos_con_historial = [(equipo, historial_por_equipo[equipo.id]) for equipo in equipos]
 
     return render(request, 'asociacion/vista_asociacion.html', {
-        'equipos': equipos,
-        'usuarios': usuarios,
-        'query_equipo': query_equipo or '',
-        'query_usuario': query_usuario or '',
+        'usuarios': Usuario.objects.all(),
+        'estados': Estado_equipo.objects.all(),
         'equipos_con_historial': equipos_con_historial,
-        'todos_los_equipos': Equipo.objects.all(),
-        'estados': estados,
+        'query_equipo': query_equipo,
+        'query_usuario': query_usuario,
     })
 
 def historial_equipo(request, equipo_id):
