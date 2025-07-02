@@ -39,7 +39,7 @@
       <button type="button" class="btn btn-outline-danger" hidden disabled>
         🗑️ Eliminar
       </button>
-      <button type="button" class="btn btn-outline-secondary "  hidden disabled title="Enviar correo a los usuarios asignados de los equipos seleccionados">
+      <button type="button" id="contactar-btn" class="btn btn-outline-secondary" title="Enviar correo a los usuarios asignados de los equipos seleccionados">
         ✉️ Contactar
       </button>
       <a href="{% url 'equipos_sin_mantencion' %}" class="btn btn-outline-success ms-auto">
@@ -193,6 +193,20 @@ document.querySelectorAll(".check-cabecera").forEach(headerCheckbox => {
     checkboxes.forEach(cb => cb.checked = this.checked);
   });
 });
+</script>
+<script>
+  document.getElementById("contactar-btn").addEventListener("click", function () {
+    const seleccionados = Array.from(document.querySelectorAll(".check-mantencion:checked"))
+      .map(cb => cb.value);
+
+    if (seleccionados.length === 0) {
+      alert("Selecciona al menos una mantención.");
+      return;
+    }
+
+    const url = "{% url 'contactar_mantenciones' %}" + "?ids=" + seleccionados.join("&ids=");
+    window.location.href = url;
+  });
 </script>
 
 {% include "fragmentos/espera_confirmacion_eliminar.html" %}

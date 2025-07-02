@@ -1,0 +1,158 @@
+{% extends 'base_tarjeta.html' %}
+{% load static %}
+
+{% block title %}Contactar responsables{% endblock %}
+
+{% block formulario_header %}
+📨 Contactar responsables por correo
+{% endblock %}
+
+{% block formulario_content %}
+<form method="post">
+  {% csrf_token %}
+
+  <!-- Filtros superiores -->
+  <div class="row mb-4 align-items-end">
+    <!-- Destinatario -->
+    <div class="col-md-4">
+      <label for="usuario" class="form-label">Destinatario principal</label>
+      <select id="usuario" name="usuario" class="form-select">
+        {% for u in usuarios %}
+          <option value="{{ u.id }}" {% if u.id == usuario_destacado_id %}selected{% endif %}>{{ u.nombre_completo }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Fecha inicio -->
+    <div class="col-md-3">
+      <label for="fecha_inicio" class="form-label">Desde</label>
+      <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control" required>
+    </div>
+
+    <!-- Fecha fin -->
+    <div class="col-md-3">
+      <label for="fecha_fin" class="form-label">Hasta</label>
+      <input type="date" id="fecha_fin" name="fecha_fin" class="form-control" required>
+    </div>
+
+    <!-- Ubicación -->
+    <div class="col-md-2">
+      <label for="ubicacion" class="form-label">Ubicación</label>
+      <select id="ubicacion" name="ubicacion" class="form-select">
+        <option value="">Todas</option>
+        {% for ub in ubicaciones %}
+          <option value="{{ ub.id }}" {% if ub.id == ubicacion_seleccionada_id %}selected{% endif %}>
+            {{ ub.nombre }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <!-- Correos copiados -->
+  <div class="mb-4">
+    <label class="form-label">Con copia a:</label>
+    <div class="d-flex flex-wrap gap-2">
+      {% for correo in correos %}
+        <span class="badge bg-secondary px-3 py-2">{{ correo }}</span>
+      {% empty %}
+        <span class="text-muted">No hay correos disponibles</span>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Cuerpo del mensaje -->
+  <div class="border rounded p-3 bg-light" style="min-height: 200px;" id="cuerpo_mensaje">
+    <p id="saludo"><em>Buenos días</em>,</p>
+
+    <p>
+      Les informamos que se realizarán mantenciones preventivas en la ubicación
+      <strong id="ubicacion_txt">[ubicación]</strong> entre el día
+      <strong id="fecha_inicio_txt">[inicio]</strong> y el
+      <strong id="fecha_fin_txt">[fin]</strong>, con el objetivo de mantener la continuidad operativa de los equipos asignados.
+    </p>
+
+    <p>
+      Según nuestros registros, actualmente existen los siguientes equipos asignados a personal en esta obra:
+    </p>
+
+    <ul>
+    {% for usuario, descripcion in equipos_por_usuario.items %}
+        <li><strong>{{ usuario }}:</strong> {{ descripcion }}</li>
+    {% empty %}
+        <li><em>No hay equipos asignados en esta ubicacion.</em></li>
+    {% endfor %}
+    </ul>
+
+    <p>
+      Solicitamos revisar si esta información es correcta y notificar con anticipación cualquier equipo
+      que presente fallas, daños o problemas de funcionamiento, con el fin de coordinar adecuadamente su revisión o reparación durante la visita.
+    </p>
+
+    <p>
+      Para cualquier duda o comentario, pueden comunicarse con el área de soporte escribiendo a
+      <a href="mailto:soporte@soporte">soporte@soporte</a>, o directamente con quien ha enviado este mensaje.
+    </p>
+
+    <p>Saludos cordiales,<br>Área de soporte TI</p>
+  </div>
+
+  <!-- Botones -->
+  <div class="d-flex justify-content-between gap-2 mt-3">
+    <a href="{% url 'lista_mantenciones' %}" class="btn btn-secondary">← Volver</a>
+    <button type="submit" class="btn btn-primary">✉️ Enviar</button>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function formatearFecha(fechaStr) {
+    const meses = [
+      "enero", "febrero", "marzo", "abril", "mayo", "junio",
+      "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+    ];
+    const partes = fechaStr.split("-");
+    if (partes.length === 3) {
+      const dia = parseInt(partes[2], 10);
+      const mes = parseInt(partes[1], 10) - 1;
+      return `${dia} de ${meses[mes]}`;
+    }
+    return "[fecha]";
+  }
+
+  // Saludo automático según hora
+  const hora = new Date().getHours();
+  const saludo = document.getElementById("saludo");
+  if (hora < 12) saludo.innerHTML = "<em>Buenos días</em>,";
+  else if (hora < 19) saludo.innerHTML = "<em>Buenas tardes</em>,";
+  else saludo.innerHTML = "<em>Buenas noches</em>,";
+
+  // Fecha inicio/fin legibles
+  document.getElementById('fecha_inicio').addEventListener('change', function () {
+    document.getElementById('fecha_inicio_txt').textContent = formatearFecha(this.value);
+  });
+
+  document.getElementById('fecha_fin').addEventListener('change', function () {
+    document.getElementById('fecha_fin_txt').textContent = formatearFecha(this.value);
+  });
+
+  // Nombre de ubicación legible
+  document.getElementById('ubicacion').addEventListener('change', function () {
+    const selectedText = this.options[this.selectedIndex].text;
+    document.getElementById('ubicacion_txt').textContent = selectedText || "[ubicación]";
+  });
+
+  // Inicializar valores legibles al cargar
+  window.addEventListener('DOMContentLoaded', () => {
+    // Ubicación
+    const ubicacionSelect = document.getElementById('ubicacion');
+    const ubicacionTexto = ubicacionSelect.options[ubicacionSelect.selectedIndex]?.text;
+    document.getElementById('ubicacion_txt').textContent = ubicacionTexto || "[ubicación]";
+
+    // Si quieres autollenar fechas en el futuro desde Django:
+    // document.getElementById('fecha_inicio_txt').textContent = formatearFecha(document.getElementById('fecha_inicio').value);
+    // document.getElementById('fecha_fin_txt').textContent = formatearFecha(document.getElementById('fecha_fin').value);
+  });
+</script>
+{% endblock %}

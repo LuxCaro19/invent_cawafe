@@ -19,6 +19,7 @@ urlpatterns = [
     path('mantenciones/api/tipo/<int:tipo_id>/tareas/', views.obtener_tareas_por_tipo, name='obtener_tareas_por_tipo'),
     path('mantenciones/template_mantenciones/', views.lista_template_mantencion, name='lista_template_mantencion'),
     path('mantenciones/tipos/eliminar/<int:id>/', views.eliminar_tipo_mantencion, name='eliminar_tipo_mantencion'),
+    path('mantenciones/contactar/', views.contactar_mantenciones, name='contactar_mantenciones')
 ]
 
 
