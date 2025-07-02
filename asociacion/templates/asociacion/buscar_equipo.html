@@ -1,0 +1,56 @@
+{% extends 'navbar/navbar.html' %}
+{% block content %}
+<div class="container mt-5">
+  <div class="card p-4 shadow">
+    <h4 class="mb-3">Buscar o Escanear Equipo</h4>
+
+    {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" class="mb-3">
+      {% csrf_token %}
+      <label for="etiqueta">Ingresar Etiqueta:</label>
+      <input type="text" name="etiqueta" id="etiqueta" class="form-control mb-2" placeholder="Ej: note1">
+      <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+
+    <hr>
+
+    <h5 class="mb-2">O escanea el código QR</h5>
+    <div id="qr-reader" style="width: 100%;"></div>
+  </div>
+</div>
+
+<!-- JS QR escáner con html5-qrcode -->
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script>
+  function redirigirSiEtiquetaValida(etiqueta) {
+    if (etiqueta) {
+      window.location.href = `/asociar/?equipo=${encodeURIComponent(etiqueta)}`;
+    }
+  }
+
+  const qrReader = new Html5Qrcode("qr-reader");
+  const config = { fps: 10, qrbox: 250 };
+
+  Html5Qrcode.getCameras().then(cameras => {
+    if (cameras && cameras.length) {
+      qrReader.start(
+        cameras[0].id,
+        config,
+        (decodedText, decodedResult) => {
+          qrReader.stop().then(() => {
+            redirigirSiEtiquetaValida(decodedText);
+          });
+        },
+        error => {}
+      ).catch(err => {
+        console.error("Error al iniciar cámara:", err);
+      });
+    }
+  }).catch(err => {
+    console.error("No se detectaron cámaras:", err);
+  });
+</script>
+{% endblock %}

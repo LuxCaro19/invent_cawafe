@@ -124,3 +124,15 @@ def autocomplete_usuarios(request):
     usuarios = Usuario.objects.filter(nombre_completo__icontains=term)[:10]
     results = [{"label": u.nombre_completo, "value": u.nombre_completo} for u in usuarios]
     return JsonResponse(results, safe=False)
+
+def buscar_equipo_asociar(request):
+    if request.method == 'POST':
+        etiqueta = request.POST.get('etiqueta', '').strip()
+        if Equipo.objects.filter(etiqueta=etiqueta).exists():
+            return redirect(f'/asociacion/?equipo={etiqueta}')
+        else:
+            return render(request, 'asociacion/buscar_equipo.html', {
+                'error': 'No se encontró un equipo con esa etiqueta.'
+            })
+
+    return render(request, 'asociacion/buscar_equipo.html')
