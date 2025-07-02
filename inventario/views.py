@@ -16,6 +16,8 @@ from .forms.procesador_form import ProcesadorForm
 from .forms.so_form import SoForm
 from .forms.estado_equipo_form import Estado_equipoForm
 from django.http import JsonResponse
+from django.urls import reverse 
+from django.utils import timezone
 
 # Create your views here.
 
@@ -227,29 +229,56 @@ def listado_estado_equipos(request):
 
 ##############################
 # Vista de detalles
+ # Asegúrate de tener este import arriba
 
 def detalle_equipo(request, id):
     equipo = get_object_or_404(Equipo, id=id)
+    historial = Equipo_historial.objects.filter(equipo=equipo).order_by('-fecha')
 
     if request.method == 'POST':
-        if 'eliminar' in request.POST:
-            equipo.eliminar_equipo()
-            return redirect('listado_equipos')  # ✅ Redirección limpia y sin errores
-        else:
-            form = EquipoForm(request.POST, instance=equipo)
-            if form.is_valid():
-                equipo.modificar_equipo(form)
-                return redirect('detalle_equipo', id=equipo.id)
+        form = EquipoForm(request.POST, instance=equipo)
+        if form.is_valid():
+            cambios = []
+            equipo_original = Equipo.objects.get(pk=equipo.pk)
+
+            # Guardar valores antes del cambio
+            estado_anterior = equipo_original.estado
+
+            for campo, nuevo_valor in form.cleaned_data.items():
+                valor_actual = getattr(equipo_original, campo)
+
+                # Si es una FK, compara por ID
+                if hasattr(valor_actual, 'id') and hasattr(nuevo_valor, 'id'):
+                    if valor_actual.id != nuevo_valor.id:
+                        cambios.append(f"{campo}: {valor_actual} → {nuevo_valor}")
+                        setattr(equipo, campo, nuevo_valor)
+                elif valor_actual != nuevo_valor:
+                    cambios.append(f"{campo}: {valor_actual} → {nuevo_valor}")
+                    setattr(equipo, campo, nuevo_valor)
+
+            equipo.save()
+
+            if cambios:
+                observaciones = f"Modificado por {request.user}\n" + "\n".join(cambios)
+                Equipo_historial.objects.create(
+                    equipo=equipo,
+                    fecha=timezone.now(),
+                    estado_anterior=estado_anterior,
+                    nuevo_estado=equipo.estado,
+                    observaciones=observaciones
+                )
+
+            return redirect('detalle_equipo', id=equipo.id)
     else:
         form = EquipoForm(instance=equipo)
-
-    historial = Equipo_historial.objects.filter(equipo=equipo).order_by('-fecha')
 
     return render(request, 'inventario/detalle/detalle_equipo.html', {
         'equipo': equipo,
         'form': form,
-        'historial': historial
+        'historial': historial,
+        'detalle_equipo_url': reverse('detalle_equipo', args=[equipo.id])
     })
+
 
 
 
@@ -372,11 +401,33 @@ def registrar_equipo(request):
     if request.method == 'POST':
         form = EquipoForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('detalle_equipo', id=Equipo.objects.latest('id').id)
+            equipo = form.save()  # Guardamos el equipo
+
+            # Registrar en historial
+            from django.utils import timezone
+            from .models import Equipo_historial
+
+            if request.user.is_authenticated:
+                creador = getattr(request.user, 'nombre_completo', str(request.user))
+            else:
+                creador = 'desconocido'
+
+            observaciones = f"Equipo creado por {creador}"
+
+            Equipo_historial.objects.create(
+                equipo=equipo,
+                fecha=timezone.now(),
+                estado_anterior=None,
+                nuevo_estado=equipo.estado,
+                observaciones=observaciones
+            )
+
+            return redirect('detalle_equipo', id=equipo.id)
     else:
         form = EquipoForm()
-    return render(request, 'inventario/registro/registrar_equipo.html', {'equipo': Equipo,'form': form})
+    return render(request, 'inventario/registro/registrar_equipo.html', {'equipo': Equipo, 'form': form})
+
+
 
 
 def registrar_modelo_equipo(request):
