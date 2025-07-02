@@ -1,26 +1,15 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
-<style>
-  body {
-    background-image: url("tiles.png") !important; 
-    background-repeat: repeat;
-    background-size: 64px 64px;
-    background-color:rgb(0, 105, 209)!important; /* base del bg-light */
-    background-blend-mode: multiply;
-  }
-</style>
-
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Listado{% endblock %}</title>
+  <title>{% block title %}Usuarios{% endblock %}</title>
 
   <!-- Bootstrap y estilos -->
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/styles.css' %}" rel="stylesheet">
-  <link href="{% static 'css/orden_tabla.css' %}" rel="stylesheet"> <!-- agregado -->
+  <link href="{% static 'css/orden_tabla.css' %}" rel="stylesheet"> <!-- para ordenamiento de tablas -->
 
   {% block extra_head %}{% endblock %}
 </head>
@@ -29,7 +18,7 @@
   <!-- Barra de navegación -->
   {% include 'navbar/navbar.html' %}
 
-  <!-- Contenedor principal -->
+  <!-- Contenido principal -->
   <main class="flex-fill d-flex justify-content-center align-items-start overflow-auto">
     <div class="container-fluid px-2" style="max-width: 1600px;">
       {% block content %}{% endblock %}
@@ -40,7 +29,7 @@
   <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
   <script src="{% static 'js/popper.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/orden_tabla.js' %}"></script> <!-- agregado -->
+  <script src="{% static 'js/orden_tabla.js' %}"></script> <!-- tabla ordenable -->
 
   {% block extra_js %}{% endblock %}
 </body>

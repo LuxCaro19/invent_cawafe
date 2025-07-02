@@ -5,16 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Listado{% endblock %}</title>
-    <link href="{% static 'css/scroll.css' %}" rel="stylesheet">
-  <!-- Bootstrap y estilos -->
+
+  <!-- Estilos -->
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/styles.css' %}" rel="stylesheet">
-  <link href="{% static 'scroll.css' %}" rel="stylesheet">
+  <link href="{% static 'css/orden_tabla.css' %}" rel="stylesheet"> <!-- actualizado -->
 
   {% block extra_head %}{% endblock %}
 </head>
 <body class="bg-light d-flex flex-column min-vh-100 scroll-b">
-
 
   <!-- Barra de navegación -->
   {% include 'navbar/navbar.html' %}
@@ -22,9 +21,7 @@
   <!-- Contenedor principal -->
   <main class="flex-fill d-flex justify-content-center align-items-start overflow-auto">
     <div class="container-fluid px-2" style="max-width: 1600px;">
-
-      {% block content %}
-      {% endblock %}
+      {% block content %}{% endblock %}
     </div>
   </main>
 
@@ -32,11 +29,8 @@
   <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
   <script src="{% static 'js/popper.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  
+  <script src="{% static 'js/orden_tabla.js' %}"></script> <!-- actualizado -->
 
-{% block extra_js %}
-
-{% endblock %}
-
+  {% block extra_js %}{% endblock %}
 </body>
 </html>

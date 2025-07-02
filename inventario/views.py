@@ -234,8 +234,7 @@ def detalle_equipo(request, id):
     if request.method == 'POST':
         if 'eliminar' in request.POST:
             equipo.eliminar_equipo()
-            equipos = Equipo.objects.all()
-            return render(request, 'inventario/listados/listado_equipos.html', {'equipos': equipos})
+            return redirect('listado_equipos')  # ✅ Redirección limpia y sin errores
         else:
             form = EquipoForm(request.POST, instance=equipo)
             if form.is_valid():
@@ -246,7 +245,11 @@ def detalle_equipo(request, id):
 
     historial = Equipo_historial.objects.filter(equipo=equipo).order_by('-fecha')
 
-    return render(request, 'inventario/detalle/detalle_equipo.html', {'equipo': equipo, 'form': form, 'historial': historial})
+    return render(request, 'inventario/detalle/detalle_equipo.html', {
+        'equipo': equipo,
+        'form': form,
+        'historial': historial
+    })
 
 
 
