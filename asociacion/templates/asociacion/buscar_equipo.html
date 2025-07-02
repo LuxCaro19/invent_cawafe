@@ -25,11 +25,15 @@
 <!-- JS QR escáner con html5-qrcode -->
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <script>
-  function redirigirSiEtiquetaValida(etiqueta) {
-    if (etiqueta) {
-      window.location.href = `/asociar/?equipo=${encodeURIComponent(etiqueta)}`;
-    }
+  function redirigirSiUrlValida(qrUrl) {
+  if (qrUrl && qrUrl.startsWith("http")) {
+    // El QR ya trae una URL completa
+    window.location.href = qrUrl;
+  } else if (qrUrl) {
+    // Si solo trae la etiqueta, mantener lógica anterior
+    window.location.href = `/asociar/?equipo=${encodeURIComponent(qrUrl)}`;
   }
+}
 
   const qrReader = new Html5Qrcode("qr-reader");
   const config = { fps: 10, qrbox: 250 };
@@ -41,7 +45,7 @@
         config,
         (decodedText, decodedResult) => {
           qrReader.stop().then(() => {
-            redirigirSiEtiquetaValida(decodedText);
+            redirigirSiUrlValida(decodedText);
           });
         },
         error => {}
