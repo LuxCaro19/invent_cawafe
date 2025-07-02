@@ -52,16 +52,43 @@ class Equipo(models.Model):
             )
         self.estado = nuevo_estado
 
-    def modificar_equipo(self, form):
-        nuevo_estado = form.cleaned_data['estado']
-        self.cambiar_estado(nuevo_estado)
+    def modificar_equipo(self, form, modificado_por=None):
+        from .equipo_historial import Equipo_historial
+        from django.utils import timezone
 
-        # Actualiza otros campos del formulario
-        for campo in form.cleaned_data:
-            if campo != 'estado':
-                setattr(self, campo, form.cleaned_data[campo])
+        cambios = []
+        estado_anterior = self.estado
+
+        for campo, nuevo_valor in form.cleaned_data.items():
+            valor_actual = getattr(self, campo)
+
+            # Comparación robusta para ForeignKey y otros tipos
+            if str(valor_actual) != str(nuevo_valor):
+                cambios.append(f"{campo}: {valor_actual} → {nuevo_valor}")
+                setattr(self, campo, nuevo_valor)
 
         self.save()
+
+        if cambios:
+            nombre_modificador = (
+                modificado_por.nombre_completo
+                if modificado_por and hasattr(modificado_por, 'nombre_completo')
+                else str(modificado_por or "desconocido")
+            )
+
+            observaciones = f"Modificado por {nombre_modificador}\n" + "\n".join(cambios)
+
+            Equipo_historial.objects.create(
+                equipo=self,
+                fecha=timezone.now(),
+                estado_anterior=estado_anterior,
+                nuevo_estado=self.estado,
+                observaciones=observaciones
+            )
+
+
+
+
 
     def eliminar_equipo(self):
         self.delete()
