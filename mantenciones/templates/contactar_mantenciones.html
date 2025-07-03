@@ -39,7 +39,7 @@
     <div class="col-md-2">
       <label for="ubicacion" class="form-label">Ubicación</label>
       <select id="ubicacion" name="ubicacion" class="form-select">
-        <option value="">Todas</option>
+
         {% for ub in ubicaciones %}
           <option value="{{ ub.id }}" {% if ub.id == ubicacion_seleccionada_id %}selected{% endif %}>
             {{ ub.nombre }}
@@ -73,7 +73,7 @@
   </p>
 
   <p>
-    Por favor, revisar si existen equipos en la obra que presenten fallas, daños o funcionamiento inestable,
+    Por favor, revisar si existen equipos en su ubicacion que presenten fallas, daños o funcionamiento inestable,
     para poder coordinar su evaluación o reparación durante la visita del área de soporte.
   </p>
 
@@ -136,10 +136,39 @@
     const ubicacionSelect = document.getElementById('ubicacion');
     const ubicacionTexto = ubicacionSelect.options[ubicacionSelect.selectedIndex]?.text;
     document.getElementById('ubicacion_txt').textContent = ubicacionTexto || "[ubicación]";
+  });
 
-    // Si quieres autollenar fechas en el futuro desde Django:
-    // document.getElementById('fecha_inicio_txt').textContent = formatearFecha(document.getElementById('fecha_inicio').value);
-    // document.getElementById('fecha_fin_txt').textContent = formatearFecha(document.getElementById('fecha_fin').value);
+  // ✅ Validación al enviar el formulario
+  document.querySelector("form").addEventListener("submit", function (e) {
+    const usuario = document.getElementById("usuario").value;
+    const ubicacion = document.getElementById("ubicacion").value;
+    const fechaInicio = document.getElementById("fecha_inicio").value;
+    const fechaFin = document.getElementById("fecha_fin").value;
+
+    if (!usuario) {
+      e.preventDefault();
+      alert("⚠️ Debes seleccionar un responsable principal.");
+      return;
+    }
+
+    if (!ubicacion) {
+      e.preventDefault();
+      alert("⚠️ Debes seleccionar una ubicación específica (no 'Todas').");
+      return;
+    }
+
+    if (!fechaInicio || !fechaFin) {
+      e.preventDefault();
+      alert("⚠️ Debes seleccionar las fechas de inicio y fin.");
+      return;
+    }
+
+    if (fechaFin < fechaInicio) {
+      e.preventDefault();
+      alert("⚠️ La fecha de fin no puede ser anterior a la fecha de inicio.");
+      return;
+    }
   });
 </script>
+
 {% endblock %}
