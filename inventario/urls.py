@@ -1,5 +1,6 @@
 from django.urls import path
-from . import views
+from . import views, views_reportes
+
 
 urlpatterns = [
     # Página de inicio
@@ -33,5 +34,10 @@ urlpatterns = [
     path('lista_estado_equipos/', views.listado_estado_equipos, name='listado_estados'),
 
     # URLS ADICIONALES
-    path('obtener_marca/', views.obtener_marca, name='obtener_marca')
+    path('obtener_marca/', views.obtener_marca, name='obtener_marca'),
+    path('reportes/', views_reportes.vista_reportes, name='vista_reportes'),
+    path('reportes/inventario/', views_reportes.reporte_inventario_general, name='reporte_inventario_general'),
+    path('reportes/venta/', views_reportes.reporte_equipos_para_venta, name='reporte_equipos_para_venta'),
+    path('reportes/antiguedad/', views_reportes.reporte_antiguedad_equipos, name='reporte_antiguedad_equipos'),
+
 ]
