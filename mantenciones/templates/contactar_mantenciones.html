@@ -62,40 +62,27 @@
   </div>
 
   <!-- Cuerpo del mensaje -->
-  <div class="border rounded p-3 bg-light" style="min-height: 200px;" id="cuerpo_mensaje">
-    <p id="saludo"><em>Buenos días</em>,</p>
+<div class="border rounded p-3 bg-light" style="min-height: 200px;" id="cuerpo_mensaje">
+  <p id="saludo"><em>Buenos días</em>,</p>
 
-    <p>
-      Les informamos que se realizarán mantenciones preventivas en la ubicación
-      <strong id="ubicacion_txt">[ubicación]</strong> entre el día
-      <strong id="fecha_inicio_txt">[inicio]</strong> y el
-      <strong id="fecha_fin_txt">[fin]</strong>, con el objetivo de mantener la continuidad operativa de los equipos asignados.
-    </p>
+  <p>
+    Les informamos que se realizarán mantenciones preventivas en la ubicación
+    <strong id="ubicacion_txt">[ubicación]</strong> entre el día
+    <strong id="fecha_inicio_txt">[inicio]</strong> y el
+    <strong id="fecha_fin_txt">[fin]</strong>, con el objetivo de mantener la continuidad operativa de los equipos asignados.
+  </p>
 
-    <p>
-      Según nuestros registros, actualmente existen los siguientes equipos asignados a personal en esta obra:
-    </p>
+  <p>
+    Por favor, revisar si existen equipos en la obra que presenten fallas, daños o funcionamiento inestable,
+    para poder coordinar su evaluación o reparación durante la visita del área de soporte.
+  </p>
 
-    <ul>
-    {% for usuario, descripcion in equipos_por_usuario.items %}
-        <li><strong>{{ usuario }}:</strong> {{ descripcion }}</li>
-    {% empty %}
-        <li><em>No hay equipos asignados en esta ubicacion.</em></li>
-    {% endfor %}
-    </ul>
+  <p>
+    Para cualquier duda o comentario, pueden comunicarse con el área de soporte escribiendo a
+    <a href="mailto:soporte@soporte">soporte@galilea.cl</a>, o directamente a <a href="mailto:{{ request.user.correo }}">{{ request.user.correo }}</a>.
 
-    <p>
-      Solicitamos revisar si esta información es correcta y notificar con anticipación cualquier equipo
-      que presente fallas, daños o problemas de funcionamiento, con el fin de coordinar adecuadamente su revisión o reparación durante la visita.
-    </p>
-
-    <p>
-      Para cualquier duda o comentario, pueden comunicarse con el área de soporte escribiendo a
-      <a href="mailto:soporte@soporte">soporte@soporte</a>, o directamente con quien ha enviado este mensaje.
-    </p>
-
-    <p>Saludos cordiales,<br>Área de soporte TI</p>
-  </div>
+  <p>Saludos cordiales,<br>Área de soporte TI</p>
+</div>
 
   <!-- Botones -->
   <div class="d-flex justify-content-between gap-2 mt-3">
