@@ -1,0 +1,21 @@
+{% extends 'navbar/navbar.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card p-4 shadow">
+    <h4 class="mb-4">Generación de Reportes</h4>
+
+    <div class="list-group">
+      <a href="{% url 'reporte_inventario_general' %}" class="list-group-item list-group-item-action">
+        📦 Reporte de Inventario General
+      </a>
+      <a href="{% url 'reporte_equipos_para_venta' %}" class="list-group-item list-group-item-action">
+        💰 Reporte de Equipos para Venta
+      </a>
+      <a href="{% url 'reporte_antiguedad_equipos' %}" class="list-group-item list-group-item-action">
+        ⏳ Reporte de Antigüedad de Equipos
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

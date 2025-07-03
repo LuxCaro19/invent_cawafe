@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: DejaVu Sans, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+    }
+    .center {
+      text-align: center;
+    }
+    .bold {
+      font-weight: bold;
+    }
+    .block {
+      margin-bottom: 12px;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      margin-bottom: 20px;
+    }
+    .table th, .table td {
+      border: 1px solid black;
+      padding: 5px;
+      text-align: center;
+    }
+    .firma {
+      margin-top: 80px;
+    }
+    .firma .block {
+      margin-bottom: 60px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="center bold" style="font-size: 14pt;">
+    CONTRATO DE COMODATO<br>
+    O<br>
+    PRÉSTAMO DE USO DE EQUIPO
+  </div>
+
+  <p><strong>FECHA:</strong> {{ fecha }}</p>
+
+  <p><strong>COMODANTE:</strong> CONSTRUCTORA PEHUENCHE LIMITADA RUT 78.246.760-3 domiciliado para estos efectos en 34 Oriente 965, Talca, y</p>
+
+  <p><strong>COMODATARIO:</strong> {{ nombre_usuario }}, C.I. Nº {{ rut_usuario }}, domiciliado en __________________________;</p>
+
+  <p>se ha convenido el siguiente anexo al contrato de trabajo:</p>
+
+  <p><strong>PRIMERO:</strong> Por medio de este acto CONSTRUCTORA PEHUENCHE LIMITADA a través de sus apoderados, da en comodato a don {{ nombre_usuario }}, quien los acepta para sí, los siguientes equipos:</p>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ITEM</th>
+        <th>MARCA</th>
+        <th>MODELO</th>
+        <th>IMEI/MAC</th>
+        <th>ESTADO</th>
+        <th>VALOR</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ equipo }}</td>
+        <td>{{ marca }}</td>
+        <td>{{ modelo }}</td>
+        <td>{{ imei }}</td>
+        <td>{{ estado }}</td>
+        <td>${{ valor }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="bold">SEGUNDO: ENTREGA DE LOS BIENES.</p>
+  <p>
+    Los bienes dados en comodato se entregan en este acto, a plena satisfacción del Comodatario. Se deja constancia que los bienes se encuentran:
+    <br>
+    □ Usados, operativos y en excelentes condiciones.
+    □ Nuevos, en su embalaje original.
+    □ Nuevos, sin embalaje original.
+  </p>
+
+  <p class="bold">TERCERO: OBLIGACIONES Y PROHIBICIONES DEL COMODATARIO.</p>
+  <p>Serán obligaciones del Comodatario, y su incumplimiento dará derecho a CONSTRUCTORA PEHUENCHE LIMITADA a poner término ipso facto al presente contrato, las siguientes:</p>
+  <p>a) Utilizar los bienes dados en comodato, únicamente para el ejercicio de sus funciones en CONSTRUCTORA PEHUENCHE LIMITADA [...].</p>
+  <p>b) Conservar, utilizar y mantener los bienes, en perfecto estado como si fuesen propios, empleando el mayor cuidado [...].</p>
+  <p>c) Utilizar únicamente los equipos, accesorios, repuestos y/o insumos necesarios [...].</p>
+  <p>d) Efectuar las mantenciones [...] únicamente por el Comodante o personas autorizadas.</p>
+  <p>e) Ser responsable de cualquier deterioro que no provenga del uso legítimo [...].</p>
+  <p>f) Dar aviso inmediato sobre cualquier desperfecto [...].</p>
+  <p>g) Pagar el valor si el daño hace inutilizable el equipo.</p>
+  <p>h) Restituir los bienes en la fecha estipulada.</p>
+  <p>i) Se prohíbe cualquier cambio o modificación del equipo.</p>
+  <p>j) Se prohíbe la instalación de programas externos.</p>
+  <p>k) Se prohíbe dejar los bienes en lugares públicos sin resguardo.</p>
+  <p>Estas obligaciones son esenciales y su incumplimiento es causal de término inmediato.</p>
+
+  <p class="bold">CUARTO: DURACIÓN DEL CONTRATO.</p>
+  <p>El presente contrato tendrá una duración de 12 meses [...] sin necesidad de justificar causa.</p>
+
+  <p class="bold">QUINTO: PÉRDIDA, DAÑO O DETERIORO DEL BIEN.</p>
+  <p>[...] deberá pagar reparación o reposición según corresponda. [...]</p>
+
+  <p class="bold">SEXTO: DESCUENTO.</p>
+  <p>El Comodatario autoriza descuento por planilla según daño causado.</p>
+
+  <p class="bold">SÉPTIMO: RESERVA DE DERECHO.</p>
+  <p>El Comodante podrá pedir la devolución del equipo en cualquier momento [...].</p>
+
+  <p class="bold">OCTAVO: DERECHO DE DOMINIO.</p>
+  <p>El Comodatario no tiene título de dominio sobre los bienes.</p>
+
+  <p class="bold">NOVENO: MANTENCIÓN PREVENTIVA.</p>
+  <p>La realizará CONSTRUCTORA PEHUENCHE LIMITADA a su costa.</p>
+
+  <p class="bold">DÉCIMO: TERMINACIÓN IPSO FACTO DEL CONTRATO.</p>
+  <p>El incumplimiento faculta al Comodante a poner término inmediato.</p>
+
+  <p class="bold">DÉCIMO PRIMERO: EXTENSIÓN DEL CONTRATO.</p>
+  <p>Contrato es personal e intransferible.</p>
+
+  <p class="bold">DÉCIMO SEGUNDO: RESPONSABILIDAD.</p>
+  <p>El Comodatario será responsable por daño directo o indirecto [...]</p>
+
+  <p class="bold">DÉCIMO TERCERO: SANCIÓN.</p>
+  <p>Multa de 5 UF si se incumple. Salvo fuerza mayor debidamente justificada.</p>
+
+  <p class="bold">DÉCIMO CUARTO: RENUNCIA.</p>
+  <p>La no exigencia de derechos no implica renuncia.</p>
+
+  <p class="bold">DÉCIMO QUINTO: GASTOS.</p>
+  <p>Todos los gastos extrajudiciales serán de cargo del Comodante.</p>
+
+  <p class="bold">DÉCIMO SEXTO: DOMICILIO Y COMPETENCIA.</p>
+  <p>Las partes fijan su domicilio en Talca y se someten a sus tribunales.</p>
+
+  <p>La personería del apoderado consta en escritura pública de 26 de septiembre de 2023, Notaría Gabriel Guerrero González.</p>
+
+
+  <br><br>
+
+  <div class="firma center">
+    <p><strong>CONSTRUCTORA PEHUENCHE LIMITADA</strong><br>COMODANTE</p>
+    <br><br>
+    <p>__________________________<br>COMODATARIO</p>
+  </div>
+
+</body>
+</html>

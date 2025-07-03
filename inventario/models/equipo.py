@@ -10,16 +10,16 @@ import qrcode
 from io import BytesIO
 from django.core.files.base import ContentFile
 from django.db import models
-
+from django.utils.timezone import now 
 
 # Clase Equipo.
 
 class Equipo(models.Model):
-    etiqueta = models.CharField()
+    etiqueta = models.CharField(max_length=100, unique=True)
     memoria_ram = models.IntegerField(null=True)
     almacenamiento = models.IntegerField(null=True)
     numero_serie = models.CharField(max_length=100, null=True)
-    fecha_de_compra = models.DateField(null=True) #se puede asociar con el registro de la factura o sea se puede obtener este dato de ahí
+    fecha_de_compra = models.DateField(null=True, blank=True, default=now) #se puede asociar con el registro de la factura o sea se puede obtener este dato de ahí
     imei = models.CharField(max_length=100, null=True) #solo para dispositivos moviles
     mac = models.CharField(max_length=100, null=True) #solo para equipos
     en_bodega = models.BooleanField(default=True) #si el equipo se encuentra en bodega o no
@@ -30,6 +30,7 @@ class Equipo(models.Model):
     usuario_asignado = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True)
     ubicacion = models.ForeignKey('Ubicacion', on_delete=models.SET_NULL, null=True, blank=True)  # NUEVO
     qr_code = models.ImageField(upload_to='qr_codes/', blank=True, null=True)  # NUEVO
+
 
 
     def __str__(self):
@@ -52,16 +53,43 @@ class Equipo(models.Model):
             )
         self.estado = nuevo_estado
 
-    def modificar_equipo(self, form):
-        nuevo_estado = form.cleaned_data['estado']
-        self.cambiar_estado(nuevo_estado)
+    def modificar_equipo(self, form, modificado_por=None):
+        from .equipo_historial import Equipo_historial
+        from django.utils import timezone
 
-        # Actualiza otros campos del formulario
-        for campo in form.cleaned_data:
-            if campo != 'estado':
-                setattr(self, campo, form.cleaned_data[campo])
+        cambios = []
+        estado_anterior = self.estado
+
+        for campo, nuevo_valor in form.cleaned_data.items():
+            valor_actual = getattr(self, campo)
+
+            # Comparación robusta para ForeignKey y otros tipos
+            if str(valor_actual) != str(nuevo_valor):
+                cambios.append(f"{campo}: {valor_actual} → {nuevo_valor}")
+                setattr(self, campo, nuevo_valor)
 
         self.save()
+
+        if cambios:
+            nombre_modificador = (
+                modificado_por.nombre_completo
+                if modificado_por and hasattr(modificado_por, 'nombre_completo')
+                else str(modificado_por or "desconocido")
+            )
+
+            observaciones = f"Modificado por {nombre_modificador}\n" + "\n".join(cambios)
+
+            Equipo_historial.objects.create(
+                equipo=self,
+                fecha=timezone.now(),
+                estado_anterior=estado_anterior,
+                nuevo_estado=self.estado,
+                observaciones=observaciones
+            )
+
+
+
+
 
     def eliminar_equipo(self):
         self.delete()
@@ -102,7 +130,17 @@ class Equipo(models.Model):
         self.qr_code.save(filename, ContentFile(buffer.getvalue()), save=False)
 
     def save(self, *args, **kwargs):
+        # Asignar ubicación "En Bodega" si el equipo está en bodega y no tiene ubicación aún
+        if self.en_bodega and not self.ubicacion:
+            from .ubicacion import Ubicacion  # Import tardío para evitar import circular
+            try:
+                self.ubicacion = Ubicacion.objects.get(nombre__iexact="En Bodega")
+            except Ubicacion.DoesNotExist:
+                pass  # Si no existe, no hace nada (o puedes crearla si quieres)
+
         super().save(*args, **kwargs)  # Guarda primero
+
+        # Generar QR si aún no existe
         if not self.qr_code:
             self.generar_qr()
             super().save(update_fields=["qr_code"])

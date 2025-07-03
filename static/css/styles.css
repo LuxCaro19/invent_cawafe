@@ -90,7 +90,7 @@
 
 /* ------------------ LAYOUT GENERAL ------------------ */
 body {
-    overflow: hidden;
+    overflow: auto;
     background-color: #f8f9fa;
 }
 .main-wrapper {
@@ -153,7 +153,7 @@ body {
         max-height: 65vh;
     }
     body {
-        overflow-y: hidden;
+        overflow-y: auto;
         overflow-x: hidden;
     }
 }
@@ -165,7 +165,7 @@ body {
         max-height: 60vh;
     }
     body {
-        overflow-y: hidden;
+        overflow-y: auto;
         overflow-x: hidden;
     }
 }

@@ -1,128 +1,132 @@
-<form method="POST" action="{{ action_url }}" id="form-edicion" class="{{ form_classes|default:'' }}">
+<form method="POST" action="{{ action_url }}" id="form-edicion">
     {% csrf_token %}
 
-    <!-- Etiqueta + Botones alineados -->
+    <!-- Etiqueta + Botones -->
     <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap">
         <div class="flex-grow-1 me-3">
-            <label><strong>Número de Equipo:</strong></label>
-            <div class="w-50">
-                {{ form.etiqueta }}
-            </div>
+            <label class="form-label"><strong>Número de Equipo:</strong></label>
+            <input type="text" name="etiqueta" class="form-control" value="{{ form.etiqueta.value|default_if_none:'' }}">
+            {% if form.etiqueta.errors %}
+                <div class="text-danger small">{{ form.etiqueta.errors }}</div>
+            {% endif %}
         </div>
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 mt-3">
             <button type="submit" class="btn btn-success btn-sm">Guardar</button>
             {% if modo_creacion %}
-                <a href="{% url 'listado_equipos' %}" class="btn btn-editar btn-sm">Cancelar</a>
+                <a href="{% url 'listado_equipos' %}" class="btn btn-secondary btn-sm">Cancelar</a>
             {% else %}
-                <button type="button" class="btn btn-editar btn-sm" onclick="toggleEdicion()">Cancelar</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleEdicion()">Cancelar</button>
             {% endif %}
         </div>
     </div>
 
     <div class="row">
         <div class="col-12 col-md-6 mb-3">
-            <div class="border rounded p-3 h-100">
-                <div class="mb-2">
-                    <label><strong>Modelo:</strong></label>
-                    <select id="id_modelo" name="modelo" class="form-control select2" data-url="{% url 'obtener_marca' %}">
-                        {% for option in form.modelo.field.choices %}
-                            <option value="{{ option.0 }}" {% if option.0 == form.modelo.value %}selected{% endif %}>{{ option.1 }}</option>
-                        {% endfor %}
-                    </select>
-                    <script>
-                        $(document).ready(function () {
-                            $('#id_modelo').on('select2:select', function (e) {
-                                const modeloId = $(this).val();
-                                const url = $(this).data('url');
-                                const marcaDisplay = document.getElementById("marca-display");
+            <div class="border rounded p-3 bg-light h-100">
 
-                                if (modeloId && url) {
-                                    fetch(`${url}?modelo_id=${modeloId}`)
-                                        .then(res => res.json())
-                                        .then(data => {
-                                            marcaDisplay.value = data.marca || "";
-                                        })
-                                        .catch(err => {
-                                            console.error("Error al obtener marca:", err);
-                                            marcaDisplay.value = "";
-                                        });
-                                } else {
-                                    marcaDisplay.value = "";
-                                }
-                            });
-                        });
-                    </script>
+                <div class="mb-3">
+                    <label class="form-label"><strong>Modelo:</strong></label>
+                    {{ form.modelo }}
+                    {% if form.modelo.errors %}
+                        <div class="text-danger small">{{ form.modelo.errors }}</div>
+                    {% endif %}
                 </div>
-                <div class="mb-2">
-                    <label><strong>Marca:</strong></label>
+
+                <!-- <div class="mb-3">
+                    <label class="form-label"><strong>Marca:</strong></label>
                     <input type="text" id="marca-display" class="form-control" value="{{ marca_actual }}" readonly>
-                </div>
-                <div class="mb-2">
-                    <label><strong>Sistema Operativo:</strong></label>
+                </div> -->
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Sistema Operativo:</strong></label>
                     {{ form.sistema_operativo }}
+                    {% if form.sistema_operativo.errors %}
+                        <div class="text-danger small">{{ form.sistema_operativo.errors }}</div>
+                    {% endif %}
                 </div>
-                <div class="mb-2">
-                    <label><strong>Procesador:</strong></label>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Procesador:</strong></label>
                     {{ form.procesador }}
+                    {% if form.procesador.errors %}
+                        <div class="text-danger small">{{ form.procesador.errors }}</div>
+                    {% endif %}
                 </div>
-                <div class="mb-2">
-                    <label><strong>Memoria RAM:</strong></label>
-                    {{ form.memoria_ram }}
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Memoria RAM:</strong></label>
+                    <input type="text" name="memoria_ram" class="form-control" value="{{ form.memoria_ram.value|default_if_none:'' }}">
+                    {% if form.memoria_ram.errors %}
+                        <div class="text-danger small">{{ form.memoria_ram.errors }}</div>
+                    {% endif %}
                 </div>
-                <div class="mb-2">
-                    <label><strong>Almacenamiento:</strong></label>
-                    {{ form.almacenamiento }}
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Almacenamiento:</strong></label>
+                    <input type="text" name="almacenamiento" class="form-control" value="{{ form.almacenamiento.value|default_if_none:'' }}">
+                    {% if form.almacenamiento.errors %}
+                        <div class="text-danger small">{{ form.almacenamiento.errors }}</div>
+                    {% endif %}
                 </div>
-                <div class="mb-2">
-                    <label><strong>Número de serie:</strong></label>
-                    {{ form.numero_serie }}
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Número de Serie:</strong></label>
+                    <input type="text" name="numero_serie" class="form-control" value="{{ form.numero_serie.value|default_if_none:'' }}">
+                    {% if form.numero_serie.errors %}
+                        <div class="text-danger small">{{ form.numero_serie.errors }}</div>
+                    {% endif %}
                 </div>
-                <div class="mb-2">
-                    <label><strong>Estado:</strong></label>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Estado:</strong></label>
                     {{ form.estado }}
+                    {% if form.estado.errors %}
+                        <div class="text-danger small">{{ form.estado.errors }}</div>
+                    {% endif %}
                 </div>
+
             </div>
         </div>
 
         <div class="col-12 col-md-6 mb-3">
-            <div class="border rounded p-3 h-100">
-                <!-- Panel adicional vacío -->
+            <div class="border rounded p-3 bg-light h-100">
+                <!-- Panel adicional -->
             </div>
         </div>
     </div>
 </form>
 
-<!-- Select2 y marca dinámica -->
+
+
+
+<!-- Estilos adicionales -->
+<style>
+    input.form-control, select.form-control {
+        border-radius: 0.6rem !important;
+    }
+</style>
+
+<!-- Select2 y actualización dinámica -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        $('.select2').select2({
-            width: '100%',
-            placeholder: "Selecciona un modelo",
-            allowClear: true
-        });
+  document.addEventListener("DOMContentLoaded", function () {
+    const modeloSelect = document.getElementById("id_modelo");
+    const marcaInput = document.getElementById("marca-display");
 
-        const modeloSelect = document.getElementById("id_modelo");
-        const marcaDisplay = document.getElementById("marca-display");
+    const modeloMarcaMap = {
+      {% for modelo in modelos %}
+        "{{ modelo.id }}": "{{ modelo.marca.marca }}",
+      {% endfor %}
+    };
 
-        if (modeloSelect) {
-            modeloSelect.addEventListener("change", function () {
-                const modeloId = this.value;
-                const url = this.dataset.url;
+    if (modeloSelect && marcaInput) {
+      modeloSelect.addEventListener("change", function () {
+        const selected = modeloSelect.value;
+        marcaInput.value = modeloMarcaMap[selected] || "";
+      });
 
-                if (modeloId && url) {
-                    fetch(`${url}?modelo_id=${modeloId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            marcaDisplay.value = data.marca || "";
-                        })
-                        .catch(err => {
-                            console.error("Error al obtener marca:", err);
-                            marcaDisplay.value = "";
-                        });
-                } else {
-                    marcaDisplay.value = "";
-                }
-            });
-        }
-    });
+      // Al cargar
+      const selected = modeloSelect.value;
+      marcaInput.value = modeloMarcaMap[selected] || "";
+    }
+  });
 </script>

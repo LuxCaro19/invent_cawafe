@@ -28,8 +28,7 @@
 {% for equipo, historial in equipos_con_historial %}
 <div class="card mb-4">
     <div class="card-body">
-        <h5><strong>ID:</strong> {{ equipo.id }}</h5>
-        <p><strong>Marca:</strong> {{ equipo.modelo.marca.nombre }}</p>
+        <p><strong>Marca:</strong> {{ equipo.modelo.marca.marca }}</p>
         <p><strong>Modelo:</strong> {{ equipo.modelo.nombre }}</p>
         <p><strong>Estado actual:</strong> {{ equipo.estado }}</p>
         <p><strong>Empleado asignado:</strong> {{ equipo.usuario_asignado.nombre_completo|default:"No asignado" }}</p>
@@ -75,7 +74,6 @@
                     {% endfor %}
                 </select>
             </div>
-
             <div class="form-check mb-3">
                 <input class="form-check-input" type="checkbox" name="bodega" id="bodegaCheckbox{{ equipo.id }}" {% if equipo.en_bodega %}checked{% endif %}>
                 <label class="form-check-label" for="bodegaCheckbox{{ equipo.id }}">
@@ -83,20 +81,44 @@
                 </label>
             </div>
 
+            <!-- NUEVO: Campos dinámicos ocultos -->
+            <div id="camposRecepcion{{ equipo.id }}" style="display: none;" class="mb-3">
+                <div class="mb-3">
+                    <label for="entregado_por{{ equipo.id }}">Nombre quien entrega el equipo:</label>
+                    <input type="text" class="form-control" name="entregado_por" id="entregado_por{{ equipo.id }}">
+                </div>
+                <div class="mb-3">
+                    <label for="estado_recepcion{{ equipo.id }}">Estado en que se recibe:</label>
+                    <select class="form-control" name="estado_recepcion" id="estado_recepcion{{ equipo.id }}">
+                        <option value="">Seleccione una opción</option>
+                        <option>Buen estado</option>
+                        <option>Con detalles estéticos</option>
+                        <option>Dañado</option>
+                    </select>
+                </div>
+            </div>
             <button type="submit" class="btn btn-success">Guardar cambios</button>
             <a href="{% url 'historial_equipo' equipo.id %}" class="btn btn-outline-info ms-2">Ver historial completo</a>
         </form>
 
-        <h5 class="mt-4">Historial reciente</h5>
+        <h5 class="mt-4">Historial reciente</h5> 
         <div class="border p-3 rounded bg-light">
-            <h5 class="text-secondary mt-4">Historial reciente</h5>
             <hr>
 
             {% if historial %}
                 <ul class="list-group">
                     {% for registro in historial %}
                         <li class="list-group-item">
-                            {{ registro.fecha|date:"d/m/Y H:i" }} - {{ registro.estado }} {% if registro.usuario_asignador %}(por {{ registro.usuario_asignador }}){% endif %}
+                            {{ registro.fecha|date:"d/m/Y H:i" }} - {{ registro.estado }}
+                            {% if registro.registrado_por %}
+                                (registrado por 
+                                    {% if registro.registrado_por.nombre_completo %}
+                                        {{ registro.registrado_por.nombre_completo }}
+                                    {% else %}
+                                        {{ registro.registrado_por }}
+                                    {% endif %}
+                                )
+                            {% endif %}
                         </li>
                     {% endfor %}
                 </ul>
@@ -121,6 +143,23 @@
         $("#busqueda_usuario").autocomplete({
             source: "{% url 'autocomplete_usuarios' %}"
         });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        {% for equipo, historial in equipos_con_historial %}
+            const checkbox = document.getElementById('bodegaCheckbox{{ equipo.id }}');
+            const campos = document.getElementById('camposRecepcion{{ equipo.id }}');
+
+            function toggleCampos() {
+                campos.style.display = checkbox.checked ? 'block' : 'none';
+            }
+
+            // Ejecutar al cargar la página
+            toggleCampos();
+
+            // Ejecutar al cambiar el checkbox
+            checkbox.addEventListener('change', toggleCampos);
+        {% endfor %}
     });
 </script>
 

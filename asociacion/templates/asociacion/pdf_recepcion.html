@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+        }
+
+        .center {
+            text-align: center;
+            font-weight: bold;
+            font-size: 14pt;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+            white-space: nowrap;
+            width: 35%;
+        }
+
+        td {
+            width: 65%;
+        }
+
+        .firma {
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .firma-linea {
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="center">
+        Equipo {{ equipo.etiqueta }} recepcionado en bodega
+    </div>
+
+    <table>
+        <tr>
+            <th>ID de Equipo</th>
+            <td>{{ equipo.id }}</td>
+        </tr>
+        <tr>
+            <th>Número Etiqueta</th>
+            <td>{{ equipo.etiqueta }}</td>
+        </tr>
+        <tr>
+            <th>Nombre Usuario que tenía asignado el Equipo</th>
+            <td>{{ usuario_asignado }}</td>
+        </tr>
+        <tr>
+            <th>Nombre de quien Entrega</th>
+            <td>{{ entregado_por }}</td>
+        </tr>
+        <tr>
+            <th>Nombre de quien Recibe</th>
+            <td>{{ registrado_por }}</td>
+        </tr>
+        <tr>
+            <th>Fecha Recepción</th>
+            <td>{{ fecha }}</td>
+        </tr>
+        <tr>
+            <th>Estado</th>
+            <td>{{ estado_recepcion }}</td>
+        </tr>
+    </table>
+
+    <div class="firma">
+        ____________________________<br>
+        Firma de quien recibe
+    </div>
+
+</body>
+</html>

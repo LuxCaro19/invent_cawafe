@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Formulario{% endblock %}</title>
-    <link href="{% static 'css/scroll.css' %}" rel="stylesheet">
   <!-- Bootstrap y estilos -->
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/styles.css' %}" rel="stylesheet">
@@ -35,14 +34,36 @@
       </div>
     </div>
   </main>
-
+  
   <!-- Scripts -->
   <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
   <script src="{% static 'js/popper.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
 {% block extra_js %}
 {% endblock %}
+<!-- TOASTS -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="toast align-items-center text-white bg-{{ message.tags }} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="12000">
+        <div class="d-flex">
+          <div class="toast-body">{{ message }}</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    toastElList.forEach(function (toastEl) {
+      new bootstrap.Toast(toastEl).show();
+    });
+  });
+</script>
+<!-- FIN TOASTS -->
 
 </body>
 </html>

@@ -16,6 +16,8 @@ from .forms.procesador_form import ProcesadorForm
 from .forms.so_form import SoForm
 from .forms.estado_equipo_form import Estado_equipoForm
 from django.http import JsonResponse
+from django.urls import reverse 
+from django.utils import timezone
 
 # Create your views here.
 
@@ -91,7 +93,6 @@ def listado_equipos(request):
         "agrupar": agrupar,
     })
 
-
 def listado_modelo_equipo(request):
     buscar = request.GET.get("buscar", "").strip()
     agrupar = request.GET.get("agrupar", "")
@@ -123,7 +124,6 @@ def listado_modelo_equipo(request):
         'agrupar': agrupar,
     })
 
-
 def listado_marcas(request):
     buscar = request.GET.get("buscar", "").strip()
     marcas = Modelo_marca.objects.all()
@@ -136,7 +136,6 @@ def listado_marcas(request):
         'filtro_busqueda': buscar,
     })
 
-
 def listado_tipo_equipos(request):
     buscar = request.GET.get("buscar", "").strip()
     tipos = Modelo_tipo.objects.all()
@@ -148,7 +147,6 @@ def listado_tipo_equipos(request):
         'tipos': tipos,
         'filtro_busqueda': buscar,
     })
-
 
 def listado_procesadores(request):
     buscar = request.GET.get("buscar", "").strip()
@@ -176,9 +174,6 @@ def listado_procesadores(request):
         'filtro_busqueda': buscar,
         'agrupar': agrupar,
     })
-
-from collections import defaultdict
-from django.db.models import Q
 
 def listado_sistemas_operativos(request):
     buscar = request.GET.get("buscar", "").strip()
@@ -208,8 +203,6 @@ def listado_sistemas_operativos(request):
         'agrupar': agrupar,
     })
 
-
-
 def listado_estado_equipos(request):
     buscar = request.GET.get("buscar", "").strip()
 
@@ -222,33 +215,59 @@ def listado_estado_equipos(request):
         'filtro_busqueda': buscar,
     })
 
-
 ##############################
 
 ##############################
 # Vista de detalles
+ # Asegúrate de tener este import arriba
 
 def detalle_equipo(request, id):
     equipo = get_object_or_404(Equipo, id=id)
+    historial = Equipo_historial.objects.filter(equipo=equipo).order_by('-fecha')
 
     if request.method == 'POST':
-        if 'eliminar' in request.POST:
-            equipo.eliminar_equipo()
-            equipos = Equipo.objects.all()
-            return render(request, 'inventario/listados/listado_equipos.html', {'equipos': equipos})
-        else:
-            form = EquipoForm(request.POST, instance=equipo)
-            if form.is_valid():
-                equipo.modificar_equipo(form)
-                return redirect('detalle_equipo', id=equipo.id)
+        form = EquipoForm(request.POST, instance=equipo)
+        if form.is_valid():
+            cambios = []
+            equipo_original = Equipo.objects.get(pk=equipo.pk)
+
+            # Guardar valores antes del cambio
+            estado_anterior = equipo_original.estado
+
+            for campo, nuevo_valor in form.cleaned_data.items():
+                valor_actual = getattr(equipo_original, campo)
+
+                # Si es una FK, compara por ID
+                if hasattr(valor_actual, 'id') and hasattr(nuevo_valor, 'id'):
+                    if valor_actual.id != nuevo_valor.id:
+                        cambios.append(f"{campo}: {valor_actual} → {nuevo_valor}")
+                        setattr(equipo, campo, nuevo_valor)
+                elif valor_actual != nuevo_valor:
+                    cambios.append(f"{campo}: {valor_actual} → {nuevo_valor}")
+                    setattr(equipo, campo, nuevo_valor)
+
+            equipo.save()
+
+            if cambios:
+                observaciones = f"Modificado por {request.user}\n" + "\n".join(cambios)
+                Equipo_historial.objects.create(
+                    equipo=equipo,
+                    fecha=timezone.now(),
+                    estado_anterior=estado_anterior,
+                    nuevo_estado=equipo.estado,
+                    observaciones=observaciones
+                )
+
+            return redirect('detalle_equipo', id=equipo.id)
     else:
         form = EquipoForm(instance=equipo)
 
-    historial = Equipo_historial.objects.filter(equipo=equipo).order_by('-fecha')
-
-    return render(request, 'inventario/detalle/detalle_equipo.html', {'equipo': equipo, 'form': form, 'historial': historial})
-
-
+    return render(request, 'inventario/detalle/detalle_equipo.html', {
+        'equipo': equipo,
+        'form': form,
+        'historial': historial,
+        'detalle_equipo_url': reverse('detalle_equipo', args=[equipo.id])
+    })
 
 def detalle_modelo_equipo(request, id):
     modelo = get_object_or_404(Modelo_equipo, id=id)
@@ -256,8 +275,7 @@ def detalle_modelo_equipo(request, id):
     if request.method == 'POST':
         if 'eliminar' in request.POST:
             modelo.eliminar_modelo()
-            modelos = Modelo_equipo.objects.all()
-            return render(request, 'inventario/listados/listado_modelo_equipos.html', {'modelos': modelos})
+            return redirect('listado_modelo_equipo')  # redirige a la vista real de lista
         else:
             form = Modelo_equipoForm(request.POST, instance=modelo)
             if form.is_valid():
@@ -266,8 +284,10 @@ def detalle_modelo_equipo(request, id):
     else:
         form = Modelo_equipoForm(instance=modelo)
 
-    return render(request, 'inventario/detalle/detalle_modelo_equipo.html', {'modelo': modelo, 'form': form})
-
+    return render(request, 'inventario/detalle/detalle_modelo_equipo.html', {
+        'modelo': modelo,
+        'form': form
+    })
 
 def detalle_marca_equipo(request, id):
     marca = get_object_or_404(Modelo_marca, id=id)
@@ -275,8 +295,7 @@ def detalle_marca_equipo(request, id):
     if request.method == 'POST':
         if 'eliminar' in request.POST:
             marca.eliminar_marca()
-            marcas = Modelo_marca.objects.all()
-            return render(request, 'inventario/listados/listado_marcas.html', {'marcas': marcas})
+            return redirect('listado_marcas')  # redirige a la vista real de listado
         else:
             form = Modelo_marcaForm(request.POST, instance=marca)
             if form.is_valid():
@@ -285,8 +304,10 @@ def detalle_marca_equipo(request, id):
     else:
         form = Modelo_marcaForm(instance=marca)
 
-    return render(request, 'inventario/detalle/detalle_marca.html', {'marca': marca, 'form': form})
-
+    return render(request, 'inventario/detalle/detalle_marca.html', {
+        'marca': marca,
+        'form': form
+    })
 
 def detalle_tipo_equipo(request, id):
     tipo = get_object_or_404(Modelo_tipo, id=id)
@@ -294,8 +315,7 @@ def detalle_tipo_equipo(request, id):
     if request.method == 'POST':
         if 'eliminar' in request.POST:
             tipo.eliminar_tipo()
-            tipos = Modelo_tipo.objects.all()
-            return render(request, 'inventario/listados/listado_tipo_equipos.html', {'tipos': tipos})
+            return redirect('listado_tipo_equipos')  # redirige a la vista real de listado
         else:
             form = Tipo_equipoForm(request.POST, instance=tipo)
             if form.is_valid():
@@ -304,8 +324,10 @@ def detalle_tipo_equipo(request, id):
     else:
         form = Tipo_equipoForm(instance=tipo)
 
-    return render(request, 'inventario/detalle/detalle_tipo_equipo.html', {'tipo': tipo, 'form': form}) 
-
+    return render(request, 'inventario/detalle/detalle_tipo_equipo.html', {
+        'tipo': tipo,
+        'form': form
+    })
 
 def detalle_procesador(request, id):
     procesador = get_object_or_404(Procesador, id=id)
@@ -322,7 +344,10 @@ def detalle_procesador(request, id):
     else:
         form = ProcesadorForm(instance=procesador)
 
-    return render(request, 'inventario/detalle/detalle_procesador.html', {'procesador': procesador, 'form': form})
+    return render(request, 'inventario/detalle/detalle_procesador.html', {
+        'procesador': procesador,
+        'form': form
+    })
 
 def detalle_sistema_operativo(request, id):
     so = get_object_or_404(Sistema_operativo, id=id)
@@ -339,8 +364,10 @@ def detalle_sistema_operativo(request, id):
     else:
         form = SoForm(instance=so)
 
-    return render(request, 'inventario/detalle/detalle_so.html', {'so': so, 'form': form})
-
+    return render(request, 'inventario/detalle/detalle_so.html', {
+        'so': so,
+        'form': form
+    })
 
 def detalle_estado_equipo(request, id):
     estado = get_object_or_404(Estado_equipo, id=id)
@@ -348,8 +375,7 @@ def detalle_estado_equipo(request, id):
     if request.method == 'POST':
         if 'eliminar' in request.POST:
             estado.delete()
-            estados = Estado_equipo.objects.all()
-            return render(request, 'inventario/listados/listado_estado.html', {'estados': estados})
+            return redirect('listado_estados')
         else:
             form = Estado_equipoForm(request.POST, instance=estado)
             if form.is_valid():
@@ -358,8 +384,10 @@ def detalle_estado_equipo(request, id):
     else:
         form = Estado_equipoForm(instance=estado)
 
-    return render(request, 'inventario/detalle/detalle_estado.html', {'estado': estado, 'form': form})
-
+    return render(request, 'inventario/detalle/detalle_estado.html', {
+        'estado': estado,
+        'form': form
+    })
 
 ##############################
 
@@ -369,50 +397,68 @@ def registrar_equipo(request):
     if request.method == 'POST':
         form = EquipoForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('detalle_equipo', id=Equipo.objects.latest('id').id)
+            equipo = form.save()  # Guardamos el equipo
+
+            # Registrar en historial
+            from django.utils import timezone
+            from .models import Equipo_historial
+
+            if request.user.is_authenticated:
+                creador = getattr(request.user, 'nombre_completo', str(request.user))
+            else:
+                creador = 'desconocido'
+
+            observaciones = f"Equipo creado por {creador}"
+
+            Equipo_historial.objects.create(
+                equipo=equipo,
+                fecha=timezone.now(),
+                estado_anterior=None,
+                nuevo_estado=equipo.estado,
+                observaciones=observaciones
+            )
+
+            return redirect('detalle_equipo', id=equipo.id)
     else:
         form = EquipoForm()
-    return render(request, 'inventario/registro/registrar_equipo.html', {'equipo': Equipo,'form': form})
-
+    return render(request, 'inventario/registro/registrar_equipo.html', {'equipo': Equipo, 'form': form})
 
 def registrar_modelo_equipo(request):
     if request.method == 'POST':
         form = Modelo_equipoForm(request.POST)
         if form.is_valid():
             form.save()
-            #return redirect('detalle_modelo_equipo', id=Modelo_equipo.objects.latest('id').id)
-            modelos = Modelo_equipo.objects.all()
-            return render(request, 'inventario/listados/listado_modelo_equipos.html', {'modelos': modelos,'form': form})
+            return redirect('listado_modelo_equipo')  # Asegúrate que esta es la URL correcta
     else:
         form = Modelo_equipoForm()
-    return render(request, 'inventario/registro/registrar_modelo.html', {'modelo_equipo': Modelo_equipo,'form': form})
 
+    return render(request, 'inventario/registro/registrar_modelo.html', {'form': form})
 
 def registrar_marca_equipo(request):
     if request.method == 'POST':
         form = Modelo_marcaForm(request.POST)
         if form.is_valid():
             form.save()
-            #return redirect('detalle_modelo_equipo', id=Modelo_equipo.objects.latest('id').id)
-            marcas = Modelo_marca.objects.all()
-            return render(request, 'inventario/listados/listado_marcas.html', {'marcas': marcas,'form': form})
+            return redirect('listado_marcas')
     else:
         form = Modelo_marcaForm()
-    return render(request, 'inventario/registro/registrar_marca.html', {'modelo_marca': Modelo_marca,'form': form})
 
+    return render(request, 'inventario/registro/registrar_marca.html', {
+        'form': form
+    })
 
 def registrar_tipo_equipo(request):
     if request.method == 'POST':
         form = Tipo_equipoForm(request.POST)
         if form.is_valid():
             form.save()
-            #return redirect('detalle_modelo_equipo', id=Modelo_equipo.objects.latest('id').id)
-            tipos = Modelo_tipo.objects.all()
-            return render(request, 'inventario/listados/listado_tipo_equipos.html', {'tipos': tipos,'form': form})
+            return redirect('listado_tipo_equipos')
     else:
         form = Tipo_equipoForm()
-    return render(request, 'inventario/registro/registrar_tipo_equipo.html', {'modelo_tipo': Modelo_tipo,'form': form})
+
+    return render(request, 'inventario/registro/registrar_tipo_equipo.html', {
+        'form': form
+    })
 
 def registrar_procesador(request):
     if request.method == 'POST':
@@ -422,7 +468,11 @@ def registrar_procesador(request):
             return redirect('listado_procesadores')
     else:
         form = ProcesadorForm()
-    return render(request, 'inventario/registro/registrar_procesador.html', {'form': form})
+
+    return render(request, 'inventario/registro/registrar_procesador.html', {
+        'form': form
+    })
+
 
 def registrar_sistema_operativo(request):
     if request.method == 'POST':
@@ -440,11 +490,14 @@ def registrar_estado_equipo(request):
         form = Estado_equipoForm(request.POST)
         if form.is_valid():
             form.save()
-            estados = Estado_equipo.objects.all()
-            return render(request, 'inventario/listados/listado_estados.html', {'estados': estados, 'form': form})
+            return redirect('listado_estados')
     else:
         form = Estado_equipoForm()
-    return render(request, 'inventario/registro/registrar_estado.html', {'form': form})
+
+    return render(request, 'inventario/registro/registrar_estado.html', {
+        'form': form
+    })
+
 
 
 # Adicionales 

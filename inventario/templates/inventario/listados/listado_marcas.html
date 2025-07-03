@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base/lista/base_inventario.html' %}
 {% block content %}
 
 <h2 class="mb-4">Fabricantes</h2>
@@ -20,10 +20,10 @@
 
 {% if marcas %}
   <div class="table-responsive overflow-hidden">
-    <table class="table table-striped table-bordered align-middle rounded-3 overflow-hidden">
+    <table class="table table-striped table-bordered align-middle rounded-3 overflow-hidden ordenable">
       <thead class="table-danger">
         <tr>
-          <th>Marca</th>
+          <th class="sortable">Marca <span class="sort-icon"></span></th>
         </tr>
       </thead>
       <tbody>

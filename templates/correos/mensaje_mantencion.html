@@ -1,0 +1,23 @@
+<p>
+  Estimado(a) {{ usuario.nombre_completo }},
+</p>
+
+<p>
+  Le informamos que se realizarán mantenciones preventivas en la ubicación
+  <strong>{{ ubicacion }}</strong> entre el día
+  <strong>{{ fecha_inicio }}</strong> y el
+  <strong>{{ fecha_fin }}</strong>, con el objetivo de mantener la continuidad operativa de los equipos asignados.
+</p>
+
+<p>
+  Por favor, revisar si existen equipos en su ubicación que presenten fallas, daños o funcionamiento inestable,
+  para poder coordinar su evaluación o reparación durante la visita del área de soporte.
+</p>
+
+<p>
+  Para cualquier duda o comentario, puede comunicarse con el área de soporte escribiendo a
+  <a href="mailto:soporte@galilea.cl">soporte@galilea.cl</a>,
+  o directamente a <a href="mailto:{{ remitente.correo }}">{{ remitente.correo }}</a>.
+</p>
+
+<p>Saludos cordiales,<br>Área de soporte TI</p>

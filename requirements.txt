@@ -3,3 +3,4 @@ qrcode[pil]
 psycopg[binary]
 xhtml2pdf
 openpyxl
+
