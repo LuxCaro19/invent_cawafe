@@ -32,7 +32,7 @@
                     <h4 class="text-dark mb-0"><strong>{{ equipo.etiqueta }}</strong></h4>
                     <div class="boton-accion">
                         <button class="btn btn-editar btn-sm" onclick="toggleEdicion()">Editar</button>
-                        <form method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este equipo?');">
+                        <form method="POST" action="{% url 'detalle_equipo' equipo.id %}" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este equipo?');">
                             {% csrf_token %}
                             <button type="submit" name="eliminar" class="btn btn-eliminar btn-sm">Eliminar</button>
                         </form>

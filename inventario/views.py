@@ -226,18 +226,21 @@ def detalle_equipo(request, id):
     historial = Equipo_historial.objects.filter(equipo=equipo).order_by('-fecha')
 
     if request.method == 'POST':
+        # Lógica de eliminación
+        if 'eliminar' in request.POST:
+            equipo.delete()
+            return redirect('listado_equipos')  # Ajusta según la vista de destino
+
+        # Lógica de edición
         form = EquipoForm(request.POST, instance=equipo)
         if form.is_valid():
             cambios = []
             equipo_original = Equipo.objects.get(pk=equipo.pk)
-
-            # Guardar valores antes del cambio
             estado_anterior = equipo_original.estado
 
             for campo, nuevo_valor in form.cleaned_data.items():
                 valor_actual = getattr(equipo_original, campo)
 
-                # Si es una FK, compara por ID
                 if hasattr(valor_actual, 'id') and hasattr(nuevo_valor, 'id'):
                     if valor_actual.id != nuevo_valor.id:
                         cambios.append(f"{campo}: {valor_actual} → {nuevo_valor}")
@@ -259,6 +262,7 @@ def detalle_equipo(request, id):
                 )
 
             return redirect('detalle_equipo', id=equipo.id)
+
     else:
         form = EquipoForm(instance=equipo)
 
@@ -275,7 +279,7 @@ def detalle_modelo_equipo(request, id):
     if request.method == 'POST':
         if 'eliminar' in request.POST:
             modelo.eliminar_modelo()
-            return redirect('listado_modelo_equipo')  # redirige a la vista real de lista
+            return redirect('listado_modelo_equipos')  # redirige a la vista real de lista
         else:
             form = Modelo_equipoForm(request.POST, instance=modelo)
             if form.is_valid():
@@ -428,7 +432,7 @@ def registrar_modelo_equipo(request):
         form = Modelo_equipoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('listado_modelo_equipo')  # Asegúrate que esta es la URL correcta
+            return redirect('listado_modelo_equipos')  # Asegúrate que esta es la URL correcta
     else:
         form = Modelo_equipoForm()
 
