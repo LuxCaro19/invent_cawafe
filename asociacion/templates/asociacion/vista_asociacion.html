@@ -74,7 +74,6 @@
                     {% endfor %}
                 </select>
             </div>
-
             <div class="form-check mb-3">
                 <input class="form-check-input" type="checkbox" name="bodega" id="bodegaCheckbox{{ equipo.id }}" {% if equipo.en_bodega %}checked{% endif %}>
                 <label class="form-check-label" for="bodegaCheckbox{{ equipo.id }}">
@@ -82,6 +81,22 @@
                 </label>
             </div>
 
+            <!-- NUEVO: Campos dinámicos ocultos -->
+            <div id="camposRecepcion{{ equipo.id }}" style="display: none;" class="mb-3">
+                <div class="mb-3">
+                    <label for="entregado_por{{ equipo.id }}">Nombre quien entrega el equipo:</label>
+                    <input type="text" class="form-control" name="entregado_por" id="entregado_por{{ equipo.id }}">
+                </div>
+                <div class="mb-3">
+                    <label for="estado_recepcion{{ equipo.id }}">Estado en que se recibe:</label>
+                    <select class="form-control" name="estado_recepcion" id="estado_recepcion{{ equipo.id }}">
+                        <option value="">Seleccione una opción</option>
+                        <option>Buen estado</option>
+                        <option>Con detalles estéticos</option>
+                        <option>Dañado</option>
+                    </select>
+                </div>
+            </div>
             <button type="submit" class="btn btn-success">Guardar cambios</button>
             <a href="{% url 'historial_equipo' equipo.id %}" class="btn btn-outline-info ms-2">Ver historial completo</a>
         </form>
@@ -128,6 +143,23 @@
         $("#busqueda_usuario").autocomplete({
             source: "{% url 'autocomplete_usuarios' %}"
         });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        {% for equipo, historial in equipos_con_historial %}
+            const checkbox = document.getElementById('bodegaCheckbox{{ equipo.id }}');
+            const campos = document.getElementById('camposRecepcion{{ equipo.id }}');
+
+            function toggleCampos() {
+                campos.style.display = checkbox.checked ? 'block' : 'none';
+            }
+
+            // Ejecutar al cargar la página
+            toggleCampos();
+
+            // Ejecutar al cambiar el checkbox
+            checkbox.addEventListener('change', toggleCampos);
+        {% endfor %}
     });
 </script>
 

@@ -9,6 +9,9 @@ from inventario.models import Equipo, Estado_equipo, Ubicacion  # ← agrega Ubi
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from urllib.parse import urlencode
+from .utils.pdf_comodato import generar_pdf_comodato, generar_pdf_recepcion
+from django.http import HttpResponse
+from django.utils import timezone
 
 def vista_asociacion(request):
     query_equipo = request.GET.get('equipo', '')
@@ -20,6 +23,7 @@ def vista_asociacion(request):
         a_bodega = request.POST.get('bodega') == 'on'
 
         equipo = Equipo.objects.get(id=equipo_id)
+        usuario_anterior = equipo.usuario_asignado
 
         if a_bodega:
             equipo.usuario_asignado = None
@@ -33,8 +37,11 @@ def vista_asociacion(request):
                 equipo.usuario_asignado = nuevo_usuario
                 equipo.estado = Estado_equipo.objects.get(nombre__iexact="Asignado")
                 equipo.ubicacion = None
+
+
             else:
                 equipo.usuario_asignado = None
+
 
         equipo.save()
 
@@ -62,7 +69,49 @@ def vista_asociacion(request):
         url = reverse('vista_asociacion')
         if params:
             url += '?' + urlencode(params)
-        return HttpResponseRedirect(url)
+
+        
+
+        # Genera el PDF de comodato si se asignó un usuario
+        # Preparar contexto para PDF
+
+        if not a_bodega and usuario_id:
+            nuevo_usuario = Usuario.objects.get(id=usuario_id)
+
+            contexto = {
+                'fecha': timezone.now().strftime('%d de %B de %Y'),
+                'equipo': equipo.etiqueta,
+                'nombre_usuario': nuevo_usuario.nombre_completo,
+                'rut_usuario': nuevo_usuario.rut,
+                'modelo': equipo.modelo.nombre,
+                'marca': equipo.modelo.marca.marca,
+                'imei': equipo.imei or '—',
+                'estado': equipo.estado.nombre,
+                'valor': equipo.modelo.precio,
+            }
+
+            pdf_file = generar_pdf_comodato(contexto)
+            response = HttpResponse(pdf_file, content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="Comodato_{equipo.etiqueta}.pdf"'
+            return response
+        else:
+            entregado_por = request.POST.get('entregado_por', 'No especificado')
+            estado_recepcion = request.POST.get('estado_recepcion', 'Sin información')
+
+            contexto_pdf_recepcion = {
+                'equipo': equipo,
+                'fecha': timezone.now().strftime('%d de %B de %Y'),
+                'usuario_asignado': usuario_anterior,
+                'entregado_por': entregado_por,
+                'estado_recepcion': estado_recepcion,
+                'registrado_por': request.user.nombre_completo,
+            }
+
+            pdf_file = generar_pdf_recepcion(contexto_pdf_recepcion)
+            response = HttpResponse(pdf_file, content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="Recepcion_{equipo.etiqueta}.pdf"'
+            return response
+
 
     # Solo ejecuta la lógica GET después de manejar el POST
     filtros = Q()
