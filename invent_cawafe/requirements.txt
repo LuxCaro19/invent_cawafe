@@ -2,4 +2,4 @@ Django==5.1.7
 qrcode[pil]
 psycopg[binary]
 xhtml2pdf
-
+openpyxl
